@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eventos | CERI – UNT</title>
+  <meta name="description" content="Conversatorios, conferencias y actividades del CERI.">
+  <!-- FAVICON: guarda el ícono en assets/img/favicon.png y quita los comentarios de la línea de abajo -->
+  <!-- <link rel="icon" href="assets/img/favicon.png"> -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="eventos">
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <header id="site-header"></header>
+
+  <main id="contenido">
+    <div class="container">
+      <div class="page-head">
+        <h1>Eventos</h1>
+        <p class="lead">Conversatorios, conferencias, foros y actividades organizadas por el CERI.</p>
+      </div>
+      <h2>Próximos</h2>
+      <div id="eventos-proximos" class="lista-eventos"></div>
+      <h2>Realizados</h2>
+      <div id="eventos-pasados" class="lista-eventos"></div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <!-- El orden importa: primero los datos, luego el diseño común, luego la lógica -->
+  <script src="js/data.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

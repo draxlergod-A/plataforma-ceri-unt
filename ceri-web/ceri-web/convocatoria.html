@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Convocatoria | CERI – UNT</title>
+  <meta name="description" content="Únete al CERI: requisitos y fechas de convocatoria.">
+  <!-- FAVICON: guarda el ícono en assets/img/favicon.png y quita los comentarios de la línea de abajo -->
+  <!-- <link rel="icon" href="assets/img/favicon.png"> -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="convocatoria">
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <header id="site-header"></header>
+
+  <main id="contenido">
+    <div class="container">
+      <div class="page-head">
+        <h1>Convocatoria <span id="conv-periodo"></span></h1>
+        <p class="lead" id="conv-fechas"></p>
+      </div>
+      <h2>Requisitos</h2>
+      <ul id="conv-requisitos"></ul>
+      <h2>¿Cómo postular?</h2>
+      <div id="conv-estado"></div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <!-- El orden importa: primero los datos, luego el diseño común, luego la lógica -->
+  <script src="js/data.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+/* =========================================================
+   styles.css — ESTILOS DE LA WEB CERI
+   Diseño sobrio. Los colores se cambian solo en :root.
+   ========================================================= */
+
+:root {
+  --azul: #1d3557;        /* color principal (azul marino del CERI) */
+  --azul-claro: #e8eef6;
+  --texto: #1f2328;
+  --gris: #5b6470;
+  --borde: #dde2e8;
+  --fondo: #ffffff;
+  --fondo-alt: #f6f7f9;
+  --serif: Georgia, "Times New Roman", serif;
+  --sans: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  --ancho: 1080px;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--sans); color: var(--texto); background: var(--fondo); line-height: 1.6; }
+img { max-width: 100%; display: block; }
+a { color: var(--azul); }
+h1, h2, h3 { font-family: var(--serif); line-height: 1.25; color: var(--azul); }
+h1 { font-size: 2.1rem; margin: 0 0 .5rem; }
+h2 { font-size: 1.5rem; margin: 2rem 0 1rem; }
+h3 { font-size: 1.15rem; margin: .3rem 0; }
+h3 a { text-decoration: none; }
+h3 a:hover { text-decoration: underline; }
+
+.container { max-width: var(--ancho); margin: 0 auto; padding: 0 1.25rem; }
+.muted { color: var(--gris); font-size: .92rem; }
+.lead { font-size: 1.15rem; color: var(--gris); }
+.vacio { color: var(--gris); font-style: italic; }
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 1rem; top: 1rem; background: #fff; padding: .5rem; z-index: 10; }
+
+/* ---------- Encabezado ---------- */
+#site-header { border-bottom: 1px solid var(--borde); background: #fff; position: sticky; top: 0; z-index: 5; }
+.header-inner { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 68px; }
+.brand { display: flex; align-items: center; gap: .65rem; text-decoration: none; color: var(--texto); }
+.brand-mark { /* espacio reservado del logo */
+  width: 42px; height: 42px; border-radius: 50%; background: var(--azul); color: #fff;
+  display: grid; place-items: center; font-size: .7rem; font-weight: 700; letter-spacing: .05em;
+}
+.brand-logo { width: 42px; height: 42px; object-fit: contain; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+.brand-text small { color: var(--gris); font-size: .78rem; }
+
+#menu ul { list-style: none; display: flex; flex-wrap: wrap; gap: .25rem; margin: 0; padding: 0; }
+#menu a { display: block; padding: .45rem .65rem; text-decoration: none; color: var(--texto); font-size: .93rem; border-radius: 4px; }
+#menu a:hover { background: var(--fondo-alt); }
+#menu a[aria-current="page"] { color: var(--azul); font-weight: 600; box-shadow: inset 0 -2px 0 var(--azul); border-radius: 0; }
+.menu-toggle { display: none; background: none; border: 1px solid var(--borde); padding: .4rem .8rem; border-radius: 4px; cursor: pointer; font: inherit; }
+
+/* ---------- Secciones ---------- */
+main { padding-bottom: 3rem; }
+.hero { background: var(--fondo-alt); border-bottom: 1px solid var(--borde); padding: 3.5rem 0 3rem; }
+.hero h1 { font-size: 2.4rem; max-width: 760px; }
+.hero p { max-width: 680px; }
+.page-head { padding: 2.5rem 0 1rem; border-bottom: 1px solid var(--borde); margin-bottom: 1.5rem; }
+.section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; }
+.section-head a { font-size: .93rem; }
+
+.aviso { background: var(--azul); color: #fff; padding: .75rem 0; text-align: center; }
+.aviso a { color: #fff; font-weight: 600; }
+
+.btn { display: inline-block; background: var(--azul); color: #fff; padding: .65rem 1.2rem; border-radius: 4px; text-decoration: none; font-weight: 600; }
+.btn:hover { opacity: .9; }
+.btn-sec { background: transparent; color: var(--azul); border: 1px solid var(--azul); }
+.acciones { display: flex; gap: .75rem; flex-wrap: wrap; margin-top: 1.5rem; }
+
+/* ---------- Tarjetas ---------- */
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1.25rem; }
+.card { border: 1px solid var(--borde); border-radius: 6px; padding: 1.2rem; background: #fff; }
+.card p { margin: .35rem 0; }
+.meta { font-size: .82rem; color: var(--gris); text-transform: uppercase; letter-spacing: .03em; }
+.tag { display: inline-block; background: var(--azul-claro); color: var(--azul); padding: .1rem .5rem; border-radius: 3px; font-weight: 600; margin-right: .3rem; }
+.tag-on { background: var(--azul); color: #fff; }
+.chip { display: inline-block; border: 1px solid var(--borde); padding: .1rem .55rem; border-radius: 99px; font-size: .82rem; margin: 0 .3rem .3rem 0; }
+
+.lista-eventos { display: grid; gap: 1rem; }
+.evento { display: grid; grid-template-columns: 110px 1fr; gap: 1rem; }
+.evento-fecha { font-family: var(--serif); color: var(--azul); font-weight: 700; border-right: 1px solid var(--borde); padding-right: .75rem; }
+
+/* ---------- Pilares / principios ---------- */
+.pilares { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-top: 1rem; }
+.pilar { border-top: 3px solid var(--azul); padding-top: .75rem; }
+.pilar h3 { margin-bottom: .25rem; }
+.datos { display: flex; flex-wrap: wrap; gap: 2rem; margin: 1rem 0 2rem; }
+.datos div strong { display: block; font-family: var(--serif); font-size: 1.6rem; color: var(--azul); }
+
+/* ---------- Filtros ---------- */
+.filtros { display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 1.5rem; }
+.filtros label { display: flex; flex-direction: column; font-size: .82rem; color: var(--gris); gap: .2rem; }
+.filtros select, .filtros input { font: inherit; padding: .5rem; border: 1px solid var(--borde); border-radius: 4px; min-width: 190px; }
+
+/* ---------- Artículo ---------- */
+.articulo { max-width: 740px; margin: 2.5rem auto; }
+.articulo section { margin-top: 1.5rem; }
+.articulo h2 { font-size: 1.3rem; border-bottom: 1px solid var(--borde); padding-bottom: .3rem; }
+.postura { border-left: 3px solid var(--borde); padding: .25rem 0 .25rem 1rem; margin-bottom: 1rem; }
+.postura p { margin: .25rem 0 0; }
+.nota-editorial { background: var(--fondo-alt); border: 1px solid var(--borde); padding: 1rem; border-radius: 6px; margin: 2rem 0 1rem; font-size: .92rem; }
+
+/* ---------- Línea de tiempo ---------- */
+.timeline { list-style: none; padding: 0; border-left: 2px solid var(--borde); margin-left: .5rem; }
+.timeline-item { padding: 0 0 1.5rem 1.25rem; position: relative; }
+.timeline-item::before { content: ""; position: absolute; left: -7px; top: .45rem; width: 12px; height: 12px; border-radius: 50%; background: var(--azul); }
+
+.estado-cerrado { background: var(--fondo-alt); border: 1px solid var(--borde); padding: 1rem; border-radius: 6px; }
+
+/* ---------- Pie ---------- */
+#site-footer { background: var(--azul); color: #dfe6ef; padding: 2.5rem 0 1rem; font-size: .92rem; }
+#site-footer a { color: #fff; }
+#site-footer .muted { color: #b7c3d3; }
+.footer-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 2rem; }
+.footer-bottom { border-top: 1px solid rgba(255,255,255,.2); margin-top: 2rem; padding-top: 1rem; font-size: .82rem; }
+
+/* ---------- Celular ---------- */
+@media (max-width: 860px) {
+  .menu-toggle { display: block; }
+  #menu { display: none; position: absolute; top: 68px; left: 0; right: 0; background: #fff; border-bottom: 1px solid var(--borde); }
+  #menu.open { display: block; }
+  #menu ul { flex-direction: column; padding: .5rem 1rem 1rem; }
+  .hero h1 { font-size: 1.8rem; }
+  h1 { font-size: 1.7rem; }
+  .evento { grid-template-columns: 1fr; }
+  .evento-fecha { border-right: none; padding: 0; }
+}

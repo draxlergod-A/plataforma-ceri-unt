@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CERI | Círculo de Estudios de Relaciones Internacionales – UNT</title>
+  <meta name="description" content="Informes y análisis imparcial de la política nacional e internacional del CERI, Universidad Nacional de Trujillo.">
+  <!-- FAVICON: guarda el ícono en assets/img/favicon.png y quita los comentarios de la línea de abajo -->
+  <!-- <link rel="icon" href="assets/img/favicon.png"> -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="inicio">
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <header id="site-header"></header>
+
+  <main id="contenido">
+    <div id="aviso-convocatoria" class="aviso" hidden></div>
+
+    <section class="hero">
+      <div class="container">
+        <p class="meta">Círculo de Estudios de Relaciones Internacionales · UNT</p>
+        <h1>Entender la política actual con hechos, contexto y todas las posturas</h1>
+        <p class="lead">Publicamos informes y análisis sobre lo que pasa en el Perú, América Latina
+          y el mundo, de forma imparcial y con fuentes verificables.</p>
+        <div class="acciones">
+          <a class="btn" href="analisis.html">Leer análisis e informes</a>
+          <a class="btn btn-sec" href="nosotros.html#principios">Cómo trabajamos</a>
+        </div>
+      </div>
+    </section>
+
+    <div class="container">
+      <section>
+        <div class="section-head">
+          <h2>Últimas publicaciones</h2>
+          <a href="analisis.html">Ver todas →</a>
+        </div>
+        <div id="ultimas" class="grid"></div>
+      </section>
+
+      <section>
+        <h2>Nuestro método</h2>
+        <div class="pilares">
+          <div class="pilar"><h3>Hechos primero</h3><p>Separamos lo que está verificado de lo que es interpretación.</p></div>
+          <div class="pilar"><h3>Todas las posturas</h3><p>Presentamos los argumentos de cada actor de forma fiel, sin tomar partido.</p></div>
+          <div class="pilar"><h3>Fuentes a la vista</h3><p>Cada publicación enlaza a sus fuentes para que el lector verifique.</p></div>
+          <div class="pilar"><h3>Corregimos errores</h3><p>Si nos equivocamos, lo corregimos y lo indicamos con fecha.</p></div>
+        </div>
+      </section>
+
+      <section>
+        <div class="section-head">
+          <h2>Próximos eventos</h2>
+          <a href="eventos.html">Ver todos →</a>
+        </div>
+        <div id="proximos" class="lista-eventos"></div>
+      </section>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <!-- El orden importa: primero los datos, luego el diseño común, luego la lógica -->
+  <script src="js/data.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

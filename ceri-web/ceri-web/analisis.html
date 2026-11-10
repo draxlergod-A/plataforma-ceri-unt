@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Análisis e informes | CERI – UNT</title>
+  <meta name="description" content="Informes, análisis, notas de coyuntura y explicadores sobre política nacional e internacional.">
+  <!-- FAVICON: guarda el ícono en assets/img/favicon.png y quita los comentarios de la línea de abajo -->
+  <!-- <link rel="icon" href="assets/img/favicon.png"> -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="analisis">
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <header id="site-header"></header>
+
+  <main id="contenido">
+    <div class="container">
+      <div class="page-head">
+        <h1>Análisis e informes</h1>
+        <p class="lead">Contenido elaborado por los miembros del CERI. Cada publicación separa hechos,
+          posturas y escenarios, e incluye sus fuentes.</p>
+      </div>
+
+      <div class="filtros">
+        <label>Tipo
+          <select id="f-tipo"><option value="">Todos</option></select>
+        </label>
+        <label>Ámbito
+          <select id="f-ambito"><option value="">Todos</option></select>
+        </label>
+        <label>Buscar
+          <input id="f-buscar" type="search" placeholder="Tema, título o autor">
+        </label>
+      </div>
+
+      <div id="lista-publicaciones" class="grid"></div>
+
+      <section>
+        <h2>Tipos de contenido</h2>
+        <div class="pilares">
+          <div class="pilar"><h3>Informe</h3><p>Investigación extensa sobre un tema, con datos y fuentes.</p></div>
+          <div class="pilar"><h3>Análisis</h3><p>Explica causas, posturas y escenarios de un hecho político.</p></div>
+          <div class="pilar"><h3>Nota de coyuntura</h3><p>Resumen breve de lo que pasó esta semana y por qué importa.</p></div>
+          <div class="pilar"><h3>Explicador</h3><p>Aclara un concepto o proceso (ej. cómo funciona una vacancia).</p></div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <!-- El orden importa: primero los datos, luego el diseño común, luego la lógica -->
+  <script src="js/data.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

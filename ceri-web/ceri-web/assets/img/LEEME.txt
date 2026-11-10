@@ -1,0 +1,1 @@
+Coloca aquí: logo.png, favicon.png, equipo.jpg y la carpeta alianzas/ con sus logos.
