@@ -127,3 +127,72 @@ main { padding-bottom: 3rem; }
   .evento { grid-template-columns: 1fr; }
   .evento-fecha { border-right: none; padding: 0; }
 }
+
+/* =========================================================
+   AGREGADOS v2
+   ========================================================= */
+code { background: var(--fondo-alt); padding: .1rem .35rem; border-radius: 3px; font-size: .9em; }
+.centro { text-align: center; margin-top: 1.5rem; }
+.btn-link { background: none; border: none; color: var(--azul); text-decoration: underline; cursor: pointer; font: inherit; padding: .5rem 0; align-self: flex-end; }
+button.btn { border: none; cursor: pointer; font: inherit; font-weight: 600; }
+button.btn-sec { border: 1px solid var(--azul); }
+
+/* Destacada en inicio */
+.destacada { border: 1px solid var(--borde); border-left: 4px solid var(--azul); border-radius: 6px; padding: 1.5rem; margin-top: 2rem; }
+.destacada h2 { margin: .3rem 0 .5rem; }
+.destacada h2 a { text-decoration: none; }
+
+/* Imágenes */
+.card-img { width: calc(100% + 2.4rem); margin: -1.2rem -1.2rem .9rem; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 6px 6px 0 0; }
+.articulo-img { width: 100%; border-radius: 6px; margin: 1rem 0; }
+.evento { grid-template-columns: 110px 1fr auto; }
+.evento-img { width: 160px; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 4px; }
+.timeline-img { max-width: 360px; border-radius: 4px; margin-top: .5rem; }
+.alianza-logo { width: 64px; height: 64px; object-fit: contain; margin-bottom: .5rem; }
+
+/* Equipo */
+.grid-equipo { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+.miembro { text-align: center; }
+.miembro-foto { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; margin: 0 auto .75rem; }
+.sin-foto { background: var(--azul-claro); color: var(--azul); display: grid; place-items: center; font-family: var(--serif); font-size: 2rem; font-weight: 700; }
+
+/* Artículo */
+.articulo blockquote { border-left: 3px solid var(--azul); margin: 1rem 0; padding: .25rem 1rem; color: var(--gris); font-style: italic; }
+.articulo h3, .articulo h4 { margin-top: 1.25rem; }
+a.chip { text-decoration: none; color: var(--texto); }
+a.chip:hover { border-color: var(--azul); color: var(--azul); }
+.compartir { display: flex; flex-wrap: wrap; align-items: center; gap: .9rem; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid var(--borde); font-size: .93rem; }
+.compartir .btn-link { padding: 0; }
+
+/* Formularios */
+.contacto-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 2.5rem; }
+.contacto-grid h2 { font-size: 1.1rem; margin: 0 0 .3rem; }
+.contacto-grid p { margin-top: 0; margin-bottom: 1.5rem; }
+.form { display: grid; gap: 1rem; }
+.form label { display: grid; gap: .3rem; font-size: .9rem; color: var(--gris); }
+.form input, .form select, .form textarea { font: inherit; padding: .6rem; border: 1px solid var(--borde); border-radius: 4px; color: var(--texto); }
+.form input:focus, .form select:focus, .form textarea:focus, .filtros select:focus, .filtros input:focus { outline: 2px solid var(--azul); outline-offset: 1px; }
+.form .btn { justify-self: start; }
+.aviso-datos { margin-top: 2rem; max-width: 720px; }
+
+/* Error de carga */
+.error-carga { max-width: 640px; margin: 3rem auto; border: 1px solid var(--borde); border-left: 4px solid #b42318; padding: 1.5rem; border-radius: 6px; }
+.error-carga h1 { font-size: 1.5rem; }
+
+@media (max-width: 860px) {
+  .evento { grid-template-columns: 1fr; }
+  .evento-img { width: 100%; }
+  .contacto-grid { grid-template-columns: 1fr; }
+}
+
+/* Ajustes de menú (8 secciones) */
+.brand-text strong, .brand-text small { white-space: nowrap; }
+#menu ul { flex-wrap: nowrap; gap: 0; }
+#menu a { padding: .45rem .55rem; font-size: .9rem; white-space: nowrap; }
+#dato-reconocimiento { font-size: 1.05rem !important; max-width: 260px; }
+@media (max-width: 1080px) {
+  .menu-toggle { display: block; }
+  #menu { display: none; position: absolute; top: 68px; left: 0; right: 0; background: #fff; border-bottom: 1px solid var(--borde); }
+  #menu.open { display: block; }
+  #menu ul { flex-direction: column; padding: .5rem 1rem 1rem; }
+}

@@ -1,0 +1,257 @@
+# =========================================================
+# config.yml — CONFIGURACIÓN DEL PANEL (Decap CMS)
+# Define qué contenido puede editar el CERI desde el panel.
+# Cada "collection" es una sección del menú del panel.
+# =========================================================
+
+# Cuando se publique la web en internet, aquí se conecta con GitHub/Netlify.
+# Por ahora se usa el modo local (local_backend: true).
+backend:
+  name: git-gateway
+  branch: main
+
+# Modo local: el panel guarda directamente en los archivos de tu carpeta.
+# Requiere tener corriendo:  npm run cms   (o npm run dev)
+local_backend: true
+
+locale: es
+
+# Dónde se guardan las imágenes que suben desde el panel
+media_folder: assets/img/subidas
+public_folder: /assets/img/subidas
+
+collections:
+
+  # ---------------------------------------------------------
+  # PUBLICACIONES (análisis e informes)
+  # ---------------------------------------------------------
+  - name: publicaciones
+    label: Análisis e informes
+    files:
+      - name: lista
+        label: Todas las publicaciones
+        file: contenido/publicaciones.json
+        fields:
+          - name: items
+            label: Publicaciones
+            label_singular: publicación
+            widget: list
+            add_to_top: true
+            collapsed: true
+            summary: "{{fields.estado}} · {{fields.fecha}} · {{fields.titulo}}"
+            fields:
+              - { name: titulo, label: Título, widget: string }
+              - name: id
+                label: Identificador para la dirección web
+                widget: string
+                hint: "Único, en minúsculas y con guiones. Ej: elecciones-peru-2026"
+                pattern: ['^[a-z0-9]+(-[a-z0-9]+)*$', 'Solo minúsculas, números y guiones (sin tildes ni espacios)']
+              - { name: subtitulo, label: Subtítulo, widget: string, required: false }
+              - name: estado
+                label: Estado
+                widget: select
+                default: borrador
+                hint: "Solo las publicaciones en estado 'publicado' aparecen en la web."
+                options:
+                  - { label: "Borrador (lo está escribiendo el autor)", value: borrador }
+                  - { label: "En revisión (lo revisa otro miembro)", value: revision }
+                  - { label: "Publicado (visible en la web)", value: publicado }
+              - name: tipo
+                label: Tipo
+                widget: select
+                options: ["Informe", "Análisis", "Nota de coyuntura", "Explicador"]
+              - name: ambito
+                label: Ámbito
+                widget: select
+                options: ["Nacional", "América Latina", "Internacional"]
+              - name: temas
+                label: Temas
+                widget: list
+                required: false
+                hint: "Ej: Elecciones, Congreso, Brasil"
+                field: { name: tema, label: Tema, widget: string }
+              - { name: autor, label: Autor/a, widget: string }
+              - { name: revisadoPor, label: Revisado por, widget: string, required: false, hint: "Quién revisó la imparcialidad y las fuentes" }
+              - { name: fecha, label: Fecha de publicación, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+              - { name: actualizado, label: Última actualización, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false, required: false }
+              - { name: destacado, label: "¿Destacar en el inicio?", widget: boolean, default: false, required: false }
+              - { name: imagen, label: Imagen principal, widget: image, required: false, hint: "Solo imágenes propias o con permiso" }
+              - { name: resumen, label: Resumen, widget: text, hint: "2 o 3 líneas con los hechos principales, sin adjetivos ni valoraciones" }
+              - name: hechos
+                label: Hechos verificados
+                widget: list
+                required: false
+                hint: "Un hecho por elemento. Cada hecho debe tener su fuente abajo."
+                field: { name: hecho, label: Hecho, widget: text }
+              - name: posturas
+                label: Posturas de los actores
+                widget: list
+                required: false
+                hint: "Incluir todas las posturas relevantes, con el mismo espacio y tono."
+                summary: "{{fields.actor}}"
+                fields:
+                  - { name: actor, label: Actor o sector, widget: string }
+                  - { name: postura, label: Qué plantea, widget: text }
+              - name: desarrollo
+                label: Análisis (texto libre)
+                widget: markdown
+                required: false
+                modes: [rich_text, raw]
+                buttons: [bold, italic, link, heading-two, heading-three, quote, bulleted-list, numbered-list]
+                editor_components: []
+              - name: escenarios
+                label: Escenarios posibles
+                widget: list
+                required: false
+                field: { name: escenario, label: Escenario, widget: text }
+              - name: fuentes
+                label: Fuentes
+                widget: list
+                required: false
+                summary: "{{fields.nombre}}"
+                fields:
+                  - { name: nombre, label: Nombre de la fuente, widget: string }
+                  - { name: url, label: Enlace, widget: string, required: false }
+              - name: correcciones
+                label: Correcciones
+                widget: list
+                required: false
+                hint: "Si se corrige un error después de publicar, registrarlo aquí."
+                summary: "{{fields.fecha}} · {{fields.detalle}}"
+                fields:
+                  - { name: fecha, label: Fecha, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+                  - { name: detalle, label: Qué se corrigió, widget: text }
+
+  # ---------------------------------------------------------
+  # EVENTOS
+  # ---------------------------------------------------------
+  - name: eventos
+    label: Eventos
+    files:
+      - name: lista
+        label: Todos los eventos
+        file: contenido/eventos.json
+        fields:
+          - name: items
+            label: Eventos
+            label_singular: evento
+            widget: list
+            add_to_top: true
+            collapsed: true
+            summary: "{{fields.fecha}} · {{fields.titulo}}"
+            fields:
+              - { name: titulo, label: Título, widget: string }
+              - name: tipo
+                label: Tipo
+                widget: select
+                options: ["Conversatorio", "Conferencia", "Foro", "Taller", "Debate", "Actividad"]
+              - { name: fecha, label: Fecha, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+              - { name: hora, label: "Hora (ej. 15:30)", widget: string, required: false }
+              - { name: modalidad, label: Modalidad, widget: select, options: ["Presencial", "Virtual", "Híbrido"] }
+              - { name: lugar, label: Lugar o plataforma, widget: string }
+              - { name: descripcion, label: Descripción, widget: text }
+              - { name: enlace, label: "Enlace (inscripción, Meet, grabación)", widget: string, required: false }
+              - { name: imagen, label: Imagen o afiche, widget: image, required: false }
+
+  # ---------------------------------------------------------
+  # PARTICIPACIÓN
+  # ---------------------------------------------------------
+  - name: participacion
+    label: Participación
+    files:
+      - name: lista
+        label: Actividades de participación
+        file: contenido/participacion.json
+        fields:
+          - name: items
+            label: Actividades
+            label_singular: actividad
+            widget: list
+            add_to_top: true
+            collapsed: true
+            summary: "{{fields.fecha}} · {{fields.titulo}}"
+            fields:
+              - { name: titulo, label: Título, widget: string }
+              - { name: fecha, label: Fecha, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+              - { name: descripcion, label: Descripción, widget: text }
+              - { name: imagen, label: Imagen, widget: image, required: false }
+
+  # ---------------------------------------------------------
+  # ALIANZAS
+  # ---------------------------------------------------------
+  - name: alianzas
+    label: Alianzas
+    files:
+      - name: lista
+        label: Organizaciones aliadas
+        file: contenido/alianzas.json
+        fields:
+          - name: items
+            label: Organizaciones
+            label_singular: organización
+            widget: list
+            collapsed: true
+            summary: "{{fields.nombre}}"
+            fields:
+              - { name: nombre, label: Nombre, widget: string }
+              - { name: area, label: Área, widget: string }
+              - { name: instagram, label: "Usuario de Instagram (sin @)", widget: string, required: false }
+              - { name: logo, label: Logo, widget: image, required: false }
+              - { name: confirmada, label: "¿Alianza formal confirmada?", widget: boolean, default: false, required: false }
+
+  # ---------------------------------------------------------
+  # EQUIPO
+  # ---------------------------------------------------------
+  - name: equipo
+    label: Equipo / Directiva
+    files:
+      - name: lista
+        label: Miembros del equipo
+        file: contenido/equipo.json
+        fields:
+          - name: items
+            label: Miembros
+            label_singular: miembro
+            widget: list
+            summary: "{{fields.cargo}} · {{fields.nombre}}"
+            fields:
+              - { name: nombre, label: Nombre, widget: string }
+              - { name: cargo, label: Cargo, widget: string }
+              - { name: carrera, label: Carrera, widget: string, required: false }
+              - { name: foto, label: Foto, widget: image, required: false, hint: "Solo con permiso de la persona" }
+
+  # ---------------------------------------------------------
+  # CONFIGURACIÓN GENERAL Y CONVOCATORIA
+  # ---------------------------------------------------------
+  - name: configuracion
+    label: Configuración
+    files:
+      - name: convocatoria
+        label: Convocatoria
+        file: contenido/convocatoria.json
+        fields:
+          - { name: periodo, label: "Periodo (ej. 2027-I)", widget: string }
+          - { name: abierta, label: "¿Convocatoria abierta?", widget: boolean, default: false }
+          - { name: inicio, label: Fecha de inicio, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+          - { name: cierre, label: Fecha de cierre, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+          - { name: formulario, label: Enlace del formulario (Google Forms), widget: string, required: false }
+          - { name: requisitos, label: Requisitos, widget: list, field: { name: requisito, label: Requisito, widget: string } }
+          - { name: proceso, label: Pasos del proceso, widget: list, required: false, field: { name: paso, label: Paso, widget: string } }
+
+      - name: sitio
+        label: Configuración del sitio
+        file: contenido/sitio.json
+        fields:
+          - { name: nombre, label: Nombre corto, widget: string }
+          - { name: nombreCompleto, label: Nombre completo, widget: string }
+          - { name: universidad, label: Universidad, widget: string }
+          - { name: facultad, label: Facultad, widget: string }
+          - { name: lema, label: Título principal del inicio, widget: string }
+          - { name: descripcion, label: Descripción (página Nosotros), widget: text }
+          - { name: fundacion, label: Fecha de fundación, widget: datetime, format: "YYYY-MM-DD", date_format: "DD/MM/YYYY", time_format: false }
+          - { name: reconocimiento, label: Reconocimiento oficial, widget: string, required: false }
+          - { name: logo, label: Logo, widget: image, required: false }
+          - { name: correo, label: Correo, widget: string }
+          - { name: instagram, label: Enlace de Instagram, widget: string, required: false }
+          - { name: facebook, label: Enlace de Facebook, widget: string, required: false }
+          - { name: whatsapp, label: "WhatsApp (con código de país, ej. 51987654321)", widget: string, required: false }

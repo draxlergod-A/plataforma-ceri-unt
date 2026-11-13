@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Nosotros | CERI – UNT</title>
   <meta name="description" content="Quiénes somos, qué hacemos y nuestros principios editoriales.">
+  <!-- Vista previa al compartir el link (WhatsApp, Facebook). TODO: poner la imagen al publicar -->
+  <meta property="og:title" content="Nosotros | CERI – UNT">
+  <meta property="og:description" content="Quiénes somos, qué hacemos y nuestros principios editoriales.">
+  <meta property="og:type" content="website">
+  <!-- <meta property="og:image" content="https://TU-DOMINIO/assets/img/compartir.jpg"> -->
   <!-- FAVICON: guarda el ícono en assets/img/favicon.png y quita los comentarios de la línea de abajo -->
   <!-- <link rel="icon" href="assets/img/favicon.png"> -->
   <link rel="stylesheet" href="css/styles.css">
@@ -17,19 +22,17 @@
     <div class="container">
       <div class="page-head">
         <h1>Nosotros</h1>
-        <p class="lead">El Círculo de Estudios de Relaciones Internacionales (CERI) es un círculo de estudios de la
-          Escuela de Ciencia Política de la Universidad Nacional de Trujillo, enfocado en la investigación y
-          difusión de las Relaciones Internacionales.</p>
+        <!-- La descripción se edita en el panel: Configuración del sitio → Descripción -->
+        <p class="lead" id="descripcion"></p>
       </div>
 
       <div class="datos">
         <div><strong id="dato-fundacion"></strong>Fundación</div>
         <div><strong id="dato-anios"></strong>Años de trayectoria</div>
+        <div><strong id="dato-publicaciones"></strong>Publicaciones</div>
+        <div><strong id="dato-eventos"></strong>Eventos</div>
         <div><strong id="dato-reconocimiento"></strong>Reconocimiento oficial</div>
       </div>
-
-      <!-- FOTO DEL EQUIPO: guarda la imagen en assets/img/equipo.jpg y quita los comentarios -->
-      <!-- <img src="assets/img/equipo.jpg" alt="Miembros del CERI"> -->
 
       <h2>Qué ofrecemos</h2>
       <ul>
@@ -48,22 +51,20 @@
         <div class="pilar"><h3>Verificación</h3><p>Todo dato lleva su fuente. Preferimos fuentes oficiales y primarias.</p></div>
         <div class="pilar"><h3>Hecho vs. opinión</h3><p>Distinguimos claramente lo verificado de las interpretaciones.</p></div>
         <div class="pilar"><h3>Revisión</h3><p>Cada publicación es revisada por al menos otro miembro antes de salir.</p></div>
-        <div class="pilar"><h3>Corrección</h3><p>Los errores se corrigen de forma visible, con la fecha de actualización.</p></div>
+        <div class="pilar"><h3>Corrección</h3><p>Los errores se corrigen de forma visible, con la fecha de la corrección.</p></div>
       </div>
 
       <h2>Equipo</h2>
-      <!-- TODO: agregar directiva (nombre, cargo y foto). Ejemplo:
-      <div class="grid">
-        <article class="card"><h3>Nombre Apellido</h3><p class="muted">Presidente/a</p></article>
-      </div> -->
-      <p class="vacio">Directiva por publicar.</p>
+      <!-- Los miembros se editan en el panel: Equipo / Directiva -->
+      <div id="lista-equipo" class="grid grid-equipo"></div>
     </div>
   </main>
 
   <footer id="site-footer"></footer>
 
-  <!-- El orden importa: primero los datos, luego el diseño común, luego la lógica -->
-  <script src="js/data.js"></script>
+  <!-- El orden importa: ayudas -> carga de datos -> menú/pie -> lógica de la página -->
+  <script src="js/utils.js"></script>
+  <script src="js/datos.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/main.js"></script>
 </body>

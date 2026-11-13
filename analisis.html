@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Análisis e informes | CERI – UNT</title>
   <meta name="description" content="Informes, análisis, notas de coyuntura y explicadores sobre política nacional e internacional.">
+  <!-- Vista previa al compartir el link (WhatsApp, Facebook). TODO: poner la imagen al publicar -->
+  <meta property="og:title" content="Análisis e informes | CERI – UNT">
+  <meta property="og:description" content="Informes, análisis, notas de coyuntura y explicadores sobre política nacional e internacional.">
+  <meta property="og:type" content="website">
+  <!-- <meta property="og:image" content="https://TU-DOMINIO/assets/img/compartir.jpg"> -->
   <!-- FAVICON: guarda el ícono en assets/img/favicon.png y quita los comentarios de la línea de abajo -->
   <!-- <link rel="icon" href="assets/img/favicon.png"> -->
   <link rel="stylesheet" href="css/styles.css">
@@ -22,25 +27,23 @@
       </div>
 
       <div class="filtros">
-        <label>Tipo
-          <select id="f-tipo"><option value="">Todos</option></select>
-        </label>
-        <label>Ámbito
-          <select id="f-ambito"><option value="">Todos</option></select>
-        </label>
-        <label>Buscar
-          <input id="f-buscar" type="search" placeholder="Tema, título o autor">
-        </label>
+        <label>Tipo <select id="f-tipo"><option value="">Todos</option></select></label>
+        <label>Ámbito <select id="f-ambito"><option value="">Todos</option></select></label>
+        <label>Tema <select id="f-tema"><option value="">Todos</option></select></label>
+        <label>Buscar <input id="f-buscar" type="search" placeholder="Tema, título o autor"></label>
+        <button id="limpiar" type="button" class="btn-link">Limpiar filtros</button>
       </div>
+      <p id="contador" class="muted"></p>
 
       <div id="lista-publicaciones" class="grid"></div>
+      <p class="centro"><button id="cargar-mas" type="button" class="btn btn-sec" hidden>Cargar más</button></p>
 
       <section>
         <h2>Tipos de contenido</h2>
         <div class="pilares">
           <div class="pilar"><h3>Informe</h3><p>Investigación extensa sobre un tema, con datos y fuentes.</p></div>
           <div class="pilar"><h3>Análisis</h3><p>Explica causas, posturas y escenarios de un hecho político.</p></div>
-          <div class="pilar"><h3>Nota de coyuntura</h3><p>Resumen breve de lo que pasó esta semana y por qué importa.</p></div>
+          <div class="pilar"><h3>Nota de coyuntura</h3><p>Resumen breve de lo que pasó y por qué importa.</p></div>
           <div class="pilar"><h3>Explicador</h3><p>Aclara un concepto o proceso (ej. cómo funciona una vacancia).</p></div>
         </div>
       </section>
@@ -49,8 +52,9 @@
 
   <footer id="site-footer"></footer>
 
-  <!-- El orden importa: primero los datos, luego el diseño común, luego la lógica -->
-  <script src="js/data.js"></script>
+  <!-- El orden importa: ayudas -> carga de datos -> menú/pie -> lógica de la página -->
+  <script src="js/utils.js"></script>
+  <script src="js/datos.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/main.js"></script>
 </body>

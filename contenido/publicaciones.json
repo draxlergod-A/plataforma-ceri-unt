@@ -1,0 +1,74 @@
+{
+  "items": [
+    {
+      "id": "brasil-futuro-politico-america-latina",
+      "titulo": "Brasil y el futuro político de América Latina",
+      "subtitulo": "Escenarios e implicancias de un eventual gobierno de Flávio Bolsonaro",
+      "tipo": "Análisis",
+      "ambito": "América Latina",
+      "temas": [
+        "Elecciones",
+        "Brasil",
+        "Integración regional"
+      ],
+      "autor": "Equipo CERI",
+      "revisadoPor": "",
+      "fecha": "2026-10-13",
+      "actualizado": "2026-10-13",
+      "estado": "publicado",
+      "destacado": true,
+      "imagen": "",
+      "resumen": "PENDIENTE: resumen de 2 o 3 líneas con los hechos principales, sin adjetivos ni valoraciones.",
+      "hechos": [
+        "PENDIENTE: hecho verificable 1 (con su fuente abajo).",
+        "PENDIENTE: hecho verificable 2."
+      ],
+      "posturas": [
+        {
+          "actor": "PENDIENTE: actor o sector A",
+          "postura": "Qué plantea, descrito de forma fiel."
+        },
+        {
+          "actor": "PENDIENTE: actor o sector B",
+          "postura": "Qué plantea la posición contraria, con el mismo espacio."
+        }
+      ],
+      "desarrollo": "PENDIENTE: texto del análisis.\n\nSe puede usar **negrita**, *cursiva*, listas con guion y enlaces [así](https://ejemplo.com).",
+      "escenarios": [
+        "PENDIENTE: escenario posible 1 y de qué depende.",
+        "PENDIENTE: escenario posible 2."
+      ],
+      "fuentes": [
+        {
+          "nombre": "PENDIENTE: nombre de la fuente",
+          "url": ""
+        }
+      ],
+      "correcciones": []
+    },
+    {
+      "id": "borrador-de-ejemplo",
+      "titulo": "[BORRADOR] Ejemplo de publicación en revisión",
+      "subtitulo": "Este texto no aparece en la web porque su estado es 'borrador'",
+      "tipo": "Nota de coyuntura",
+      "ambito": "Nacional",
+      "temas": [
+        "Ejemplo"
+      ],
+      "autor": "Nombre del autor",
+      "revisadoPor": "",
+      "fecha": "2026-11-10",
+      "actualizado": "",
+      "estado": "borrador",
+      "destacado": false,
+      "imagen": "",
+      "resumen": "Ejemplo.",
+      "hechos": [],
+      "posturas": [],
+      "desarrollo": "",
+      "escenarios": [],
+      "fuentes": [],
+      "correcciones": []
+    }
+  ]
+}

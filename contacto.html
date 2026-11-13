@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contacto | CERI – UNT</title>
+  <meta name="description" content="Escríbenos: consultas, alianzas, correcciones y propuestas.">
+  <!-- Vista previa al compartir el link (WhatsApp, Facebook). TODO: poner la imagen al publicar -->
+  <meta property="og:title" content="Contacto | CERI – UNT">
+  <meta property="og:description" content="Escríbenos: consultas, alianzas, correcciones y propuestas.">
+  <meta property="og:type" content="website">
+  <!-- <meta property="og:image" content="https://TU-DOMINIO/assets/img/compartir.jpg"> -->
+  <!-- FAVICON: guarda el ícono en assets/img/favicon.png y quita los comentarios de la línea de abajo -->
+  <!-- <link rel="icon" href="assets/img/favicon.png"> -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body data-page="contacto">
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <header id="site-header"></header>
+
+  <main id="contenido">
+    <div class="container">
+      <div class="page-head">
+        <h1>Contacto</h1>
+        <p class="lead">Consultas, propuestas de alianza o correcciones a nuestras publicaciones.</p>
+      </div>
+      <div class="contacto-grid">
+        <form id="form-contacto" class="form" novalidate>
+          <label>Nombre <input name="nombre" required maxlength="80"></label>
+          <label>Correo <input name="correo" type="email" required maxlength="120"></label>
+          <label>Motivo
+            <select name="motivo">
+              <option>Consulta</option>
+              <option>Propuesta de alianza o evento</option>
+              <option>Corrección de una publicación</option>
+              <option>Otro</option>
+            </select>
+          </label>
+          <label>Mensaje <textarea name="mensaje" rows="6" required maxlength="2000"></textarea></label>
+          <button class="btn" type="submit">Enviar</button>
+          <p class="muted">Al enviar se abrirá tu aplicación de correo con el mensaje listo.</p>
+        </form>
+        <div>
+          <h2>Correo</h2>
+          <p id="contacto-correo"></p>
+          <h2>Redes</h2>
+          <p id="contacto-redes"></p>
+          <h2>Dirección</h2>
+          <p>Facultad de Derecho y Ciencias Políticas<br>Universidad Nacional de Trujillo</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="site-footer"></footer>
+
+  <!-- El orden importa: ayudas -> carga de datos -> menú/pie -> lógica de la página -->
+  <script src="js/utils.js"></script>
+  <script src="js/datos.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>CERI | Círculo de Estudios de Relaciones Internacionales – UNT</title>
   <meta name="description" content="Informes y análisis imparcial de la política nacional e internacional del CERI, Universidad Nacional de Trujillo.">
+  <!-- Vista previa al compartir el link (WhatsApp, Facebook). TODO: poner la imagen al publicar -->
+  <meta property="og:title" content="CERI | Círculo de Estudios de Relaciones Internacionales – UNT">
+  <meta property="og:description" content="Informes y análisis imparcial de la política nacional e internacional del CERI, Universidad Nacional de Trujillo.">
+  <meta property="og:type" content="website">
+  <!-- <meta property="og:image" content="https://TU-DOMINIO/assets/img/compartir.jpg"> -->
   <!-- FAVICON: guarda el ícono en assets/img/favicon.png y quita los comentarios de la línea de abajo -->
   <!-- <link rel="icon" href="assets/img/favicon.png"> -->
   <link rel="stylesheet" href="css/styles.css">
@@ -19,7 +24,8 @@
     <section class="hero">
       <div class="container">
         <p class="meta">Círculo de Estudios de Relaciones Internacionales · UNT</p>
-        <h1>Entender la política actual con hechos, contexto y todas las posturas</h1>
+        <!-- El título se edita en el panel: Configuración del sitio → Lema -->
+        <h1 id="hero-titulo"></h1>
         <p class="lead">Publicamos informes y análisis sobre lo que pasa en el Perú, América Latina
           y el mundo, de forma imparcial y con fuentes verificables.</p>
         <div class="acciones">
@@ -30,6 +36,9 @@
     </section>
 
     <div class="container">
+      <!-- Publicación marcada como "Destacada" en el panel -->
+      <section id="destacada" class="destacada"></section>
+
       <section>
         <div class="section-head">
           <h2>Últimas publicaciones</h2>
@@ -60,8 +69,9 @@
 
   <footer id="site-footer"></footer>
 
-  <!-- El orden importa: primero los datos, luego el diseño común, luego la lógica -->
-  <script src="js/data.js"></script>
+  <!-- El orden importa: ayudas -> carga de datos -> menú/pie -> lógica de la página -->
+  <script src="js/utils.js"></script>
+  <script src="js/datos.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/main.js"></script>
 </body>

@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Alianzas | CERI – UNT</title>
   <meta name="description" content="Organizaciones con las que articula el CERI.">
+  <!-- Vista previa al compartir el link (WhatsApp, Facebook). TODO: poner la imagen al publicar -->
+  <meta property="og:title" content="Alianzas | CERI – UNT">
+  <meta property="og:description" content="Organizaciones con las que articula el CERI.">
+  <meta property="og:type" content="website">
+  <!-- <meta property="og:image" content="https://TU-DOMINIO/assets/img/compartir.jpg"> -->
   <!-- FAVICON: guarda el ícono en assets/img/favicon.png y quita los comentarios de la línea de abajo -->
   <!-- <link rel="icon" href="assets/img/favicon.png"> -->
   <link rel="stylesheet" href="css/styles.css">
@@ -22,16 +27,17 @@
       <div id="lista-alianzas" class="grid"></div>
       <section>
         <h2>¿Quieres trabajar con nosotros?</h2>
-        <p>Si eres parte de una organización y quieres organizar una actividad conjunta, escríbenos por
-          <a href="https://www.instagram.com/ceri_unt/" target="_blank" rel="noopener">Instagram</a>.</p>
+        <p>Si eres parte de una organización y quieres organizar una actividad conjunta,
+          <a href="contacto.html">escríbenos</a>.</p>
       </section>
     </div>
   </main>
 
   <footer id="site-footer"></footer>
 
-  <!-- El orden importa: primero los datos, luego el diseño común, luego la lógica -->
-  <script src="js/data.js"></script>
+  <!-- El orden importa: ayudas -> carga de datos -> menú/pie -> lógica de la página -->
+  <script src="js/utils.js"></script>
+  <script src="js/datos.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/main.js"></script>
 </body>

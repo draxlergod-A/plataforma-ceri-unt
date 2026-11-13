@@ -1,0 +1,67 @@
+{
+  "items": [
+    {
+      "nombre": "CECIP – Centro de Estudiantes de Ciencia Política",
+      "area": "Ciencia política",
+      "instagram": "cecip.unt",
+      "logo": "",
+      "confirmada": false
+    },
+    {
+      "nombre": "Leviatán",
+      "area": "Ciencias sociales",
+      "instagram": "leviatan.sociales",
+      "logo": "",
+      "confirmada": false
+    },
+    {
+      "nombre": "CIDEPAC",
+      "area": "Democracia, partidos y cultura política",
+      "instagram": "cidepac.unt",
+      "logo": "",
+      "confirmada": false
+    },
+    {
+      "nombre": "CECOMPOL",
+      "area": "Comunicación política",
+      "instagram": "cecompol",
+      "logo": "",
+      "confirmada": false
+    },
+    {
+      "nombre": "AIESEC en Trujillo",
+      "area": "Juventud y liderazgo",
+      "instagram": "sharkietru",
+      "logo": "",
+      "confirmada": false
+    },
+    {
+      "nombre": "Rotaract Club Trujillo",
+      "area": "Voluntariado",
+      "instagram": "rotaract_clubtrujillo",
+      "logo": "",
+      "confirmada": false
+    },
+    {
+      "nombre": "UNEC Trujillo",
+      "area": "Participación ciudadana",
+      "instagram": "unec.trujillo",
+      "logo": "",
+      "confirmada": false
+    },
+    {
+      "nombre": "Uni2 Voluntariado",
+      "area": "Voluntariado",
+      "instagram": "uni2_voluntariado",
+      "logo": "",
+      "confirmada": false
+    },
+    {
+      "nombre": "Plataforma Regional de Juventudes – La Libertad",
+      "area": "Articulación juvenil",
+      "instagram": "",
+      "logo": "",
+      "confirmada": false
+    }
+  ]
+}

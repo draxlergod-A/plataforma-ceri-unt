@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Convocatoria | CERI – UNT</title>
   <meta name="description" content="Únete al CERI: requisitos y fechas de convocatoria.">
+  <!-- Vista previa al compartir el link (WhatsApp, Facebook). TODO: poner la imagen al publicar -->
+  <meta property="og:title" content="Convocatoria | CERI – UNT">
+  <meta property="og:description" content="Únete al CERI: requisitos y fechas de convocatoria.">
+  <meta property="og:type" content="website">
+  <!-- <meta property="og:image" content="https://TU-DOMINIO/assets/img/compartir.jpg"> -->
   <!-- FAVICON: guarda el ícono en assets/img/favicon.png y quita los comentarios de la línea de abajo -->
   <!-- <link rel="icon" href="assets/img/favicon.png"> -->
   <link rel="stylesheet" href="css/styles.css">
@@ -21,15 +26,21 @@
       </div>
       <h2>Requisitos</h2>
       <ul id="conv-requisitos"></ul>
+      <h2>Proceso</h2>
+      <ol id="conv-proceso"></ol>
       <h2>¿Cómo postular?</h2>
       <div id="conv-estado"></div>
+      <p class="muted aviso-datos">Los datos que envíes en el formulario solo serán usados por la directiva del CERI
+        para el proceso de convocatoria y no serán compartidos con terceros, conforme a la Ley N.° 29733,
+        Ley de Protección de Datos Personales.</p>
     </div>
   </main>
 
   <footer id="site-footer"></footer>
 
-  <!-- El orden importa: primero los datos, luego el diseño común, luego la lógica -->
-  <script src="js/data.js"></script>
+  <!-- El orden importa: ayudas -> carga de datos -> menú/pie -> lógica de la página -->
+  <script src="js/utils.js"></script>
+  <script src="js/datos.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/main.js"></script>
 </body>

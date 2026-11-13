@@ -1,36 +1,43 @@
 /* =========================================================
    layout.js — ENCABEZADO Y PIE DE PÁGINA
    Se escriben una sola vez aquí y aparecen en todas las páginas.
+   Para agregar una página al menú, añádela a la lista MENU.
    ========================================================= */
 
 const MENU = [
   { href: "index.html", texto: "Inicio", id: "inicio" },
-  { href: "analisis.html", texto: "Análisis e informes", id: "analisis" },
+  { href: "analisis.html", texto: "Análisis", id: "analisis" },
   { href: "eventos.html", texto: "Eventos", id: "eventos" },
   { href: "participacion.html", texto: "Participación", id: "participacion" },
   { href: "alianzas.html", texto: "Alianzas", id: "alianzas" },
   { href: "nosotros.html", texto: "Nosotros", id: "nosotros" },
-  { href: "convocatoria.html", texto: "Convocatoria", id: "convocatoria" }
+  { href: "convocatoria.html", texto: "Convocatoria", id: "convocatoria" },
+  { href: "contacto.html", texto: "Contacto", id: "contacto" }
 ];
 
-function renderHeader() {
+function renderHeader(sitio) {
   const actual = document.body.dataset.page;
   const links = MENU.map(m =>
     `<li><a href="${m.href}" ${m.id === actual ? 'aria-current="page"' : ""}>${m.texto}</a></li>`
   ).join("");
 
+  /* ============ LOGO ============
+     Opción 1 (panel): Panel → Configuración del sitio → Logo.
+     Opción 2 (manual): guarda el archivo en assets/img/logo.png y en
+     contenido/sitio.json escribe:  "logo": "assets/img/logo.png"
+     Si no hay logo, se muestra el círculo azul con el texto CERI.
+     ================================ */
+  const logo = sitio.logo
+    ? `<img src="${esc(rutaImagen(sitio.logo))}" alt="Logo ${esc(sitio.nombre)}" class="brand-logo">`
+    : `<span class="brand-mark" aria-hidden="true">${esc(sitio.nombre || "CERI")}</span>`;
+
   document.getElementById("site-header").innerHTML = `
     <div class="container header-inner">
       <a class="brand" href="index.html">
-        <!-- ============ LOGO ============
-             Guarda el logo en: assets/img/logo.png
-             y reemplaza el <span class="brand-mark"> de abajo por:
-             <img src="assets/img/logo.png" alt="Logo CERI" class="brand-logo">
-             ================================ -->
-        <span class="brand-mark" aria-hidden="true">CERI</span>
+        ${logo}
         <span class="brand-text">
-          <strong>${SITIO.nombre}</strong>
-          <small>${SITIO.universidad}</small>
+          <strong>${esc(sitio.nombre)}</strong>
+          <small>${esc(sitio.universidad)}</small>
         </span>
       </a>
       <button class="menu-toggle" aria-expanded="false" aria-controls="menu">Menú</button>
@@ -45,20 +52,24 @@ function renderHeader() {
   });
 }
 
-function renderFooter() {
+function renderFooter(sitio) {
   const anio = new Date().getFullYear();
+  const redes = [
+    sitio.instagram && `<a href="${esc(urlSegura(sitio.instagram))}" target="_blank" rel="noopener">Instagram</a>`,
+    sitio.facebook && `<a href="${esc(urlSegura(sitio.facebook))}" target="_blank" rel="noopener">Facebook</a>`
+  ].filter(Boolean).join(" · ");
+
   document.getElementById("site-footer").innerHTML = `
     <div class="container footer-grid">
       <div>
-        <strong>${SITIO.nombreCompleto}</strong>
-        <p>${SITIO.facultad}<br>${SITIO.universidad}</p>
-        <p class="muted">Reconocido mediante ${SITIO.reconocimiento}.</p>
+        <strong>${esc(sitio.nombreCompleto)}</strong>
+        <p>${esc(sitio.facultad)}<br>${esc(sitio.universidad)}</p>
+        ${sitio.reconocimiento ? `<p class="muted">Reconocido mediante ${esc(sitio.reconocimiento)}.</p>` : ""}
       </div>
       <div>
         <strong>Contacto</strong>
-        <p><a href="mailto:${SITIO.correo}">${SITIO.correo}</a></p>
-        <p><a href="${SITIO.instagram}" target="_blank" rel="noopener">Instagram</a> ·
-           <a href="${SITIO.facebook}" target="_blank" rel="noopener">Facebook</a></p>
+        ${sitio.correo ? `<p><a href="mailto:${esc(sitio.correo)}">${esc(sitio.correo)}</a></p>` : ""}
+        <p>${redes}</p>
       </div>
       <div>
         <strong>Compromiso editorial</strong>
@@ -66,10 +77,5 @@ function renderFooter() {
            <a href="nosotros.html#principios">Ver nuestros principios</a>.</p>
       </div>
     </div>
-    <div class="container footer-bottom">© ${anio} ${SITIO.nombre} – ${SITIO.universidad}</div>`;
+    <div class="container footer-bottom">© ${anio} ${esc(sitio.nombre)} – ${esc(sitio.universidad)}</div>`;
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-  renderHeader();
-  renderFooter();
-});

@@ -1,0 +1,12 @@
+{
+  "name": "ceri-web",
+  "version": "2.0.0",
+  "description": "Web del Círculo de Estudios de Relaciones Internacionales (CERI) – Universidad Nacional de Trujillo",
+  "private": true,
+  "scripts": {
+    "sitio": "npx --yes http-server . -p 5500 -c-1",
+    "cms": "npx --yes decap-server",
+    "dev": "npx --yes concurrently -n sitio,panel -c blue,green \"npm:sitio\" \"npm:cms\"",
+    "validar": "node herramientas/validar.js"
+  }
+}

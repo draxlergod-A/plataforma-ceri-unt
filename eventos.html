@@ -5,6 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Eventos | CERI – UNT</title>
   <meta name="description" content="Conversatorios, conferencias y actividades del CERI.">
+  <!-- Vista previa al compartir el link (WhatsApp, Facebook). TODO: poner la imagen al publicar -->
+  <meta property="og:title" content="Eventos | CERI – UNT">
+  <meta property="og:description" content="Conversatorios, conferencias y actividades del CERI.">
+  <meta property="og:type" content="website">
+  <!-- <meta property="og:image" content="https://TU-DOMINIO/assets/img/compartir.jpg"> -->
   <!-- FAVICON: guarda el ícono en assets/img/favicon.png y quita los comentarios de la línea de abajo -->
   <!-- <link rel="icon" href="assets/img/favicon.png"> -->
   <link rel="stylesheet" href="css/styles.css">
@@ -17,7 +22,8 @@
     <div class="container">
       <div class="page-head">
         <h1>Eventos</h1>
-        <p class="lead">Conversatorios, conferencias, foros y actividades organizadas por el CERI.</p>
+        <p class="lead">Conversatorios, conferencias, foros y actividades organizadas por el CERI.
+          Los eventos pasan solos de "Próximos" a "Realizados" según su fecha.</p>
       </div>
       <h2>Próximos</h2>
       <div id="eventos-proximos" class="lista-eventos"></div>
@@ -28,8 +34,9 @@
 
   <footer id="site-footer"></footer>
 
-  <!-- El orden importa: primero los datos, luego el diseño común, luego la lógica -->
-  <script src="js/data.js"></script>
+  <!-- El orden importa: ayudas -> carga de datos -> menú/pie -> lógica de la página -->
+  <script src="js/utils.js"></script>
+  <script src="js/datos.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/main.js"></script>
 </body>
