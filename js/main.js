@@ -7,7 +7,13 @@
 const POR_PAGINA = 9; // publicaciones que se muestran antes de "Cargar más"
 
 /* ---------- Tarjetas reutilizables ---------- */
+// Almacena publicaciones para el visor editorial
+window._ceriPublicaciones = window._ceriPublicaciones || {};
+
 function tarjetaPublicacion(p) {
+  // Registrar la publicación para el visor
+  window._ceriPublicaciones[p.id] = p;
+
   const img = p.imagen
     ? `<img class="card-img" src="${esc(rutaImagen(p.imagen))}" alt="" loading="lazy">` : "";
   return `
@@ -17,6 +23,10 @@ function tarjetaPublicacion(p) {
       <h3><a href="articulo.html?id=${encodeURIComponent(p.id)}">${esc(p.titulo)}</a></h3>
       <p>${esc(p.subtitulo)}</p>
       <p class="muted">Por ${esc(p.autor)} · ${minutosLectura(p)} min de lectura</p>
+      <button class="btn-periodico" onclick="abrirVisorEditorial(window._ceriPublicaciones['${p.id}'])" type="button"
+              title="Ver este informe en modo periódico interactivo">
+        📰 Ver como periódico
+      </button>
     </article>`;
 }
 
