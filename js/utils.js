@@ -48,7 +48,8 @@ function ordenarPorFecha(lista, desc = true) {
 /* Minutos de lectura aproximados (200 palabras por minuto) */
 function minutosLectura(p) {
   const texto = [p.resumen, ...(p.hechos || []), p.desarrollo,
-    ...(p.posturas || []).map(x => x.postura), ...(p.escenarios || [])].join(" ");
+    ...(p.posturas || []).map(x => x.postura), ...(p.escenarios || []),
+    ...(p.editorial?.paginas || []).flatMap(page => [page.contenido, ...(page.bloques || []).map(b => [b.texto, ...(b.items || []).map(x => x.texto || x.nombre)].join(" "))])].join(" ");
   return Math.max(1, Math.round(texto.split(/\s+/).filter(Boolean).length / 200));
 }
 

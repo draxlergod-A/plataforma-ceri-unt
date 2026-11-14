@@ -77,6 +77,78 @@ collections:
               - { name: destacado, label: "¿Destacar en el inicio?", widget: boolean, default: false, required: false }
               - { name: imagen, label: Imagen principal, widget: image, required: false, hint: "Solo imágenes propias o con permiso" }
               - { name: resumen, label: Resumen, widget: text, hint: "2 o 3 líneas con los hechos principales, sin adjetivos ni valoraciones" }
+              - name: editorial
+                label: Edición de periódico digital
+                widget: object
+                required: false
+                collapsed: true
+                hint: "Agrega una edición con portada y páginas propias. Aparecerá en la biblioteca de informes."
+                fields:
+                  - { name: edicion, label: Número de edición, widget: string, required: false }
+                  - { name: nota, label: Nota de archivo o fecha de corte, widget: string, required: false }
+                  - name: paginas
+                    label: Páginas de la edición
+                    widget: list
+                    required: false
+                    collapsed: true
+                    summary: "{{fields.titulo}}"
+                    fields:
+                      - { name: tipo, label: Tipo de página, widget: select, options: ["portada", "interior"], default: interior }
+                      - { name: titulo, label: Título, widget: string }
+                      - { name: seccion, label: Sección o capítulo, widget: string, required: false }
+                      - { name: diseno, label: Composición, widget: select, options: ["texto", "columnas", "referencias"], default: texto, required: false }
+                      - { name: bajada, label: Subtítulo de portada, widget: text, required: false }
+                      - { name: contenido, label: Texto simple, widget: text, required: false, hint: "Separa párrafos con una línea en blanco. Usa **negrita** para destacar." }
+                      - { name: imagen, label: Imagen de portada o de página simple, widget: image, required: false }
+                      - { name: alt, label: Descripción de la imagen, widget: string, required: false }
+                      - { name: pie, label: Pie de foto, widget: string, required: false }
+                      - { name: imagenDespuesDe, label: Colocar imagen después del párrafo, widget: number, value_type: int, min: 0, required: false }
+                      - { name: miniatura, label: Miniatura de la página (opcional), widget: image, required: false }
+                      - name: recorte
+                        label: Recorte de imagen original (x, y, ancho, alto)
+                        widget: list
+                        required: false
+                        field: { name: valor, label: Píxeles, widget: number, value_type: int, min: 0 }
+                      - name: original
+                        label: Dimensiones de la imagen original (ancho, alto)
+                        widget: list
+                        required: false
+                        field: { name: valor, label: Píxeles, widget: number, value_type: int, min: 1 }
+                      - name: bloques
+                        label: Composición por bloques (opcional)
+                        widget: list
+                        required: false
+                        collapsed: true
+                        summary: "{{fields.tipo}}"
+                        hint: "Permite varias fotos, párrafos, destacados, cronologías o fuentes en una página. Si se usa, sustituye el texto simple."
+                        fields:
+                          - { name: tipo, label: Tipo de bloque, widget: select, options: ["parrafo", "imagen", "destacado", "cronologia", "fichas", "fuentes"], default: parrafo }
+                          - { name: texto, label: Texto, widget: text, required: false }
+                          - { name: src, label: Imagen, widget: image, required: false }
+                          - { name: alt, label: Descripción de la imagen, widget: string, required: false }
+                          - { name: pie, label: Pie de foto, widget: string, required: false }
+                          - name: recorte
+                            label: Recorte (x, y, ancho, alto)
+                            widget: list
+                            required: false
+                            field: { name: valor, label: Píxeles, widget: number, value_type: int, min: 0 }
+                          - name: original
+                            label: Dimensiones originales (ancho, alto)
+                            widget: list
+                            required: false
+                            field: { name: valor, label: Píxeles, widget: number, value_type: int, min: 1 }
+                          - name: items
+                            label: Elementos de cronología, fichas o fuentes
+                            widget: list
+                            required: false
+                            collapsed: true
+                            summary: "{{fields.titulo}}{{fields.nombre}}"
+                            fields:
+                              - { name: etiqueta, label: Año o etiqueta breve, widget: string, required: false }
+                              - { name: titulo, label: Título de ficha, widget: string, required: false }
+                              - { name: texto, label: Texto de ficha, widget: text, required: false }
+                              - { name: nombre, label: Nombre de fuente, widget: string, required: false }
+                              - { name: url, label: Enlace de fuente, widget: string, required: false }
               - name: hechos
                 label: Hechos verificados
                 widget: list

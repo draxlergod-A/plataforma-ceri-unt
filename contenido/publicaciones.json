@@ -1,74 +1,617 @@
 {
   "items": [
     {
-      "resumen": "PENDIENTE: resumen de 2 o 3 líneas con los hechos principales, sin adjetivos ni valoraciones.",
-      "autor": "Equipo CERI",
-      "estado": "publicado",
-      "hechos": [
-        "PENDIENTE: hecho verificable 1 (con su fuente abajo).",
-        "PENDIENTE: hecho verificable 2."
-      ],
-      "destacado": true,
-      "fuentes": [
-        {
-          "nombre": "PENDIENTE: nombre de la fuente",
-          "url": ""
-        }
-      ],
-      "actualizado": "2026-10-13",
+      "id": "brasil-futuro-politico-america-latina",
+      "titulo": "Brasil y el futuro político de América Latina",
+      "subtitulo": "Escenarios e implicancias de un eventual gobierno de Flávio Bolsonaro",
+      "tipo": "Informe",
+      "ambito": "América Latina",
       "temas": [
         "Elecciones",
         "Brasil",
         "Integración regional"
       ],
-      "ambito": "América Latina",
-      "posturas": [
+      "autor": "Equipo CERI",
+      "revisadoPor": "",
+      "fecha": "2026-10-13",
+      "actualizado": "2026-10-13",
+      "estado": "publicado",
+      "destacado": true,
+      "imagen": "",
+      "editorial": {
+        "edicion": "01",
+        "nota": "Edición de archivo · corte al 13 de octubre de 2026",
+        "paginas": [
+          {
+            "tipo": "portada",
+            "titulo": "Brasil y el futuro político de América Latina",
+            "bajada": "Escenarios e implicancias de un eventual gobierno de Flávio Bolsonaro",
+            "imagen": "assets/img/editorial/brasil-1.webp",
+            "alt": "Fotografía de la portada original del informe",
+            "recorte": [
+              67,
+              344,
+              612,
+              385
+            ],
+            "original": [
+              750,
+              915
+            ]
+          },
+          {
+            "tipo": "interior",
+            "seccion": "Panorama",
+            "titulo": "Ideas centrales y resumen ejecutivo",
+            "bloques": [
+              {
+                "tipo": "parrafo",
+                "texto": "Una victoria de **Flávio Bolsonaro podría dar más fuerza a los sectores conservadores de América Latina y cambiar algunas prioridades de la política exterior brasileña**. Eso no significa, sin embargo, que toda la región vaya a girar hacia la derecha ni que Brasil rompa de inmediato sus principales vínculos comerciales."
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "En la primera vuelta del 4 de octubre, **Flávio Bolsonaro, del Partido Liberal (PL), obtuvo el 47,03 % de los votos válidos, frente al 45,16 % de Luiz Inácio Lula da Silva, del Partido de los Trabajadores (PT)**. La elección quedó así definida para la segunda vuelta del 25 de octubre."
+              },
+              {
+                "tipo": "imagen",
+                "src": "assets/img/editorial/brasil-2.webp",
+                "recorte": [
+                  97,
+                  323,
+                  608,
+                  374
+                ],
+                "original": [
+                  747,
+                  912
+                ],
+                "alt": "Actores políticos brasileños con los brazos levantados"
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "Las encuestas publicadas después mostraron una contienda muy ajustada: Datafolha daba a Flávio una ventaja de 52 % frente a 48 % el 8 de octubre. Son cifras de un momento de la campaña y podían cambiar antes de la votación."
+              }
+            ]
+          },
+          {
+            "tipo": "interior",
+            "seccion": "Panorama",
+            "titulo": "Una elección, múltiples factores",
+            "diseno": "columnas",
+            "bloques": [
+              {
+                "tipo": "imagen",
+                "src": "assets/img/editorial/fuentes/pagina-03.jpg",
+                "recorte": [
+                  86,
+                  62,
+                  268,
+                  373
+                ],
+                "original": [
+                  740,
+                  932
+                ],
+                "alt": "Material de campaña de Lula y Flávio Bolsonaro"
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "El crecimiento de la candidatura de **Flávio no parece responder a una sola causa**. A su favor juega una base electoral que ya estaba consolidada, pero también el descontento de parte de la población con el Gobierno y la preocupación por la economía y la seguridad. **Las redes conservadoras han contribuido a movilizar a sus simpatizantes**."
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "En el resto de América Latina, los avances de la derecha tienen motivos distintos en cada país; hablar de una sola ola regional puede llevar a una conclusión demasiado simple (Ayuso & Mejía, 2026)."
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "En política exterior, Flávio ha planteado estrechar la relación con Estados Unidos, Argentina e Israel, además de impulsar el ingreso de Brasil a la OCDE. Aun así, **China tiene un peso importante en el comercio brasileño y muchos exportadores dependen de los vínculos con el Mercosur**."
+              },
+              {
+                "tipo": "imagen",
+                "src": "assets/img/editorial/fuentes/pagina-03.jpg",
+                "recorte": [
+                  401,
+                  484,
+                  268,
+                  375
+                ],
+                "original": [
+                  740,
+                  932
+                ],
+                "alt": "Encuentro político en la Casa Blanca"
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "Lo que finalmente cambie dependerá del equipo diplomático que elija, de los apoyos que consiga en el Congreso y de las decisiones de su eventual Gobierno."
+              }
+            ],
+            "miniatura": "assets/img/editorial/fuentes/pagina-03.jpg"
+          },
+          {
+            "tipo": "interior",
+            "seccion": "01 / Criterio de lectura",
+            "titulo": "Alcance y criterio de lectura",
+            "bloques": [
+              {
+                "tipo": "parrafo",
+                "texto": "Este informe distingue entre hechos reportados por fuentes institucionales o periodísticas, interpretaciones de especialistas y escenarios que todavía son hipotéticos. **La información se toma con fecha de corte al 13 de octubre de 2026**, por lo que los datos electorales y las propuestas de campaña podrían cambiar."
+              },
+              {
+                "tipo": "imagen",
+                "src": "assets/img/editorial/fuentes/pagina-04.jpg",
+                "recorte": [
+                  78,
+                  261,
+                  611,
+                  229
+                ],
+                "original": [
+                  732,
+                  912
+                ],
+                "alt": "Composición del documento original con dirigentes de la política brasileña"
+              },
+              {
+                "tipo": "destacado",
+                "texto": "El resultado de la primera vuelta no se explica por un solo factor. Flávio cuenta con el apoyo de un sector que ya se identificaba con el bolsonarismo y logró reunir a personas descontentas con el Partido de los Trabajadores."
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "Cuando no se encontró un respaldo completo en una fuente primaria, se dio prioridad a instituciones públicas y medios que identifican claramente sus fuentes. Con la información disponible, no es posible establecer con exactitud cuánto pesó cada una de estas razones en el resultado."
+              },
+              {
+                "tipo": "imagen",
+                "src": "assets/img/editorial/fuentes/pagina-04.jpg",
+                "recorte": [
+                  412,
+                  575,
+                  274,
+                  306
+                ],
+                "original": [
+                  732,
+                  912
+                ],
+                "alt": "Manifestante con un retrato de Jair Bolsonaro"
+              }
+            ],
+            "miniatura": "assets/img/editorial/fuentes/pagina-04.jpg",
+            "diseno": "columnas"
+          },
+          {
+            "tipo": "interior",
+            "seccion": "01 / Antecedentes",
+            "titulo": "Evolución política entre 2018 y 2026",
+            "bloques": [
+              {
+                "tipo": "parrafo",
+                "texto": "Para entender la situación actual, conviene repasar algunos momentos recientes de la política brasileña:"
+              },
+              {
+                "tipo": "cronologia",
+                "items": [
+                  {
+                    "etiqueta": "2018",
+                    "titulo": "Jair Bolsonaro llega a la presidencia",
+                    "texto": "Lula da Silva no pudo participar por su situación judicial. En la segunda vuelta, Bolsonaro se enfrentó a Fernando Haddad, del PT. Su victoria consolidó una derecha populista que encontró parte de su apoyo en el rechazo al Partido de los Trabajadores."
+                  },
+                  {
+                    "etiqueta": "2022",
+                    "titulo": "Lula vuelve a la presidencia",
+                    "texto": "Venció a Jair Bolsonaro por un margen estrecho. El resultado dejó claro que el país estaba dividido entre dos bloques electorales de tamaño parecido y que la polarización seguía siendo profunda."
+                  },
+                  {
+                    "etiqueta": "2025",
+                    "titulo": "El relevo de la candidatura",
+                    "texto": "Después de la condena judicial contra Jair Bolsonaro, su hijo Flávio asumió la candidatura presidencial del Partido Liberal. Recibió una estructura política organizada y una base fiel, junto con las controversias asociadas al apellido Bolsonaro."
+                  },
+                  {
+                    "etiqueta": "2026",
+                    "titulo": "Una elección abierta",
+                    "texto": "El documento original recoge la primera vuelta del 4 de octubre y el escenario de segunda vuelta del 25 de octubre (TSE, 2026; Reuters, 2026)."
+                  }
+                ]
+              }
+            ],
+            "miniatura": "assets/img/editorial/fuentes/pagina-05.jpg"
+          },
+          {
+            "tipo": "interior",
+            "seccion": "01 / Explicaciones",
+            "titulo": "Factores que pueden explicar el respaldo",
+            "bloques": [
+              {
+                "tipo": "parrafo",
+                "texto": "Una de las **claves es el desgaste del Gobierno**. Algunos votantes parecen apoyar a la oposición para expresar su malestar con la gestión actual. Este tipo de voto de castigo también se ha visto en otros países de la región. A ello se suman dos preocupaciones que han marcado la campaña: el costo de vida y la inseguridad."
+              },
+              {
+                "tipo": "imagen",
+                "src": "assets/img/editorial/fuentes/pagina-06.jpg",
+                "recorte": [
+                  75,
+                  261,
+                  608,
+                  440
+                ],
+                "original": [
+                  730,
+                  922
+                ],
+                "alt": "Persona depositando un voto en una urna"
+              },
+              {
+                "tipo": "destacado",
+                "texto": "La percepción que tiene la ciudadanía sobre el delito no siempre coincide con las cifras oficiales."
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "También ha sido importante la organización de grupos evangélicos y de sectores conservadores, que han ayudado a movilizar votantes. Las redes sociales facilitan que los mensajes circulen rápidamente. **La estructura del Partido Liberal y su presencia en el Congreso podrían ser decisivas** para impulsar reformas y conseguir apoyo legislativo."
+              }
+            ],
+            "miniatura": "assets/img/editorial/fuentes/pagina-06.jpg"
+          },
+          {
+            "tipo": "interior",
+            "seccion": "01 / Liderazgos",
+            "titulo": "Continuidades y diferencias entre Jair y Flávio Bolsonaro",
+            "bloques": [
+              {
+                "tipo": "parrafo",
+                "texto": "**Jair y Flávio Bolsonaro comparten una base electoral, una identidad política familiar y una oposición firme al PT**. Flávio ha mencionado cambios institucionales que incluyen modificaciones al Supremo Tribunal Federal, al periodo presidencial y a la posibilidad de reelegirse de manera consecutiva. Para valorar estas ideas, es necesario revisar el programa oficial y las declaraciones del candidato."
+              },
+              {
+                "tipo": "imagen",
+                "src": "assets/img/editorial/fuentes/pagina-07.jpg",
+                "recorte": [
+                  82,
+                  248,
+                  608,
+                  470
+                ],
+                "original": [
+                  734,
+                  922
+                ],
+                "alt": "Jair y Flávio Bolsonaro durante un acto político"
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "Una diferencia que señalan algunos observadores es el tono: Flávio suele mostrarse menos confrontacional que su padre, algo que podría ayudarlo a atraer a votantes moderados. Una forma de hablar más mesurada no implica necesariamente que haya cambiado sus posiciones de fondo. La propuesta de conceder un indulto a su padre es un ejemplo de esa continuidad (El País, 2026)."
+              }
+            ],
+            "miniatura": "assets/img/editorial/fuentes/pagina-07.jpg"
+          },
+          {
+            "tipo": "interior",
+            "seccion": "02 / América Latina",
+            "titulo": "¿Cómo podría cambiar el mapa ideológico latinoamericano?",
+            "bloques": [
+              {
+                "tipo": "parrafo",
+                "texto": "Si Flávio Bolsonaro gana, **los sectores conservadores podrían ganar visibilidad e influencia en el Cono Sur**. Sin embargo, su victoria no explicaría por sí sola los avances de la derecha en América Latina."
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "En cada país influyen factores propios: la evaluación del Gobierno saliente, la preocupación por la delincuencia, las divisiones dentro de la izquierda y la aparición de liderazgos centrados en una figura política."
+              },
+              {
+                "tipo": "imagen",
+                "src": "assets/img/editorial/fuentes/pagina-08.jpg",
+                "recorte": [
+                  97,
+                  384,
+                  607,
+                  424
+                ],
+                "original": [
+                  733,
+                  915
+                ],
+                "alt": "Mapa de América Latina y retratos de dirigentes de la región"
+              },
+              {
+                "tipo": "destacado",
+                "texto": "El CIDOB advierte que no conviene interpretar lo que ocurre en la región como un giro ideológico uniforme (Ayuso & Mejía, 2026)."
+              }
+            ],
+            "miniatura": "assets/img/editorial/fuentes/pagina-08.jpg"
+          },
+          {
+            "tipo": "interior",
+            "seccion": "02 / Claves regionales",
+            "titulo": "Una tendencia regional desigual",
+            "bloques": [
+              {
+                "tipo": "parrafo",
+                "texto": "Para comparar lo que ocurre en distintos países, es importante no usar como sinónimos “derecha”, “centroderecha”, “populismo” y “conservadurismo”. Describen corrientes que no son idénticas."
+              },
+              {
+                "tipo": "fichas",
+                "items": [
+                  {
+                    "titulo": "Voto de castigo",
+                    "texto": "Cuando la ciudadanía está descontenta con el Gobierno de turno, puede apoyar a la oposición. Eso no implica necesariamente un cambio permanente de ideología."
+                  },
+                  {
+                    "titulo": "Seguridad pública",
+                    "texto": "La preocupación por la delincuencia puede aumentar el respaldo a propuestas más duras. Su eficacia debe evaluarse por los resultados y por el respeto a los derechos y las garantías institucionales."
+                  },
+                  {
+                    "titulo": "Polarización y gobernabilidad",
+                    "texto": "Las campañas suelen girar en torno a liderazgos fuertes y posiciones enfrentadas. Esa dinámica puede dificultar acuerdos duraderos."
+                  },
+                  {
+                    "titulo": "Fragmentación parlamentaria",
+                    "texto": "Ganar la presidencia no basta para aprobar reformas. El Gobierno necesita negociar con otras fuerzas políticas y reunir votos en el Congreso."
+                  },
+                  {
+                    "titulo": "Vínculos con Estados Unidos",
+                    "texto": "Acercarse a Washington puede abrir oportunidades, pero también generar tensiones comerciales y reducir el margen de independencia en la política exterior."
+                  }
+                ]
+              }
+            ],
+            "miniatura": "assets/img/editorial/fuentes/pagina-09.jpg"
+          },
+          {
+            "tipo": "interior",
+            "seccion": "02 / Redes políticas",
+            "titulo": "Redes políticas y posible efecto de demostración",
+            "bloques": [
+              {
+                "tipo": "parrafo",
+                "texto": "Las **afinidades entre Flávio Bolsonaro, Javier Milei y algunos líderes conservadores de Estados Unidos** muestran que estos movimientos mantienen contactos y comparten ideas más allá de sus fronteras. Esos vínculos pueden facilitar el intercambio de mensajes y la cooperación diplomática."
+              },
+              {
+                "tipo": "imagen",
+                "src": "assets/img/editorial/fuentes/pagina-10.jpg",
+                "recorte": [
+                  149,
+                  352,
+                  492,
+                  343
+                ],
+                "original": [
+                  729,
+                  918
+                ],
+                "alt": "Reunión de dirigentes políticos del continente americano"
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "Que dos líderes tengan posiciones parecidas no significa que una elección en un país vaya a determinar lo que ocurra en los países vecinos."
+              },
+              {
+                "tipo": "destacado",
+                "texto": "El llamado “efecto contagio” debe tomarse como una posibilidad, no como un resultado asegurado."
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "Una victoria de Flávio podría convertirse en un ejemplo para otros grupos conservadores. Su influencia real dependería de las circunstancias de cada país y de su capacidad para responder a las preocupaciones de sus propios votantes."
+              }
+            ],
+            "miniatura": "assets/img/editorial/fuentes/pagina-10.jpg"
+          },
+          {
+            "tipo": "interior",
+            "seccion": "03 / Política exterior",
+            "titulo": "Integración regional y diplomacia brasileña",
+            "bloques": [
+              {
+                "tipo": "parrafo",
+                "texto": "Con Flávio Bolsonaro en el Gobierno, Brasil podría dar prioridad a una relación más cercana con Estados Unidos, Argentina e Israel, además de impulsar su ingreso a la OCDE. El peso de China en el comercio y los intereses de los exportadores vinculados al Mercosur dificultarían un giro radical sin costos económicos."
+              },
+              {
+                "tipo": "fichas",
+                "items": [
+                  {
+                    "titulo": "Mercosur",
+                    "texto": "Se han criticado limitaciones del bloque, pero no se ha presentado un plan detallado para reorganizarlo. Revisar reglas no equivale a proponer que Brasil abandone el Mercosur."
+                  },
+                  {
+                    "titulo": "Argentina y países vecinos",
+                    "texto": "La afinidad con Javier Milei puede facilitar contactos. Una mayor cooperación dependerá de intereses económicos, decisiones comerciales y posiciones de los demás socios."
+                  },
+                  {
+                    "titulo": "BRICS y China",
+                    "texto": "Las declaraciones apuntan al pragmatismo y al intercambio económico. Enfriar los vínculos con Pekín podría afectar al comercio y a la inversión productiva."
+                  },
+                  {
+                    "titulo": "Estados Unidos",
+                    "texto": "La propuesta busca estrechar la relación bilateral y la coordinación estratégica. Un acercamiento político no elimina desacuerdos sobre aranceles u otros temas comerciales."
+                  },
+                  {
+                    "titulo": "Unión Europea y OCDE",
+                    "texto": "El ingreso a la OCDE figura entre las prioridades. Mantener una relación sólida con Europa ayudaría a diversificar mercados y requeriría acuerdos y procedimientos."
+                  },
+                  {
+                    "titulo": "CELAC y otros foros",
+                    "texto": "El documento no identifica propuestas concretas sobre la participación de Brasil en estos espacios. Su continuidad es un asunto pendiente de definición."
+                  }
+                ]
+              }
+            ],
+            "miniatura": "assets/img/editorial/fuentes/pagina-11.jpg"
+          },
+          {
+            "tipo": "interior",
+            "seccion": "03 / Autonomía",
+            "titulo": "El dilema entre alineamiento y autonomía",
+            "bloques": [
+              {
+                "tipo": "parrafo",
+                "texto": "El reto sería acercarse a Washington **sin dejar de lado la autonomía internacional de Brasil ni los intereses de sus exportadores**. Como advierten los analistas del CIDOB, alinearse con Estados Unidos no garantiza obtener ventajas comerciales y podría debilitar la capacidad de negociación frente a China (Ayuso & Mejía, 2026)."
+              },
+              {
+                "tipo": "imagen",
+                "src": "assets/img/editorial/fuentes/pagina-12.jpg",
+                "recorte": [
+                  98,
+                  323,
+                  591,
+                  416
+                ],
+                "original": [
+                  738,
+                  921
+                ],
+                "alt": "Banderas de Brasil y Estados Unidos"
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "Parece más probable que Brasil tenga que negociar cada asunto por separado, en lugar de seguir una línea de alineamiento automático. El rumbo dependerá de quién dirija la diplomacia, de sus recursos, de la relación entre el Ejecutivo y el Congreso y de las decisiones de los socios internacionales."
+              },
+              {
+                "tipo": "destacado",
+                "texto": "Mientras no haya medidas oficiales de un nuevo Gobierno, estas ideas deben leerse como escenarios posibles y no como decisiones ya tomadas."
+              }
+            ],
+            "miniatura": "assets/img/editorial/fuentes/pagina-12.jpg"
+          },
+          {
+            "tipo": "interior",
+            "seccion": "Cierre",
+            "titulo": "Conclusiones",
+            "bloques": [
+              {
+                "tipo": "parrafo",
+                "texto": "Los resultados de la primera vuelta muestran que el bolsonarismo conserva una base electoral importante. El apoyo a Flávio parece reunir la identidad política de sus seguidores, el descontento con el Gobierno del PT, las preocupaciones económicas y de seguridad y la capacidad de organización de sus bases."
+              },
+              {
+                "tipo": "imagen",
+                "src": "assets/img/editorial/fuentes/pagina-13.jpg",
+                "recorte": [
+                  122,
+                  261,
+                  491,
+                  344
+                ],
+                "original": [
+                  736,
+                  917
+                ],
+                "alt": "Simpatizantes se fotografían frente a una bandera de Brasil"
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "En América Latina, una victoria de Flávio podría dar mayor visibilidad a sectores de derecha y fortalecer sus contactos. Eso no significa que los países vecinos sigan el mismo camino: **en cada uno pesan sus propias circunstancias sociales, políticas e institucionales**."
+              },
+              {
+                "tipo": "parrafo",
+                "texto": "En política exterior, Brasil podría acercarse a Washington y a gobiernos afines. Tendría que cuidar al mismo tiempo sus relaciones con China, el Mercosur y otros socios. La dirección definitiva dependería del resultado de la segunda vuelta y de las decisiones de la nueva administración."
+              }
+            ],
+            "miniatura": "assets/img/editorial/fuentes/pagina-13.jpg"
+          },
+          {
+            "tipo": "interior",
+            "seccion": "Documentación",
+            "titulo": "Referencias del informe",
+            "diseno": "referencias",
+            "bloques": [
+              {
+                "tipo": "parrafo",
+                "texto": "Referencias incluidas en la edición original, con fecha de corte al **13 de octubre de 2026**. Este documento se conserva como parte del archivo editorial del CERI."
+              },
+              {
+                "tipo": "fuentes",
+                "items": [
+                  {
+                    "nombre": "Ayuso, A. & Mejía, J. (2026). La ola derechista latinoamericana no es homogénea. CIDOB, Opinión n.º 895.",
+                    "url": "https://www.cidob.org/publicaciones/la-ola-derechista-latinoamericana-no-es-homogenea"
+                  },
+                  {
+                    "nombre": "El País (13 de octubre de 2026). Flávio Bolsonaro visita a su padre en prisión domiciliaria tras un veto de tres meses.",
+                    "url": "https://elpais.com/america/2026-10-13/flavio-bolsonaro-visita-a-su-padre-en-prision-domiciliaria-tras-un-veto-de-tres-meses.html"
+                  },
+                  {
+                    "nombre": "Reuters (8 de octubre de 2026). Flavio Bolsonaro slightly ahead of Lula in Brazil runoff, Datafolha poll shows.",
+                    "url": "https://www.reuters.com/world/americas/flavio-bolsonaro-slightly-ahead-lula-brazil-runoff-datafolha-poll-shows-2026-10-08/"
+                  },
+                  {
+                    "nombre": "Tribunal Superior Eleitoral (2026). Eleições 2026: calendário e datas da votação.",
+                    "url": "https://www.tse.jus.br/eleicoes/cde-2026"
+                  },
+                  {
+                    "nombre": "UOL (13 de octubre de 2026). Pesquisa PoderData para presidente: veja quem está na frente.",
+                    "url": "https://noticias.uol.com.br/eleicoes/2026/10/13/pesquisa-poderdata-presidente-veja-quem-esta-na-frente.ghtm"
+                  },
+                  {
+                    "nombre": "UOL (13 de octubre de 2026). Flávio tem 52% dos votos válidos, e Lula, 48%, diz pesquisa BTG/Nexus.",
+                    "url": "https://noticias.uol.com.br/eleicoes/2026/10/13/btg-nexus-pesquisa-presidencial-segundo-turno.ghtm"
+                  },
+                  {
+                    "nombre": "UOL (8 de octubre de 2026). Nova pesquisa Datafolha do segundo turno: veja números de Lula e Flávio Bolsonaro.",
+                    "url": "https://noticias.uol.com.br/eleicoes/2026/10/08/nova-pesquisa-datafolha-do-segundo-turno-veja-numeros-de-lula-e-flavio-bolsonaro.ghtm"
+                  }
+                ]
+              }
+            ],
+            "miniatura": "assets/img/editorial/fuentes/pagina-14.jpg"
+          }
+        ]
+      },
+      "resumen": "Un análisis de los factores que explican el respaldo al bolsonarismo, las redes políticas latinoamericanas y los posibles escenarios de la diplomacia brasileña. Edición de archivo con corte al 13 de octubre de 2026.",
+      "hechos": [],
+      "posturas": [],
+      "desarrollo": "",
+      "escenarios": [],
+      "fuentes": [
         {
-          "actor": "PENDIENTE: actor o sector A",
-          "postura": "Qué plantea, descrito de forma fiel."
+          "nombre": "Ayuso, A. & Mejía, J. (2026). La ola derechista latinoamericana no es homogénea. CIDOB, Opinión n.º 895.",
+          "url": "https://www.cidob.org/publicaciones/la-ola-derechista-latinoamericana-no-es-homogenea"
         },
         {
-          "actor": "PENDIENTE: actor o sector B",
-          "postura": "Qué plantea la posición contraria, con el mismo espacio."
+          "nombre": "El País (13 de octubre de 2026). Flávio Bolsonaro visita a su padre en prisión domiciliaria tras un veto de tres meses.",
+          "url": "https://elpais.com/america/2026-10-13/flavio-bolsonaro-visita-a-su-padre-en-prision-domiciliaria-tras-un-veto-de-tres-meses.html"
+        },
+        {
+          "nombre": "Reuters (8 de octubre de 2026). Flavio Bolsonaro slightly ahead of Lula in Brazil runoff, Datafolha poll shows.",
+          "url": "https://www.reuters.com/world/americas/flavio-bolsonaro-slightly-ahead-lula-brazil-runoff-datafolha-poll-shows-2026-10-08/"
+        },
+        {
+          "nombre": "Tribunal Superior Eleitoral (2026). Eleições 2026: calendário e datas da votação.",
+          "url": "https://www.tse.jus.br/eleicoes/cde-2026"
+        },
+        {
+          "nombre": "UOL (13 de octubre de 2026). Pesquisa PoderData para presidente: veja quem está na frente.",
+          "url": "https://noticias.uol.com.br/eleicoes/2026/10/13/pesquisa-poderdata-presidente-veja-quem-esta-na-frente.ghtm"
+        },
+        {
+          "nombre": "UOL (13 de octubre de 2026). Flávio tem 52% dos votos válidos, e Lula, 48%, diz pesquisa BTG/Nexus.",
+          "url": "https://noticias.uol.com.br/eleicoes/2026/10/13/btg-nexus-pesquisa-presidencial-segundo-turno.ghtm"
+        },
+        {
+          "nombre": "UOL (8 de octubre de 2026). Nova pesquisa Datafolha do segundo turno: veja números de Lula e Flávio Bolsonaro.",
+          "url": "https://noticias.uol.com.br/eleicoes/2026/10/08/nova-pesquisa-datafolha-do-segundo-turno-veja-numeros-de-lula-e-flavio-bolsonaro.ghtm"
         }
       ],
-      "desarrollo": "PENDIENTE: texto del análisis.\n\nSe puede usar **negrita**, *cursiva*, listas con guion y enlaces [así](https://ejemplo.com).",
-      "imagen": "",
-      "revisadoPor": "",
-      "tipo": "Análisis",
-      "subtitulo": "Escenarios e implicancias de un eventual gobierno de Flávio Bolsonaro",
-      "titulo": "Brasil y el futuro político de América Latina",
-      "id": "brasil-futuro-politico-america-latina",
-      "correcciones": [],
-      "fecha": "2026-10-13",
-      "escenarios": [
-        "PENDIENTE: escenario posible 1 y de qué depende.",
-        "PENDIENTE: escenario posible 2."
-      ]
+      "correcciones": []
     },
     {
-      "resumen": "Ejemplo.",
-      "autor": "Nombre del autor",
-      "estado": "borrador",
-      "hechos": [],
-      "destacado": false,
-      "fuentes": [],
-      "actualizado": "",
+      "id": "borrador-de-ejemplo",
+      "titulo": "[BORRADOR] Ejemplo de publicación en revisión",
+      "subtitulo": "Este texto no aparece en la web porque su estado es 'borrador'",
+      "tipo": "Nota de coyuntura",
+      "ambito": "Nacional",
       "temas": [
         "Ejemplo"
       ],
-      "ambito": "Nacional",
+      "autor": "Nombre del autor",
+      "revisadoPor": "",
+      "fecha": "2026-11-10",
+      "actualizado": "",
+      "estado": "borrador",
+      "destacado": false,
+      "imagen": "",
+      "resumen": "Ejemplo.",
+      "hechos": [],
       "posturas": [],
       "desarrollo": "",
-      "imagen": "",
-      "revisadoPor": "",
-      "tipo": "Nota de coyuntura",
-      "subtitulo": "Este texto no aparece en la web porque su estado es 'borrador'",
-      "titulo": "[BORRADOR] Ejemplo de publicación en revisión",
-      "id": "borrador-de-ejemplo",
-      "correcciones": [],
-      "fecha": "2026-11-10",
-      "escenarios": []
+      "escenarios": [],
+      "fuentes": [],
+      "correcciones": []
     }
   ]
 }
