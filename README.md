@@ -191,3 +191,57 @@ En los dos casos el logo reemplaza al círculo azul que dice "CERI" en el menú.
 6. **Contenido político:** respetar los principios editoriales (independencia, imparcialidad, fuentes verificables, hecho vs. opinión).
 7. No subir fotos de personas sin su permiso.
 8. Los datos de postulantes (Google Forms) son de la directiva y no van en el repositorio (Ley N.° 29733).
+
+## Biblioteca editorial y ediciones digitales
+
+La biblioteca está en `analisis.html`. Las portadas seleccionan una edición que se lee
+dentro de la misma página. El lector ofrece dos páginas en pantallas amplias, una en
+celular, índice, miniaturas, teclado, gestos táctiles, ampliación y lectura continua
+en modo texto. El movimiento respeta la preferencia del sistema de reducir animaciones.
+
+### Encender la vista previa
+
+En PowerShell, desde esta carpeta:
+
+```powershell
+npm.cmd run sitio
+```
+
+Abre `http://localhost:5500/` para el inicio y `http://localhost:5500/analisis.html`
+para la biblioteca. La vista previa usa Node.js sin descargar paquetes. Si PowerShell
+bloquea `npm.ps1`, usa siempre `npm.cmd`. También funciona `node herramientas/servidor.js`.
+
+### Agregar otro informe
+
+1. Abre el CMS en `/admin/` y crea una publicación en **Análisis e informes**.
+2. Completa título, identificador, autor, fecha, ámbito, temas y resumen.
+3. En **Edición de periódico digital**, asigna un número de edición y agrega páginas.
+4. Crea una **portada** con título, subtítulo e imagen. Añade las páginas interiores.
+5. Para una página sencilla usa **Texto simple** e **Imagen de página**. Para varias
+   fotos o composiciones, usa **Composición por bloques**: párrafos, imágenes,
+   destacados, cronologías, fichas y fuentes.
+6. Completa la descripción de cada foto y, cuando corresponda, sus créditos.
+7. Revisa la edición y cambia el estado a **Publicado** para mostrarla en la colección.
+
+No hace falta modificar el lector ni crear otro HTML para cada informe. Los datos
+se guardan en `contenido/publicaciones.json`. Las publicaciones sin edición digital
+siguen disponibles como artículos y notas.
+
+Las imágenes de Brasil provienen de las páginas originales facilitadas. Se conservaron
+como imágenes JPEG optimizadas y sus fotografías se encuadran con coordenadas en el
+JSON. Para informes nuevos, sube fotos limpias: no necesitan recorte ni dimensiones
+originales. La edición de Brasil consta de 14 páginas y está identificada como archivo
+con corte al **13 de octubre de 2026**. Sus referencias pertenecen al documento original;
+la integración técnica no constituye una nueva verificación de sus afirmaciones.
+
+### Archivos principales
+
+- `css/styles.css`: diseño institucional y adaptación de todas las secciones.
+- `css/periodico.css`: biblioteca, portadas y lector.
+- `js/visor-editorial.js`: renderizado de páginas y animación de hojas mediante franjas 3D.
+- `js/main.js`: filtros, selección de ediciones e integración con inicio y artículos.
+- `admin/config.yml`: campos para gestionar las ediciones.
+- `herramientas/validar.js`: valida contenido, bloques, imágenes y recortes.
+
+Ejecuta `npm.cmd run validar` antes de compartir los cambios. El CMS también necesita
+su servidor local (`npm.cmd run cms`) y acceso a sus dependencias de Decap.

@@ -1,511 +1,268 @@
-/* =========================================================
-   visor-editorial.js — Visor interactivo tipo periódico
-   Se activa desde las tarjetas de publicaciones con el
-   botón "Ver como periódico".
-   ========================================================= */
+/* Biblioteca y lector editorial nativos. Sin dependencias externas. */
+(() => {
+  "use strict";
+  const pad = i => String(i + 1).padStart(2, "0");
+  const inline = text => esc(text || "").replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+  const clamp = (v, min, max) => Math.min(max, Math.max(min, v));
 
-(function () {
-  /* ---- Generar imágenes de las páginas del informe ---- */
-  function generarPaginasInforme(pub) {
-    // Paleta y tipografía del CERI
-    const navy   = "#1f2f49";
-    const royal  = "#27446e";
-    const sky    = "#597daf";
-    const paper  = "#f0efdb";
-    const ink    = "#172538";
-    const muted  = "#c5d1de";
-    const W = 750, H = 915;
-
-    function crearCanvas() {
-      const c = document.createElement("canvas");
-      c.width = W; c.height = H;
-      return c;
+  function photo(media) {
+    if (!media?.src) return "";
+    const src = rutaImagen(media.src);
+    if (!src) return "";
+    const rect = media.recorte, size = media.original;
+    let style = "", imageStyle = "";
+    if (Array.isArray(rect) && rect.length === 4 && Array.isArray(size) && rect.every(Number.isFinite) && rect[2] > 0 && rect[3] > 0) {
+      const [x, y, w, h] = rect;
+      style = `aspect-ratio:${w}/${h}`;
+      imageStyle = `position:absolute;width:${size[0]/w*100}%;height:${size[1]/h*100}%;left:${-x/w*100}%;top:${-y/h*100}%;max-width:none;object-fit:fill`;
     }
+    return `<figure class="paper-photo" style="${style}"><img src="${esc(src)}" alt="${esc(media.alt || "")}" style="${imageStyle}" decoding="async" draggable="false">${media.pie ? `<figcaption>${esc(media.pie)}</figcaption>` : ""}</figure>`;
+  }
 
-    function fondoPapel(ctx) {
-      ctx.fillStyle = paper;
-      ctx.fillRect(0, 0, W, H);
-      // textura sutil
-      ctx.fillStyle = "rgba(0,0,0,0.018)";
-      for (let i = 0; i < H; i += 4) {
-        ctx.fillRect(0, i, W, 1);
-      }
+  function block(b) {
+    if (b.tipo === "imagen") return photo(b);
+    if (b.tipo === "destacado") return `<blockquote class="paper-callout">${inline(b.texto)}</blockquote>`;
+    if (b.tipo === "cronologia" || b.tipo === "fichas") return `<ol class="paper-facts ${b.tipo === "cronologia" ? "paper-facts--timeline" : ""}">${(b.items || []).map((item, i) => `<li><span class="paper-facts__number">${esc(item.etiqueta || pad(i))}</span><div><h4>${esc(item.titulo)}</h4><p>${inline(item.texto)}</p></div></li>`).join("")}</ol>`;
+    if (b.tipo === "fuentes") return `<ol class="paper-sources">${(b.items || []).map(f => {
+      const url = urlSegura(f.url);
+      return `<li>${url ? `<a href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(f.nombre)} <span aria-hidden="true">↗</span></a>` : esc(f.nombre)}</li>`;
+    }).join("")}</ol>`;
+    return `<p>${inline(b.texto)}</p>`;
+  }
+
+  function page(pub, p, i) {
+    const total = pub.editorial.paginas.length, cover = p.tipo === "portada";
+    let blocks = (p.bloques?.length ? p.bloques : null) || String(p.contenido || "").split(/\n\s*\n/).filter(Boolean).map(texto => ({ tipo: "parrafo", texto }));
+    if (!p.bloques?.length && p.imagen && !cover) {
+      blocks = [...blocks];
+      blocks.splice(Number.isInteger(p.imagenDespuesDe) ? p.imagenDespuesDe : blocks.length, 0, { tipo:"imagen", src:p.imagen, alt:p.alt, pie:p.pie, recorte:p.recorte, original:p.original });
     }
+    return `<article class="paper ${cover ? "paper--cover" : ""} ${p.diseno === "referencias" ? "paper--references" : ""}" aria-label="Página ${i + 1}: ${esc(p.titulo || pub.titulo)}">
+      <header class="paper-head"><span class="paper-mark">CERI</span><span>Cuadernos de<br>relaciones internacionales</span><b>UNT / ${esc(pub.editorial.edicion || "01")}</b></header>
+      <div class="paper-main">${cover ? `<p class="paper-kicker">${esc(pub.ambito)} · Informe de análisis</p><h3 class="paper-cover-title">${esc(p.titulo || pub.titulo)}</h3><p class="paper-cover-deck">${esc(p.bajada || pub.subtitulo)}</p>${photo({src:p.imagen,alt:p.alt,recorte:p.recorte,original:p.original})}<div class="paper-cover-note"><span>Análisis · Contexto · Perspectivas</span><b>${total} páginas</b></div>` :
+        `<p class="paper-kicker">${esc(p.seccion || pub.ambito)}</p><h3 class="paper-title">${esc(p.titulo || "Informe CERI")}</h3><div class="paper-content ${p.diseno === "columnas" ? "paper-content--columns" : ""}">${blocks.map(block).join("")}</div>`}</div>
+      <footer class="paper-footer"><span>${esc(pub.autor || "Equipo CERI")} · ${formatearFecha(pub.fecha)}</span><b>${pad(i)} / ${pad(total - 1)}</b></footer></article>`;
+  }
 
-    function barraTop(ctx) {
-      // línea de colores superior
-      ctx.fillStyle = paper; ctx.fillRect(0, 0, W * 0.14, 5);
-      ctx.fillStyle = sky;   ctx.fillRect(W * 0.14, 0, W * 0.24, 5);
-      ctx.fillStyle = royal; ctx.fillRect(W * 0.38, 0, W * 0.62, 5);
-    }
+  function cover(pub) {
+    return `<div class="edition-cover" aria-hidden="true">${page(pub, pub.editorial.paginas[0], 0)}</div>`;
+  }
 
-    function sello(ctx, x, y, r) {
-      ctx.save();
-      ctx.strokeStyle = "rgba(31,47,73,0.55)";
-      ctx.lineWidth = 1;
-      ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.stroke();
-      ctx.beginPath(); ctx.arc(x, y, r - 5, 0, Math.PI * 2); ctx.stroke();
-      ctx.fillStyle = navy;
-      ctx.font = `bold ${Math.round(r * 0.42)}px Georgia, serif`;
-      ctx.textAlign = "center"; ctx.textBaseline = "middle";
-      ctx.fillText("CERI", x, y);
-      ctx.restore();
-    }
-
-    function wrapText(ctx, text, x, y, maxW, lineH) {
-      const words = String(text || "").split(" ");
-      let line = "";
-      const lines = [];
-      for (const w of words) {
-        const test = line ? line + " " + w : w;
-        if (ctx.measureText(test).width > maxW && line) {
-          lines.push(line);
-          line = w;
-        } else {
-          line = test;
+  class Reader {
+    constructor(host, pub) {
+      this.host = host;
+      this.abort = new AbortController();
+      this.index = 0;
+      this.turning = false;
+      this.textMode = false;
+      this.root = document.createElement("div");
+      this.root.className = "editorial-reader";
+      this.root.tabIndex = -1;
+      this.root.setAttribute("aria-label", "Lector del informe");
+      host.replaceChildren(this.root);
+      this.root.innerHTML = `<div class="reader-top"><div><span class="eyebrow">Sala de lectura</span><h3 class="reader-issue-title"></h3></div><div class="reader-tools"><div class="reader-mode" aria-label="Modo de lectura"><button type="button" data-action="pages" aria-pressed="true">Páginas</button><button type="button" data-action="text" aria-pressed="false">Texto</button></div><button class="reader-expand" type="button" data-action="expand" aria-label="Ampliar lector">⤢ <span>Ampliar</span></button></div></div>
+      <div class="reader-layout"><aside class="reader-sidebar"><p class="eyebrow">En esta edición</p><div class="reader-chapters"></div><p class="reader-archive-note"></p></aside>
+      <div class="reader-main"><div class="reader-book"><div class="reader-stage"><div class="reader-side reader-side--left"></div><div class="reader-side reader-side--right"></div><div class="reader-spine" aria-hidden="true"></div></div></div>
+      <div class="reader-navigation"><button type="button" data-action="previous" aria-label="Páginas anteriores">← <span>Anterior</span></button><div><label class="sr-only" for="reader-page-${host.id}">Ir a página</label><select id="reader-page-${host.id}" class="reader-page-select"></select><span class="reader-total"></span></div><button type="button" data-action="next" aria-label="Páginas siguientes"><span>Siguiente</span> →</button></div><div class="reader-progress" role="presentation"><span></span></div><div class="reader-bottom"><span>Desliza o usa las teclas ← →</span><span class="reader-live" aria-live="polite" aria-atomic="true"></span></div></div></div>
+      <div class="reader-text" hidden></div><div class="reader-thumbnails" aria-label="Vista previa de páginas"></div>`;
+      this.stage = this.root.querySelector(".reader-stage");
+      this.left = this.root.querySelector(".reader-side--left");
+      this.right = this.root.querySelector(".reader-side--right");
+      const opts = { signal: this.abort.signal };
+      this.root.addEventListener("click", e => {
+        const button = e.target.closest("[data-action]");
+        if (button) {
+          const a = button.dataset.action;
+          if (a === "next") this.go(this.index + this.step);
+          if (a === "previous") this.go(this.index - this.step);
+          if (a === "text" || a === "pages") this.mode(a === "text");
+          if (a === "expand") this.fullscreen(!this.expanded);
         }
+        const jump = e.target.closest("[data-reader-page]");
+        if (jump) this.go(Number(jump.dataset.readerPage));
+      }, opts);
+      this.root.querySelector(".reader-page-select").addEventListener("change", e => this.go(Number(e.target.value)), opts);
+      this.root.addEventListener("keydown", e => {
+        if (e.key === "Escape" && this.expanded) { this.fullscreen(false); return; }
+        if (e.target.matches("select,input,textarea")) return;
+        if (!this.textMode && ["ArrowRight","ArrowLeft","Home","End"].includes(e.key)) {
+          e.preventDefault();
+          this.go(e.key === "Home" ? 0 : e.key === "End" ? this.pages.length - 1 : this.index + (e.key === "ArrowRight" ? this.step : -this.step));
+        }
+        if (e.key === "Tab" && this.expanded) {
+          const buttons = [...this.root.querySelectorAll("button:not(:disabled),select,a[href]")].filter(el => el.getClientRects().length);
+          if (e.shiftKey && document.activeElement === buttons[0]) { e.preventDefault(); buttons.at(-1).focus(); }
+          if (!e.shiftKey && document.activeElement === buttons.at(-1)) { e.preventDefault(); buttons[0].focus(); }
+        }
+      }, opts);
+      let start;
+      this.stage.addEventListener("pointerdown", e => { if (e.pointerType !== "mouse") start = {x:e.clientX,y:e.clientY}; }, opts);
+      this.stage.addEventListener("pointerup", e => {
+        if (!start) return;
+        const dx=e.clientX-start.x, dy=e.clientY-start.y;
+        if (Math.abs(dx)>45 && Math.abs(dx)>Math.abs(dy)*1.3) this.go(this.index+(dx<0?this.step:-this.step));
+        start=null;
+      }, opts);
+      this.stage.addEventListener("pointercancel", () => { start=null; }, opts);
+      this.observer = new ResizeObserver(() => {
+        const spread=this.root.querySelector(".reader-main").clientWidth>=680;
+        if(spread!==this.spread) { this.cancel(); this.spread=spread; this.step=spread?2:1; this.index=this.normal(this.index); this.paint(); }
+      });
+      this.observer.observe(this.root.querySelector(".reader-main"));
+      this.set(pub);
+    }
+    normal(i) { const target=clamp(i,0,this.pages.length-1); return this.spread ? target-target%2 : target; }
+    set(pub) {
+      this.cancel();
+      this.pub=pub; this.pages=pub.editorial.paginas;
+      this.html=this.pages.map((p,i)=>page(pub,p,i));
+      this.index=0; this.spread=this.root.querySelector(".reader-main").clientWidth>=680; this.step=this.spread?2:1;
+      this.root.querySelector(".reader-issue-title").textContent=pub.titulo;
+      this.root.querySelector(".reader-archive-note").textContent=pub.editorial.nota || `${pub.autor} · ${formatearFecha(pub.fecha)}`;
+      this.root.querySelector(".reader-chapters").innerHTML=this.pages.map((p,i)=>`<button type="button" data-reader-page="${i}"><span>${pad(i)}</span>${esc(p.tipo==="portada"?"Portada":p.titulo)}</button>`).join("");
+      this.root.querySelector(".reader-page-select").innerHTML=this.pages.map((_,i)=>`<option value="${i}">${pad(i)}</option>`).join("");
+      this.root.querySelector(".reader-total").textContent=` / ${pad(this.pages.length-1)}`;
+      this.root.querySelector(".reader-thumbnails").innerHTML=this.pages.map((p,i)=>`<button type="button" data-reader-page="${i}" aria-label="Ir a página ${i+1}: ${esc(p.titulo)}"><span class="reader-thumb">${p.miniatura || p.imagen ? `<img src="${esc(rutaImagen(p.miniatura||p.imagen))}" alt="" loading="lazy">` : `<span class="reader-thumb__lines">CERI<br>—<br>——<br>——</span>`}</span><span>${pad(i)}</span></button>`).join("");
+      this.root.querySelector(".reader-text").innerHTML="";
+      if(this.textMode) this.mode(true);
+      this.paint();
+    }
+    paint() {
+      this.root.classList.toggle("reader--spread",!!this.spread);
+      this.left.innerHTML=this.html[this.index];
+      this.right.innerHTML=this.html[this.index+1] || '<div class="paper paper--end"><span>CERI</span><p>Relaciones internacionales<br>Universidad Nacional de Trujillo</p></div>';
+      this.right.hidden=!this.spread;
+      this.update();
+      requestAnimationFrame(()=>this.fit());
+      const next=this.pages.slice(this.index,this.index+this.step+2);
+      next.forEach(p => { const sources=[p.imagen,...(p.bloques||[]).filter(b=>b.tipo==="imagen").map(b=>b.src)].filter(Boolean); sources.forEach(src=>{const image=new Image();image.src=rutaImagen(src);}); });
+    }
+    update() {
+      const last=Math.min(this.index+this.step,this.pages.length);
+      this.root.querySelector('[data-action="previous"]').disabled=this.index===0||this.turning;
+      this.root.querySelector('[data-action="next"]').disabled=this.index+this.step>=this.pages.length||this.turning;
+      this.root.querySelector(".reader-page-select").value=this.index;
+      this.root.querySelector(".reader-live").textContent=this.spread?`Páginas ${this.index+1}–${last} de ${this.pages.length}`:`Página ${this.index+1} de ${this.pages.length}`;
+      this.root.querySelector(".reader-progress span").style.width=`${last/this.pages.length*100}%`;
+      this.root.querySelectorAll("[data-reader-page]").forEach(b=>b.setAttribute("aria-current",Number(b.dataset.readerPage)>=this.index&&Number(b.dataset.readerPage)<last?"page":"false"));
+    }
+    fitPaper(paper) {
+      const body=paper?.querySelector(".paper-content");
+      if(!body)return false;
+      const overflowY=body.scrollHeight-body.clientHeight, overflowX=body.scrollWidth-body.clientWidth;
+      if(overflowY<3 && overflowX<3)return false;
+      const imageScale=Number(paper.style.getPropertyValue("--image-scale")||1);
+      const typeScale=Number(paper.style.getPropertyValue("--type-scale")||1);
+      const photos=[...body.querySelectorAll(".paper-photo")].reduce((h,p)=>h+p.getBoundingClientRect().height,0);
+      const excess=Math.max(overflowY,overflowX)/Math.max(body.scrollHeight,body.clientWidth,1);
+      const nextImage=photos?Math.max(.38,imageScale*(1-Math.min(.18,excess*.9))):imageScale;
+      const nextType=Math.max(.72,typeScale*(1-Math.min(.1,excess*(photos?.3:.8))));
+      paper.style.setProperty("--type-scale",String(nextType));
+      paper.style.setProperty("--image-scale",String(nextImage));
+      return nextImage<imageScale-.001||nextType<typeScale-.001;
+    }
+    fit() {
+      const token=this.fitToken=(this.fitToken||0)+1;
+      this.root.querySelectorAll(".reader-side .paper").forEach(paper=>{
+        paper.style.setProperty("--type-scale","1");paper.style.setProperty("--image-scale","1");
+        const step=attempt=>{if(!paper.isConnected||token!==this.fitToken||attempt>15)return;if(this.fitPaper(paper))requestAnimationFrame(()=>step(attempt+1));};
+        requestAnimationFrame(()=>step(0));
+      });
+    }
+    sized(index) {
+      if(!this.html[index])return '<div class="paper paper--end">CERI</div>';
+      const box=document.createElement("div");
+      box.style.cssText="position:absolute;visibility:hidden;pointer-events:none;top:0;left:0;width:"+this.left.clientWidth+"px;height:"+this.stage.clientHeight+"px";
+      box.innerHTML=this.html[index];this.stage.append(box);
+      this.fitPaper(box.firstElementChild);
+      const html=box.innerHTML;box.remove();return html;
+    }
+    go(index) {
+      const target=this.normal(index);
+      if(target===this.index || this.turning) return;
+      if(this.textMode || matchMedia("(prefers-reduced-motion: reduce)").matches) { this.index=target;this.paint();return; }
+      this.flip(target);
+    }
+    flip(target) {
+      this.turning=true;this.update();
+      this.stage.setAttribute("aria-busy","true");
+      const forward=target>this.index, direction=forward?1:-1;
+      const w=this.left.clientWidth, h=this.stage.clientHeight;
+      const count=this.spread?12:9, sw=w/count;
+      const current=this.spread?(forward?this.right.innerHTML:this.left.innerHTML):this.left.innerHTML;
+      const backside=this.sized(this.spread?target+(forward?0:1):target);
+      if(this.spread) { this.left.innerHTML=this.html[forward?this.index:target];this.right.innerHTML=this.html[forward?target+1:this.index+1]||'<div class="paper paper--end">CERI</div>'; }
+      else this.left.innerHTML=this.html[target];
+      this.fit();
+      const mesh=document.createElement("div");mesh.className="reader-mesh";mesh.setAttribute("aria-hidden","true");
+      const strips=[];
+      for(let i=0;i<count;i++){
+        const source=forward?i:count-1-i, reversed=count-1-source;
+        const strip=document.createElement("div");strip.className="reader-strip";strip.style.width=(sw+.6)+"px";strip.style.height=h+"px";
+        strip.innerHTML=`<div class="reader-strip__front"><div style="width:${w}px;height:${h}px;left:${-source*sw}px">${current}</div></div><div class="reader-strip__back"><div style="width:${w}px;height:${h}px;left:${-reversed*sw}px">${backside}</div></div><span class="reader-strip__shade"></span>`;
+        strip.querySelectorAll("a").forEach(a=>a.tabIndex=-1);
+        mesh.append(strip);strips.push(strip);
       }
-      if (line) lines.push(line);
-      lines.forEach((l, i) => ctx.fillText(l, x, y + i * lineH));
-      return lines.length;
+      this.stage.append(mesh); this.mesh=mesh;
+      const hinge=this.spread?w:(forward?0:w);
+      let started;
+      const tick=now=>{
+        if(!this.turning)return;
+        if(started===undefined)started=now;
+        const raw=clamp((now-started)/760,0,1), t=raw*raw*(3-2*raw);
+        let x=hinge,z=0;
+        const curl=.72*Math.sin(Math.PI*t);
+        strips.forEach((strip,i)=>{
+          const theta=direction*(-Math.PI*t+curl*(i/(count-1)-.5));
+          const dx=direction*Math.cos(theta)*sw, dz=-direction*Math.sin(theta)*sw;
+          strip.style.transform=`translate3d(${x+dx/2-sw/2}px,0,${z+dz/2}px) rotateY(${theta}rad)`;
+          strip.style.setProperty("--fold-shade",String(Math.sin(Math.PI*t)*(.16+.22*i/count)));
+          x+=dx;z+=dz;
+        });
+        this.stage.style.setProperty("--turn-shadow",String(Math.sin(Math.PI*t)*.3));
+        if(raw<1)this.frame=requestAnimationFrame(tick);
+        else {this.cancel();this.index=target;this.paint();}
+      };
+      this.frame=requestAnimationFrame(tick);
     }
-
-    // ---- PÁGINA 1: PORTADA ----
-    const c1 = crearCanvas();
-    const g1 = c1.getContext("2d");
-
-    // fondo degradado azul
-    const grad = g1.createLinearGradient(0, 0, W, H);
-    grad.addColorStop(0, navy);
-    grad.addColorStop(0.6, royal);
-    grad.addColorStop(1, navy);
-    g1.fillStyle = grad;
-    g1.fillRect(0, 0, W, H);
-
-    barraTop(g1);
-
-    // ruido sutil
-    g1.fillStyle = "rgba(255,255,255,0.03)";
-    for (let y = 0; y < H; y += 3)
-      for (let x = 0; x < W; x += 3)
-        if (Math.random() > 0.7) g1.fillRect(x, y, 1, 1);
-
-    // cabecera
-    sello(g1, 60, 70, 36);
-    g1.fillStyle = paper;
-    g1.font = "bold 13px 'Segoe UI', Arial, sans-serif";
-    g1.textAlign = "left";
-    g1.fillText("Círculo de Estudios de Relaciones Internacionales", 108, 60);
-    g1.fillStyle = muted;
-    g1.font = "11px 'Segoe UI', Arial, sans-serif";
-    g1.fillText("Universidad Nacional de Trujillo · Archivo editorial", 108, 78);
-
-    // línea divisoria
-    g1.strokeStyle = "rgba(240,239,219,0.18)"; g1.lineWidth = 1;
-    g1.beginPath(); g1.moveTo(40, 105); g1.lineTo(W - 40, 105); g1.stroke();
-
-    // tipo/ámbito
-    g1.fillStyle = sky;
-    g1.font = "bold 10px 'Segoe UI', Arial, sans-serif";
-    g1.letterSpacing = "0.15em";
-    g1.textAlign = "left";
-    g1.fillText((pub.tipo || "Análisis").toUpperCase() + "  ·  " + (pub.ambito || "").toUpperCase(), 44, 130);
-
-    // número gigante decorativo
-    g1.fillStyle = "rgba(89,125,175,0.13)";
-    g1.font = "bold 220px Georgia, serif";
-    g1.textAlign = "right";
-    g1.fillText("01", W - 20, 320);
-
-    // título principal
-    g1.fillStyle = paper;
-    g1.font = `bold ${pub.titulo && pub.titulo.length > 40 ? 36 : 44}px Georgia, serif`;
-    g1.textAlign = "left";
-    const linsTit = wrapText(g1, pub.titulo, 44, 190, W - 100, 54);
-
-    // subtítulo
-    if (pub.subtitulo) {
-      g1.fillStyle = "#bdd0e7";
-      g1.font = `italic ${pub.subtitulo.length > 60 ? 18 : 22}px Georgia, serif`;
-      wrapText(g1, pub.subtitulo, 44, 190 + linsTit * 54 + 20, W - 100, 30);
+    cancel() {
+      cancelAnimationFrame(this.frame);
+      this.mesh?.remove();this.mesh=null;this.turning=false;
+      this.stage?.removeAttribute("aria-busy");
+      this.stage?.style.setProperty("--turn-shadow","0");
     }
-
-    // línea azul
-    g1.strokeStyle = sky; g1.lineWidth = 2;
-    g1.beginPath(); g1.moveTo(44, 400); g1.lineTo(W - 44, 400); g1.stroke();
-
-    // datos
-    const fecha = pub.fecha ? new Date(pub.fecha + "T12:00:00").toLocaleDateString("es-PE", { year: "numeric", month: "long", day: "numeric" }) : "";
-    const datos = [
-      ["AUTOR", pub.autor || "Equipo CERI"],
-      ["FECHA", fecha],
-      ["TEMAS", (pub.temas || []).join(", ") || "—"]
-    ];
-    datos.forEach(([k, v], i) => {
-      g1.fillStyle = sky;
-      g1.font = "bold 9px 'Segoe UI', Arial, sans-serif";
-      g1.textAlign = "left";
-      g1.fillText(k, 44, 435 + i * 48);
-      g1.fillStyle = paper;
-      g1.font = "14px 'Segoe UI', Arial, sans-serif";
-      wrapText(g1, v, 44, 452 + i * 48, (W - 88) / 2, 18);
-    });
-
-    // pie de portada
-    g1.strokeStyle = "rgba(240,239,219,0.18)"; g1.lineWidth = 1;
-    g1.beginPath(); g1.moveTo(40, H - 55); g1.lineTo(W - 40, H - 55); g1.stroke();
-    g1.fillStyle = muted;
-    g1.font = "10px 'Segoe UI', Arial, sans-serif";
-    g1.textAlign = "left";
-    g1.fillText("CERI · Edición digital", 44, H - 35);
-    g1.textAlign = "right";
-    g1.fillText("PORTADA / 01", W - 44, H - 35);
-
-    // ---- PÁGINA 2: CONTENIDO ----
-    const c2 = crearCanvas();
-    const g2 = c2.getContext("2d");
-    fondoPapel(g2);
-    barraTop(g2);
-
-    // encabezado
-    g2.fillStyle = navy;
-    g2.font = "bold 11px 'Segoe UI', Arial, sans-serif";
-    g2.textAlign = "left";
-    g2.fillText("CERI · " + (pub.tipo || "Análisis").toUpperCase(), 44, 40);
-    g2.fillStyle = "#a0b4c8";
-    g2.font = "10px 'Segoe UI', Arial, sans-serif";
-    g2.textAlign = "right";
-    g2.fillText("02 / RESUMEN EJECUTIVO", W - 44, 40);
-
-    g2.strokeStyle = "rgba(31,47,73,0.15)"; g2.lineWidth = 1;
-    g2.beginPath(); g2.moveTo(40, 52); g2.lineTo(W - 40, 52); g2.stroke();
-
-    // título compacto
-    g2.fillStyle = navy;
-    g2.font = "bold 22px Georgia, serif";
-    g2.textAlign = "left";
-    wrapText(g2, pub.titulo, 44, 85, W - 88, 30);
-
-    // línea decorativa
-    g2.strokeStyle = sky; g2.lineWidth = 2;
-    g2.beginPath(); g2.moveTo(44, 125); g2.lineTo(180, 125); g2.stroke();
-
-    let curY = 148;
-
-    // RESUMEN
-    if (pub.resumen && !pub.resumen.includes("PENDIENTE")) {
-      g2.fillStyle = sky;
-      g2.font = "bold 9px 'Segoe UI', Arial, sans-serif";
-      g2.fillText("RESUMEN", 44, curY);
-      curY += 16;
-      // barra lateral azul
-      g2.strokeStyle = sky; g2.lineWidth = 2;
-      g2.beginPath(); g2.moveTo(44, curY); g2.lineTo(44, curY + 100); g2.stroke();
-      g2.fillStyle = "#2d3f58";
-      g2.font = "14px Georgia, serif";
-      const nLines = wrapText(g2, pub.resumen, 56, curY + 4, W - 110, 22);
-      curY += Math.max(nLines * 22 + 20, 40);
+    mode(text) {
+      this.cancel();this.textMode=text;
+      this.root.classList.toggle("reader--text",text);
+      this.root.querySelector(".reader-layout").hidden=text;
+      const continuous=this.root.querySelector(".reader-text");continuous.hidden=!text;
+      if(text && !continuous.children.length)continuous.innerHTML=this.html.join("");
+      this.root.querySelector('[data-action="text"]').setAttribute("aria-pressed",String(text));
+      this.root.querySelector('[data-action="pages"]').setAttribute("aria-pressed",String(!text));
+      this.paint();
     }
-
-    // HECHOS VERIFICADOS
-    const hechosValidos = (pub.hechos || []).filter(h => !h.includes("PENDIENTE"));
-    if (hechosValidos.length) {
-      curY += 8;
-      g2.fillStyle = sky;
-      g2.font = "bold 9px 'Segoe UI', Arial, sans-serif";
-      g2.fillText("HECHOS VERIFICADOS", 44, curY);
-      curY += 16;
-      hechosValidos.slice(0, 4).forEach((h, i) => {
-        g2.fillStyle = sky;
-        g2.font = "bold 13px 'Segoe UI', Arial, sans-serif";
-        g2.fillText("●", 44, curY + 3);
-        g2.fillStyle = ink;
-        g2.font = "13px 'Segoe UI', Arial, sans-serif";
-        const n = wrapText(g2, h, 60, curY, W - 110, 19);
-        curY += n * 19 + 8;
-      });
-      curY += 4;
+    fullscreen(expanded) {
+      this.cancel();if(expanded)this.host.style.minHeight=this.root.offsetHeight+"px";else this.host.style.minHeight="";this.expanded=expanded;
+      this.root.classList.toggle("reader--expanded",expanded);
+      document.body.classList.toggle("reader-open",expanded);
+      this.root.setAttribute("role",expanded?"dialog":"region");
+      if(expanded)this.root.setAttribute("aria-modal","true");else this.root.removeAttribute("aria-modal");
+      this.root.querySelector('[data-action="expand"]').innerHTML=expanded?'× <span>Cerrar</span>':'⤢ <span>Ampliar</span>';
+      this.root.querySelector('[data-action="expand"]').setAttribute("aria-label",expanded?"Cerrar vista ampliada":"Ampliar lector");
+      this.root.focus({preventScroll:true});
+      this.paint();
     }
-
-    // POSTURAS
-    const posturasValidas = (pub.posturas || []).filter(p => p.actor && !p.actor.includes("PENDIENTE"));
-    if (posturasValidas.length) {
-      curY += 8;
-      g2.fillStyle = sky;
-      g2.font = "bold 9px 'Segoe UI', Arial, sans-serif";
-      g2.fillText("POSTURAS DE LOS ACTORES", 44, curY);
-      curY += 16;
-      posturasValidas.slice(0, 2).forEach(p => {
-        const colW = (W - 100) / 2;
-        g2.strokeStyle = "rgba(31,47,73,0.1)"; g2.lineWidth = 1;
-        g2.strokeRect(44, curY, colW, 70);
-        g2.fillStyle = royal;
-        g2.font = "bold 11px 'Segoe UI', Arial, sans-serif";
-        wrapText(g2, p.actor, 52, curY + 14, colW - 20, 14);
-        g2.fillStyle = "#2d3f58";
-        g2.font = "11px 'Segoe UI', Arial, sans-serif";
-        wrapText(g2, p.postura, 52, curY + 30, colW - 20, 15);
-        curY += 80;
-      });
-    }
-
-    // ESCENARIOS
-    const escenariosValidos = (pub.escenarios || []).filter(e => !e.includes("PENDIENTE"));
-    if (escenariosValidos.length && curY < H - 120) {
-      curY += 8;
-      g2.fillStyle = sky;
-      g2.font = "bold 9px 'Segoe UI', Arial, sans-serif";
-      g2.fillText("ESCENARIOS POSIBLES", 44, curY);
-      curY += 16;
-      escenariosValidos.slice(0, 3).forEach((e, i) => {
-        g2.fillStyle = "rgba(89,125,175,0.12)";
-        g2.fillRect(44, curY - 2, W - 88, 36);
-        g2.fillStyle = sky;
-        g2.font = "bold 10px 'Segoe UI', Arial, sans-serif";
-        g2.fillText("0" + (i + 1), 52, curY + 14);
-        g2.fillStyle = ink;
-        g2.font = "11px 'Segoe UI', Arial, sans-serif";
-        wrapText(g2, e, 70, curY + 8, W - 130, 16);
-        curY += 42;
-      });
-    }
-
-    // pie de página 2
-    g2.strokeStyle = "rgba(31,47,73,0.15)"; g2.lineWidth = 1;
-    g2.beginPath(); g2.moveTo(40, H - 40); g2.lineTo(W - 40, H - 40); g2.stroke();
-    g2.fillStyle = "#7a92aa";
-    g2.font = "9px 'Segoe UI', Arial, sans-serif";
-    g2.textAlign = "left";
-    g2.fillText("CERI · Círculo de Estudios de Relaciones Internacionales", 44, H - 22);
-    g2.textAlign = "right";
-    g2.fillText("02", W - 44, H - 22);
-
-    return [c1.toDataURL("image/jpeg", 0.92), c2.toDataURL("image/jpeg", 0.92)];
+    destroy() { this.cancel();this.observer.disconnect();this.abort.abort();document.body.classList.remove("reader-open");this.host.replaceChildren(); }
   }
 
-  /* ---- Crear el overlay del visor ---- */
-  function crearVisor() {
-    if (document.getElementById("ceri-visor-overlay")) return;
-
-    const overlay = document.createElement("div");
-    overlay.id = "ceri-visor-overlay";
-    overlay.setAttribute("role", "dialog");
-    overlay.setAttribute("aria-modal", "true");
-    overlay.setAttribute("aria-label", "Visor editorial del informe");
-    overlay.setAttribute("aria-hidden", "true");
-    overlay.innerHTML = `
-      <div class="ceri-visor-inner">
-        <div class="ceri-visor-topbar">
-          <div class="ceri-visor-brand">
-            <span class="ceri-visor-seal">CERI</span>
-            <div>
-              <div class="ceri-visor-brand-top">Círculo de Estudios</div>
-              <div class="ceri-visor-brand-bottom">de Relaciones Internacionales · UNT</div>
-            </div>
-          </div>
-          <div style="display:flex;gap:10px;align-items:center">
-            <span id="ceri-visor-label" style="font-size:10px;letter-spacing:.19em;text-transform:uppercase;color:#b7c9e0">Archivo editorial</span>
-            <button id="ceri-visor-close" type="button" class="ceri-visor-btn-close" aria-label="Cerrar visor">✕ Cerrar</button>
-          </div>
-        </div>
-        <div class="ceri-visor-strip">
-          <span id="ceri-visor-rubric" class="ceri-visor-rubric">Informes de análisis</span>
-          <span class="ceri-visor-slash">/</span>
-          <span id="ceri-visor-ambito">Política latinoamericana</span>
-          <span style="margin-left:auto;white-space:nowrap;font-size:10px;letter-spacing:.15em;text-transform:uppercase;color:#8ca5be">CERI · Edición digital</span>
-        </div>
-        <div class="ceri-visor-body">
-          <div class="ceri-visor-intro">
-            <div class="ceri-visor-small-label">Colección de informes CERI</div>
-            <div class="ceri-visor-kicker" aria-hidden="true">01.</div>
-            <h2 id="ceri-visor-titulo" class="ceri-visor-display-title"></h2>
-            <p id="ceri-visor-subtitulo" class="ceri-visor-lead"></p>
-            <div class="ceri-visor-facts" id="ceri-visor-facts"></div>
-            <hr class="ceri-visor-divider">
-            <div class="ceri-visor-chapter-label">Contenido de esta edición</div>
-            <div class="ceri-visor-chapters" id="ceri-visor-chapters"></div>
-          </div>
-          <div class="ceri-visor-reader">
-            <div class="ceri-visor-readercap">
-              <span>El informe · Vista editorial</span>
-              <span><i class="ceri-live-dot" aria-hidden="true"></i> Interactivo</span>
-            </div>
-            <div class="ceri-book-wrap">
-              <div class="ceri-book" id="ceri-book" aria-label="Páginas del informe con efecto de cambio de hoja">
-                <div class="ceri-under-page"><img id="ceri-under" alt="Página visible del informe" draggable="false"></div>
-                <div class="ceri-leaf" id="ceri-leaf">
-                  <div class="ceri-face ceri-front"><img id="ceri-front" alt="Página actual" draggable="false"></div>
-                  <div class="ceri-face ceri-back"><img id="ceri-back" alt="Página siguiente" draggable="false"></div>
-                </div>
-                <div class="ceri-page-highlight" aria-hidden="true"></div>
-                <div class="ceri-corner" aria-hidden="true"></div>
-                <div class="ceri-page-label" id="ceri-page-label">PORTADA / 01</div>
-              </div>
-            </div>
-            <div class="ceri-navpanel" aria-label="Controles de navegación">
-              <button class="ceri-navbutton" id="ceri-prev" type="button" aria-label="Página anterior"><span style="font-size:20px;font-family:Georgia,serif;line-height:.55">‹</span> Anterior</button>
-              <div class="ceri-counter" aria-live="polite"><span id="ceri-current">01</span> <span style="font-size:12px;color:#96aecb">/ 02</span></div>
-              <button class="ceri-navbutton" id="ceri-next" type="button" aria-label="Página siguiente">Siguiente <span style="font-size:20px;font-family:Georgia,serif;line-height:.55">›</span></button>
-            </div>
-            <div class="ceri-dots" id="ceri-dots" role="group" aria-label="Saltar a página"></div>
-            <div class="ceri-tip" id="ceri-hint">⟶ Usa las flechas del teclado o los botones para pasar la hoja</div>
-            <div class="ceri-reader-toolbox">
-              <span id="ceri-chapter-title" style="font-size:10px;color:#b0c6e1;letter-spacing:.18em;text-transform:uppercase">01 · Portada</span>
-              <div style="display:flex;gap:8px">
-                <button class="ceri-tool" id="ceri-zoom" type="button">⤢ Ampliar página</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div id="ceri-viewer-modal" style="display:none;position:fixed;inset:0;z-index:1100;background:rgba(10,18,30,.97);display:none;flex-direction:column;align-items:center;justify-content:center;gap:14px;padding:18px">
-        <div style="width:min(100%,900px);display:flex;justify-content:space-between;align-items:center;color:#f0efdb;font-size:12px;letter-spacing:.14em;text-transform:uppercase">
-          <strong id="ceri-viewer-title">CERI · Página 01</strong>
-          <button id="ceri-viewer-close" style="background:#27446e;color:#f0efdb;border:1px solid #597daf;padding:10px 16px;cursor:pointer;font:inherit">✕ Cerrar</button>
-        </div>
-        <img id="ceri-viewer-img" style="max-height:calc(100vh - 105px);max-width:min(100%,900px);object-fit:contain;box-shadow:0 20px 60px rgba(0,0,0,.5)" alt="">
-      </div>`;
-    document.body.appendChild(overlay);
-
-    // Eventos del overlay
-    document.getElementById("ceri-visor-close").addEventListener("click", cerrarVisor);
-    overlay.addEventListener("click", e => { if (e.target === overlay) cerrarVisor(); });
-    document.getElementById("ceri-viewer-close").addEventListener("click", () => {
-      document.getElementById("ceri-viewer-modal").style.display = "none";
-    });
-    document.addEventListener("keydown", e => {
-      if (!overlay.classList.contains("ceri-open")) return;
-      if (e.key === "Escape") cerrarVisor();
-      if (e.key === "ArrowRight") irPagina(window._ceriVisor.paginaActual + 1);
-      if (e.key === "ArrowLeft") irPagina(window._ceriVisor.paginaActual - 1);
-    });
-  }
-
-  function cerrarVisor() {
-    const ov = document.getElementById("ceri-visor-overlay");
-    if (ov) {
-      ov.classList.remove("ceri-open");
-      ov.setAttribute("aria-hidden", "true");
-    }
-    document.body.style.overflow = "";
-  }
-
-  function irPagina(idx) {
-    const v = window._ceriVisor;
-    if (!v || idx < 0 || idx >= v.paginas.length) return;
-    const anterior = v.paginaActual;
-    v.paginaActual = idx;
-
-    const book  = document.getElementById("ceri-book");
-    const leaf  = document.getElementById("ceri-leaf");
-    const front = document.getElementById("ceri-front");
-    const back  = document.getElementById("ceri-back");
-    const under = document.getElementById("ceri-under");
-
-    const avanzar = idx > anterior;
-
-    if (avanzar) {
-      front.src = v.paginas[anterior];
-      back.src  = v.paginas[idx];
-      under.src = v.paginas[idx];
-      leaf.classList.remove("ceri-backwards", "ceri-forward", "ceri-go");
-      book.classList.add("ceri-is-turning");
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => { leaf.classList.add("ceri-forward"); });
-      });
-    } else {
-      front.src = v.paginas[idx];
-      back.src  = v.paginas[anterior];
-      under.src = v.paginas[idx];
-      leaf.classList.remove("ceri-forward");
-      leaf.classList.add("ceri-backwards");
-      book.classList.add("ceri-is-turning");
-      requestAnimationFrame(() => {
-        requestAnimationFrame(() => { leaf.classList.add("ceri-go"); });
-      });
-    }
-
-    setTimeout(() => {
-      book.classList.remove("ceri-is-turning");
-      front.src = v.paginas[idx];
-      leaf.classList.remove("ceri-backwards", "ceri-forward", "ceri-go");
-    }, 1380);
-
-    // Actualizar controles
-    actualizarControles(idx);
-  }
-
-  function actualizarControles(idx) {
-    const v = window._ceriVisor;
-    const n = v.paginas.length;
-    document.getElementById("ceri-current").textContent = String(idx + 1).padStart(2, "0");
-    document.getElementById("ceri-prev").disabled = idx === 0;
-    document.getElementById("ceri-next").disabled = idx === n - 1;
-    document.getElementById("ceri-page-label").textContent = idx === 0 ? "PORTADA / 01" : "RESUMEN / 02";
-    document.getElementById("ceri-chapter-title").textContent = idx === 0 ? "01 · Portada" : "02 · Resumen ejecutivo";
-    document.querySelectorAll(".ceri-dot").forEach((d, i) => d.setAttribute("aria-current", i === idx ? "page" : "false"));
-    document.querySelectorAll(".ceri-chapter-btn").forEach((b, i) => b.setAttribute("aria-current", i === idx ? "page" : "false"));
-  }
-
-  /* ---- Abrir el visor con una publicación ---- */
-  window.abrirVisorEditorial = function (pub) {
-    crearVisor();
-    const paginas = generarPaginasInforme(pub);
-    window._ceriVisor = { paginas, paginaActual: 0 };
-
-    // Rellenar metadata
-    document.getElementById("ceri-visor-titulo").textContent = pub.titulo || "";
-    document.getElementById("ceri-visor-subtitulo").textContent = pub.subtitulo || "";
-    document.getElementById("ceri-visor-rubric").textContent = pub.tipo || "Informe";
-    document.getElementById("ceri-visor-ambito").textContent = pub.ambito || "";
-
-    const facts = document.getElementById("ceri-visor-facts");
-    facts.innerHTML = `
-      <span><b>01</b> Informe</span>
-      <span><b>02</b> Páginas</span>
-      <span><b>3D</b> Efecto de hoja</span>`;
-
-    // Índice de capítulos
-    const chapters = document.getElementById("ceri-visor-chapters");
-    const names = ["Portada · " + (pub.titulo || "Informe").slice(0, 30), "Ideas centrales y resumen ejecutivo"];
-    chapters.innerHTML = names.map((name, i) => `
-      <button class="ceri-chapter-btn" data-go="${i}" ${i === 0 ? 'aria-current="page"' : ''}>
-        <span class="ceri-chap-num">0${i + 1}</span>
-        <span class="ceri-chap-name">${name}</span>
-        <span style="font-size:15px;color:#597daf">↗</span>
-      </button>`).join("");
-
-    // Dots
-    const dotsEl = document.getElementById("ceri-dots");
-    dotsEl.innerHTML = paginas.map((_, i) => `
-      <button class="ceri-dot" data-go="${i}" aria-label="Ir a página ${i + 1}" ${i === 0 ? 'aria-current="page"' : ''}></button>`).join("");
-
-    // Eventos nav
-    document.getElementById("ceri-prev").addEventListener("click", () => irPagina(window._ceriVisor.paginaActual - 1));
-    document.getElementById("ceri-next").addEventListener("click", () => irPagina(window._ceriVisor.paginaActual + 1));
-    document.querySelectorAll(".ceri-dot, .ceri-chapter-btn").forEach(btn => {
-      btn.addEventListener("click", () => irPagina(Number(btn.dataset.go)));
-    });
-    document.getElementById("ceri-zoom").addEventListener("click", () => {
-      const idx = window._ceriVisor.paginaActual;
-      const modal = document.getElementById("ceri-viewer-modal");
-      document.getElementById("ceri-viewer-img").src = paginas[idx];
-      document.getElementById("ceri-viewer-title").textContent = "CERI · Página 0" + (idx + 1);
-      modal.style.display = "flex";
-    });
-
-    // Inicializar libro
-    const front = document.getElementById("ceri-front");
-    const under = document.getElementById("ceri-under");
-    front.src = paginas[0];
-    under.src = paginas[0];
-    document.getElementById("ceri-back").src = paginas[1] || paginas[0];
-    actualizarControles(0);
-
-    // Abrir overlay
-    const ov = document.getElementById("ceri-visor-overlay");
-    ov.classList.add("ceri-open");
-    ov.setAttribute("aria-hidden", "false");
-    document.body.style.overflow = "hidden";
+  window.CeriEditorial = {
+    page, cover,
+    mount(host,pub) { host._reader?.destroy();const reader=new Reader(host,pub);host._reader=reader;return reader; },
+    card(pub) { return `<a class="edition-card" href="#sala-de-lectura" data-edicion="${esc(pub.id)}"><div class="edition-card__visual"><span class="edition-card__issue">Edición ${esc(pub.editorial.edicion||"01")}</span>${cover(pub)}<span class="edition-card__arrow" aria-hidden="true">↗</span></div><div class="edition-card__copy"><p class="eyebrow">${esc(pub.ambito)} · ${pub.editorial.paginas.length} páginas</p><h3>${esc(pub.titulo)}</h3><p>${esc(pub.subtitulo)}</p><span class="edition-card__date">${formatearFecha(pub.fecha)} <span>Explorar edición ↗</span></span></div></a>`; }
+  };
+  window.abrirVisorEditorial=(pub)=>{
+    if(!pub?.editorial?.paginas?.length)return;
+    const host=document.getElementById("lector-informes")||document.getElementById("lector-articulo");
+    if(host){host._reader?.pub.id===pub.id?host._reader.go(0):CeriEditorial.mount(host,pub);host.scrollIntoView({behavior:"smooth",block:"start"});host._reader.root.focus({preventScroll:true});}
   };
 })();

@@ -1,81 +1,30 @@
-/* =========================================================
-   layout.js — ENCABEZADO Y PIE DE PÁGINA
-   Se escriben una sola vez aquí y aparecen en todas las páginas.
-   Para agregar una página al menú, añádela a la lista MENU.
-   ========================================================= */
-
+/* Encabezado y pie institucional compartidos por todas las páginas. */
 const MENU = [
-  { href: "index.html", texto: "Inicio", id: "inicio" },
-  { href: "analisis.html", texto: "Análisis", id: "analisis" },
-  { href: "eventos.html", texto: "Eventos", id: "eventos" },
-  { href: "participacion.html", texto: "Participación", id: "participacion" },
-  { href: "alianzas.html", texto: "Alianzas", id: "alianzas" },
-  { href: "nosotros.html", texto: "Nosotros", id: "nosotros" },
-  { href: "convocatoria.html", texto: "Convocatoria", id: "convocatoria" },
-  { href: "contacto.html", texto: "Contacto", id: "contacto" }
+  {href:"index.html",texto:"Inicio",id:"inicio"},
+  {href:"analisis.html",texto:"Informes y análisis",id:"analisis"},
+  {href:"eventos.html",texto:"Eventos",id:"eventos"},
+  {href:"participacion.html",texto:"Participación",id:"participacion"},
+  {href:"alianzas.html",texto:"Alianzas",id:"alianzas"},
+  {href:"nosotros.html",texto:"Nosotros",id:"nosotros"},
+  {href:"convocatoria.html",texto:"Convocatoria",id:"convocatoria"},
+  {href:"contacto.html",texto:"Contacto",id:"contacto"}
 ];
-
 function renderHeader(sitio) {
-  const actual = document.body.dataset.page;
-  const links = MENU.map(m =>
-    `<li><a href="${m.href}" ${m.id === actual ? 'aria-current="page"' : ""}>${m.texto}</a></li>`
-  ).join("");
-
-  /* ============ LOGO ============
-     Opción 1 (panel): Panel → Configuración del sitio → Logo.
-     Opción 2 (manual): guarda el archivo en assets/img/logo.png y en
-     contenido/sitio.json escribe:  "logo": "assets/img/logo.png"
-     Si no hay logo, se muestra el círculo azul con el texto CERI.
-     ================================ */
-  const logo = sitio.logo
-    ? `<img src="${esc(rutaImagen(sitio.logo))}" alt="Logo ${esc(sitio.nombre)}" class="brand-logo">`
-    : `<span class="brand-mark" aria-hidden="true">${esc(sitio.nombre || "CERI")}</span>`;
-
-  document.getElementById("site-header").innerHTML = `
-    <div class="container header-inner">
-      <a class="brand" href="index.html">
-        ${logo}
-        <span class="brand-text">
-          <strong>${esc(sitio.nombre)}</strong>
-          <small>${esc(sitio.universidad)}</small>
-        </span>
-      </a>
-      <button class="menu-toggle" aria-expanded="false" aria-controls="menu">Menú</button>
-      <nav id="menu" aria-label="Principal"><ul>${links}</ul></nav>
-    </div>`;
-
-  const btn = document.querySelector(".menu-toggle");
-  const nav = document.getElementById("menu");
-  btn.addEventListener("click", () => {
-    const abierto = nav.classList.toggle("open");
-    btn.setAttribute("aria-expanded", abierto);
-  });
+  const actual=document.body.dataset.page;
+  const links=MENU.map(m=>`<li><a href="${m.href}" ${m.id===actual||(actual==="articulo"&&m.id==="analisis")?'aria-current="page"':""}>${m.texto}</a></li>`).join("");
+  const logo=sitio.logo?`<img src="${esc(rutaImagen(sitio.logo))}" alt="Logo CERI" class="brand-logo">`:'<span class="brand-mark" aria-hidden="true">CERI</span>';
+  document.getElementById("site-header").innerHTML=`<div class="container header-inner"><a class="brand" href="index.html" aria-label="CERI, inicio">${logo}<span class="brand-text"><strong>Círculo de Estudios de<br>Relaciones Internacionales</strong><small>${esc(sitio.universidad||"Universidad Nacional de Trujillo")}</small></span></a><button type="button" class="menu-toggle" aria-expanded="false" aria-controls="menu">☰ Menú</button><nav id="menu" aria-label="Navegación principal"><ul>${links}</ul></nav></div>`;
+  const button=document.querySelector(".menu-toggle"), nav=document.getElementById("menu");
+  const close=()=>{nav.classList.remove("open");button.setAttribute("aria-expanded","false");};
+  button.addEventListener("click",()=>{const open=nav.classList.toggle("open");button.setAttribute("aria-expanded",String(open));});
+  document.addEventListener("keydown",e=>{if(e.key==="Escape"&&nav.classList.contains("open")){close();button.focus();}});
+  document.addEventListener("click",e=>{if(!e.target.closest("#site-header"))close();});
 }
-
 function renderFooter(sitio) {
-  const anio = new Date().getFullYear();
-  const redes = [
-    sitio.instagram && `<a href="${esc(urlSegura(sitio.instagram))}" target="_blank" rel="noopener">Instagram</a>`,
-    sitio.facebook && `<a href="${esc(urlSegura(sitio.facebook))}" target="_blank" rel="noopener">Facebook</a>`
+  const redes=[
+    sitio.instagram&&`<a href="${esc(urlSegura(sitio.instagram))}" target="_blank" rel="noopener">Instagram ↗</a>`,
+    sitio.facebook&&`<a href="${esc(urlSegura(sitio.facebook))}" target="_blank" rel="noopener">Facebook ↗</a>`
   ].filter(Boolean).join(" · ");
-
-  document.getElementById("site-footer").innerHTML = `
-    <div class="container footer-grid">
-      <div>
-        <strong>${esc(sitio.nombreCompleto)}</strong>
-        <p>${esc(sitio.facultad)}<br>${esc(sitio.universidad)}</p>
-        ${sitio.reconocimiento ? `<p class="muted">Reconocido mediante ${esc(sitio.reconocimiento)}.</p>` : ""}
-      </div>
-      <div>
-        <strong>Contacto</strong>
-        ${sitio.correo ? `<p><a href="mailto:${esc(sitio.correo)}">${esc(sitio.correo)}</a></p>` : ""}
-        <p>${redes}</p>
-      </div>
-      <div>
-        <strong>Compromiso editorial</strong>
-        <p>Publicamos con independencia de partidos y gobiernos.
-           <a href="nosotros.html#principios">Ver nuestros principios</a>.</p>
-      </div>
-    </div>
-    <div class="container footer-bottom">© ${anio} ${esc(sitio.nombre)} – ${esc(sitio.universidad)}</div>`;
+  const correo=sitio.correo&&!/^correo@/.test(sitio.correo)?sitio.correo:"";
+  document.getElementById("site-footer").innerHTML=`<div class="container"><div class="footer-heading">CERI<span>Entender el mundo.<br>Construir perspectivas.</span></div><div class="footer-grid"><div><strong>${esc(sitio.nombreCompleto||"Círculo de Estudios de Relaciones Internacionales")}</strong><p>${esc(sitio.facultad||"")}<br>${esc(sitio.universidad||"Universidad Nacional de Trujillo")}</p>${sitio.reconocimiento?`<p class="muted">${esc(sitio.reconocimiento)}</p>`:""}</div><div><strong>Conecta con el CERI</strong><p>${redes}</p>${correo?`<p><a href="mailto:${esc(correo)}">${esc(correo)}</a></p>`:""}<p><a href="contacto.html">Contacto y colaboraciones →</a></p></div><div><strong>Investigación con criterio</strong><p>Hechos, contexto y diversas perspectivas para comprender la política nacional e internacional.</p><p><a href="nosotros.html#principios">Nuestros principios editoriales →</a></p></div></div><div class="footer-bottom"><span>© ${new Date().getFullYear()} CERI · Universidad Nacional de Trujillo</span><span>Trujillo, Perú · Desde 2024</span></div></div>`;
 }
