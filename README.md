@@ -1,247 +1,141 @@
-# Web del CERI – UNT
+# Web del CERI - UNT
 
-Sitio web del **Círculo de Estudios de Relaciones Internacionales (CERI)** de la Universidad Nacional de Trujillo.
+Sitio del **Círculo de Estudios de Relaciones Internacionales de la Universidad Nacional de Trujillo**. Incluye la biblioteca de informes digitales, el lector de libros y el estudio editorial para prepararlos sin editar código.
 
-**Objetivo:** publicar informes y análisis de la política actual de forma **imparcial**, además de eventos, participación, alianzas y convocatorias.
+## Iniciar en VS Code
 
-**Estado:** versión 2, **en construcción y sin publicar**. Por ahora todo funciona solo en la computadora (modo local).
-
----
-
-## 1. Requisitos
-
-| Programa | Para qué | Dónde se descarga |
-|---|---|---|
-| **VS Code** | Editar el código | code.visualstudio.com |
-| **Node.js** (versión LTS) | Encender la web y el panel | nodejs.org |
-| **Git** | Guardar versiones y trabajar en equipo | git-scm.com |
-| Extensión **Live Server** (opcional) | Ver la web desde VS Code | Pestaña Extensiones de VS Code |
-
-La primera vez que se usa el panel hace falta **internet**, porque descarga sus herramientas.
-
----
-
-## 2. Cómo encender la web y el panel
-
-1. Abre la carpeta `ceri-web` en VS Code.
-2. Abre la terminal: menú **Terminal → New Terminal**.
-3. Escribe:
-   ```
-   npm run dev
-   ```
-4. Abre en el navegador:
-   - **La web:** http://localhost:5500
-   - **El panel:** http://localhost:5500/admin/
-
-Para apagar todo, entra a la terminal y presiona `Ctrl + C`.
-
-> ⚠️ Ya **no** funciona abrir `index.html` con doble clic: el contenido está en la carpeta `contenido/` y la web necesita un servidor local. Si lo intentas, la página te mostrará un aviso.
-
-**Otros comandos:**
-
-| Comando | Qué hace |
-|---|---|
-| `npm run dev` | Enciende la web y el panel juntos (lo normal) |
-| `npm run sitio` | Enciende solo la web |
-| `npm run cms` | Enciende solo el conector del panel (útil si usas Live Server) |
-| `npm run validar` | Revisa errores en el contenido: ids repetidos, fechas mal escritas, publicaciones sin fuentes, textos PENDIENTE |
-
----
-
-## 3. Cómo funciona
-
-```
- Panel (/admin)  ──guarda──▶  contenido/*.json  ──lee──▶  Páginas de la web
- (formularios)                (los datos)                 (HTML + CSS + JS)
-```
-
-- **El panel** (Decap CMS) es una pantalla con formularios. Al guardar, escribe en los archivos de `contenido/`.
-- **La web** lee esos archivos y arma las páginas sola.
-- Para publicar algo **no se toca el código**.
-
-### Flujo de una publicación (imparcialidad)
-
-Cada publicación tiene un **Estado**:
-
-| Estado | Quién lo pone | ¿Se ve en la web? |
-|---|---|---|
-| `Borrador` | El autor mientras escribe | No |
-| `En revisión` | El autor cuando termina | No |
-| `Publicado` | El editor, después de que el revisor apruebe | **Sí** |
-
-Estructura obligatoria: **Resumen → Hechos verificados → Posturas de los actores → Análisis → Escenarios → Fuentes**. Si después se corrige un error, se registra en **Correcciones**.
-
----
-
-## 4. Estructura de carpetas
-
-```
-ceri-web/
-├── index.html            Inicio (publicación destacada, últimas, eventos)
-├── analisis.html         Lista de publicaciones con filtros, buscador y "Cargar más"
-├── articulo.html         Muestra una publicación (articulo.html?id=...)
-├── eventos.html          Próximos y realizados (se separan solos por fecha)
-├── participacion.html    Línea de tiempo
-├── alianzas.html         Organizaciones aliadas
-├── nosotros.html         Quiénes somos, principios editoriales y equipo
-├── convocatoria.html     Requisitos, proceso y botón de postulación
-├── contacto.html         Formulario de contacto
-├── 404.html              Página de error
-│
-├── css/styles.css        Todos los estilos (colores en :root, al inicio)
-│
-├── js/utils.js           Ayudas: fechas, seguridad del texto, Markdown, compartir
-├── js/datos.js           Carga los archivos de contenido/
-├── js/layout.js          Menú y pie de página (comunes a todas las páginas)
-├── js/main.js            Lógica de cada página
-│
-├── contenido/            ◀ EL CONTENIDO (lo edita el panel)
-│   ├── sitio.json            Nombre, logo, correo, redes, lema
-│   ├── publicaciones.json    Análisis e informes
-│   ├── eventos.json
-│   ├── participacion.json
-│   ├── alianzas.json
-│   ├── equipo.json           Directiva
-│   └── convocatoria.json
-│
-├── admin/
-│   ├── index.html        El panel
-│   └── config.yml        Qué campos tiene el panel
-│
-├── assets/img/           Logo, favicon e imágenes
-│   └── subidas/          Imágenes subidas desde el panel
-│
-├── herramientas/validar.js   Revisión del contenido (npm run validar)
-└── package.json              Comandos (npm run ...)
-```
-
----
-
-## 5. Dónde poner el logo
-
-**Opción A (desde el panel, recomendada):**
-1. `npm run dev` → abre http://localhost:5500/admin/
-2. Entra a **Configuración → Configuración del sitio → Logo**.
-3. Sube la imagen y dale **Publicar / Guardar**.
-
-**Opción B (manual):**
-1. Guarda el archivo como `assets/img/logo.png`.
-2. Abre `contenido/sitio.json` y cambia `"logo": ""` por `"logo": "assets/img/logo.png"`.
-
-En los dos casos el logo reemplaza al círculo azul que dice "CERI" en el menú. El código está en `js/layout.js`, en el comentario `LOGO`.
-
-**Favicon** (el ícono de la pestaña): guárdalo en `assets/img/favicon.png` y, en el `<head>` de cada archivo `.html`, quita el comentario de la línea `<link rel="icon" ...>`.
-
----
-
-## 6. Roles del equipo
-
-| Rol | Quién | Qué hace |
-|---|---|---|
-| Autor | Miembros del CERI | Escribe en estado *Borrador* / *En revisión* |
-| Revisor | 1–2 miembros | Revisa imparcialidad y fuentes; escribe su nombre en "Revisado por" |
-| Editor | Directiva | Cambia el estado a *Publicado* |
-| Admin técnico | Desarrollador | Código, diseño y configuración |
-
-> En modo local el panel **no tiene usuarios ni contraseñas**: lo usa quien tenga la computadora. Los permisos reales por persona se activan cuando se publique (ver Pendientes).
-
----
-
-## 7. Pendientes
-
-### Contenido (lo entrega el CERI)
-- [ ] Logo oficial y favicon
-- [ ] Correo, Facebook y WhatsApp reales (Configuración del sitio)
-- [ ] Completar el análisis de Brasil (tiene textos `PENDIENTE`)
-- [ ] Borrar la publicación de ejemplo `borrador-de-ejemplo`
-- [ ] Fecha real del ciclo de conferencias de geopolítica
-- [ ] Directiva: nombres, cargos y fotos (con permiso)
-- [ ] Confirmar qué alianzas son formales (campo "¿Alianza formal confirmada?")
-- [ ] Enlace del Google Form de la próxima convocatoria
-
-### Funciones por implementar
-- [ ] Página por autor (perfil con sus publicaciones)
-- [ ] Descargar informes en PDF
-- [ ] Boletín por correo (Brevo, Mailchimp)
-- [ ] Formulario de contacto real con Formspree (hoy abre el correo del visitante)
-- [ ] Galería de fotos por evento
-- [ ] Sección "Vuelta al Mundo CERI" (mapa con fichas de países)
-- [ ] Vista previa del panel con el diseño real de la web (`CMS.registerPreviewTemplate`)
-- [ ] Separar cada publicación en su propio archivo cuando haya muchas (carpeta + GitHub Actions para generar el índice)
-
-### Al publicar (todavía no)
-- [ ] Subir a GitHub (repositorio privado mientras se construye)
-- [ ] Publicar en Netlify o GitHub Pages
-- [ ] Cambiar `backend` en `admin/config.yml` y activar los usuarios del panel (Netlify Identity / Git Gateway o GitHub)
-- [ ] Activar `publish_mode: editorial_workflow` para que el flujo Borrador → Revisión → Publicado lo controle el panel con permisos
-- [ ] Imagen para compartir en redes (`og:image` en cada HTML)
-- [ ] Dominio propio (opcional)
-- [ ] Revisar velocidad y accesibilidad con Lighthouse (Chrome → F12 → Lighthouse)
-
----
-
-## 8. Reglas para colaboradores
-
-1. **Nunca trabajar directo en `main`.** Crear una rama:
-   `git checkout -b feature/nombre-del-cambio`
-2. Commits claros: `Agrega página de autores`, `Corrige menú en celular`.
-3. Antes de subir: `npm run validar` sin errores y revisar la web en celular (F12 → modo dispositivo).
-4. Abrir un **Pull Request** y esperar la revisión del admin.
-5. **El código va en su archivo:** HTML en `.html`, estilos en `css/styles.css`, lógica en `js/`. Nada de estilos o scripts dentro del HTML.
-6. **Contenido político:** respetar los principios editoriales (independencia, imparcialidad, fuentes verificables, hecho vs. opinión).
-7. No subir fotos de personas sin su permiso.
-8. Los datos de postulantes (Google Forms) son de la directiva y no van en el repositorio (Ley N.° 29733).
-
-## Biblioteca editorial y ediciones digitales
-
-La biblioteca está en `analisis.html`. Las portadas seleccionan una edición que se lee
-dentro de la misma página. El lector ofrece dos páginas en pantallas amplias, una en
-celular, índice, miniaturas, teclado, gestos táctiles, ampliación y lectura continua
-en modo texto. El movimiento respeta la preferencia del sistema de reducir animaciones.
-
-### Encender la vista previa
-
-En PowerShell, desde esta carpeta:
+Requisitos: Node.js 20 o posterior, Git y VS Code. Abre la carpeta `plataforma-ceri-unt` y, en **Terminal → Nueva terminal**, ejecuta:
 
 ```powershell
 npm.cmd run sitio
 ```
 
-Abre `http://localhost:5500/` para el inicio y `http://localhost:5500/analisis.html`
-para la biblioteca. La vista previa usa Node.js sin descargar paquetes. Si PowerShell
-bloquea `npm.ps1`, usa siempre `npm.cmd`. También funciona `node herramientas/servidor.js`.
+- Web: http://localhost:5500/
+- Biblioteca: http://localhost:5500/analisis.html
+- Estudio editorial: http://localhost:5500/admin/
 
-### Agregar otro informe
+Mantén la terminal abierta. Para detener el servidor, pulsa `Ctrl + C`. Si ya había una vista previa encendida, detenla y vuelve a iniciarla para cargar la nueva API del panel. Si el puerto 5500 está ocupado por Live Server, detén Live Server o usa otro puerto:
 
-1. Abre el CMS en `/admin/` y crea una publicación en **Análisis e informes**.
-2. Completa título, identificador, autor, fecha, ámbito, temas y resumen.
-3. En **Edición de periódico digital**, asigna un número de edición y agrega páginas.
-4. Crea una **portada** con título, subtítulo e imagen. Añade las páginas interiores.
-5. Para una página sencilla usa **Texto simple** e **Imagen de página**. Para varias
-   fotos o composiciones, usa **Composición por bloques**: párrafos, imágenes,
-   destacados, cronologías, fichas y fuentes.
-6. Completa la descripción de cada foto y, cuando corresponda, sus créditos.
-7. Revisa la edición y cambia el estado a **Publicado** para mostrarla en la colección.
+```powershell
+$env:PORT = '5501'
+npm.cmd run sitio
+```
 
-No hace falta modificar el lector ni crear otro HTML para cada informe. Los datos
-se guardan en `contenido/publicaciones.json`. Las publicaciones sin edición digital
-siguen disponibles como artículos y notas.
+Usa la dirección que indique la terminal. `npm.cmd` evita el bloqueo de `npm.ps1` en PowerShell sin cambiar la política de ejecución. También puedes ejecutar `node herramientas/servidor.js`.
 
-Las imágenes de Brasil provienen de las páginas originales facilitadas. Se conservaron
-como imágenes JPEG optimizadas y sus fotografías se encuadran con coordenadas en el
-JSON. Para informes nuevos, sube fotos limpias: no necesitan recorte ni dimensiones
-originales. La edición de Brasil consta de 14 páginas y está identificada como archivo
-con corte al **13 de octubre de 2026**. Sus referencias pertenecen al documento original;
-la integración técnica no constituye una nueva verificación de sus afirmaciones.
+Para abrirlo con **F5**, entra en **Run and Debug** de VS Code y selecciona **CERI: iniciar y abrir el administrador**. Este perfil enciende el servidor en el puerto **5501** y abre `http://localhost:5501/admin/`. El perfil **CERI: iniciar y abrir la web** usa el mismo puerto y abre el inicio. Mantén la ejecución activa mientras utilices el sitio o compartas ese puerto; si el servidor ya está encendido, abre su dirección directamente.
 
-### Archivos principales
+El estudio de informes funciona con Node, sin instalar paquetes ni descargar un CMS. Abrir el HTML con doble clic o usar solo Live Server no permite guardar y publicar mediante este panel.
 
-- `css/styles.css`: diseño institucional y adaptación de todas las secciones.
-- `css/periodico.css`: biblioteca, portadas y lector.
-- `js/visor-editorial.js`: renderizado de páginas y animación de hojas mediante franjas 3D.
-- `js/main.js`: filtros, selección de ediciones e integración con inicio y artículos.
-- `admin/config.yml`: campos para gestionar las ediciones.
-- `herramientas/validar.js`: valida contenido, bloques, imágenes y recortes.
+## Acceso al estudio
 
-Ejecuta `npm.cmd run validar` antes de compartir los cambios. El CMS también necesita
-su servidor local (`npm.cmd run cms`) y acceso a sus dependencias de Decap.
+La primera vez, abre `/admin/` desde **localhost en la computadora del proyecto** y crea una contraseña de entre 10 y 128 caracteres. Después podrás iniciar y cerrar sesión. No hay una contraseña predeterminada.
+
+La contraseña se guarda con sal y scrypt en `.ceri/admin.json`, fuera de Git; no se guarda en texto plano. Las sesiones caducan a las ocho horas o al reiniciar el servidor. Las escrituras requieren sesión, origen permitido y token CSRF; los intentos de acceso fallidos tienen un límite.
+
+Este panel tiene **un acceso administrativo compartido**. Los campos Autor y Revisado por identifican a los responsables del informe; todavía no son cuentas con permisos separados.
+
+Para restablecer una contraseña olvidada, detén el servidor, elimina **solo** `.ceri/admin.json`, vuelve a iniciarlo y configura el acceso desde localhost. Conserva `.ceri/backups/`. No compartas ni subas a Git los archivos privados de `.ceri/`.
+
+## Crear y publicar un informe
+
+1. Pulsa **Nuevo informe** en la biblioteca del estudio.
+2. En **Información**, completa título, autor, resumen, fecha, número de edición, ámbito y temas. El identificador del enlace se genera automáticamente.
+3. En **Portada**, sube una foto o selecciónala de la galería. Elige una composición editorial con título y foto o una imagen que contenga el diseño completo. Describe la imagen para quienes usan lectores de pantalla.
+4. En **Páginas**, agrega plantillas de texto, resumen ejecutivo, cronología, referencias o página diseñada. Combina párrafos, destacados, fotos, fichas y fuentes. Reordena las páginas con flechas o arrastrándolas; también puedes duplicarlas.
+5. Usa **Vista previa** para leer la edición con el mismo lector de la web: hojas animadas, índice, navegación por teclado, vista de texto y adaptación al celular.
+6. En **Revisar y publicar**, resuelve los campos pendientes. Guarda como borrador, pasa a revisión o publica. La publicación requiere portada, contenido interior, descripciones de las fotos y al menos una fuente con nombre y enlace.
+7. Pulsa **Ver en la web** o **Copiar enlace**. La nueva edición aparece en la biblioteca pública como libro. Las páginas que ya estaban abiertas deben recargarse para mostrar los cambios.
+
+No hace falta crear otro HTML ni modificar el lector. Para preparar informes parecidos, usa **Duplicar** en la biblioteca. Para ocultar una edición publicada sin perder su contenido, usa **Retirar a borrador**.
+
+### Subir fotos y páginas completas
+
+En un bloque de imagen, selecciona una foto existente o sube JPG, PNG, WebP o GIF. El panel optimiza las fotos grandes cuando puede reducir su peso y conserva los GIF. El límite de cada archivo enviado al servidor es 12 MB.
+
+Si ya tienes páginas diseñadas como imágenes, usa **Subir páginas diseñadas** para añadir varias a la vez. Cada imagen se convierte en una hoja del libro, sin recortar su composición. Revisa títulos, orden, descripciones y fuentes antes de publicar. Para contenido nuevo se recomienda usar texto y fotos por bloques: el texto se puede seleccionar y la lectura continua resulta más accesible. La carga directa de PDF no forma parte de este flujo.
+
+### Borradores y respaldos
+
+| Estado | Visibilidad con el servidor del CERI |
+|---|---|
+| Borrador | Solo en el estudio |
+| En revisión | Solo en el estudio |
+| Publicado | Biblioteca pública |
+
+**Guardar** escribe el informe en `contenido/publicaciones.json`. Los cambios sin guardar se conservan de forma recuperable en ese navegador; al volver a editar, el estudio ofrece recuperarlos. Usa Guardar o descarga un respaldo para conservarlos fuera del navegador.
+
+Antes de cada escritura, el servidor respalda la colección anterior en `.ceri/backups/` y conserva los últimos 20 respaldos. Puedes descargar el informe actual o un respaldo JSON completo desde el panel. Si dos personas guardan a partir de la misma versión, la segunda recibe un aviso de conflicto y sus cambios no sobrescriben la colección. Descarga su copia antes de recargar y comparar.
+
+La restauración de respaldos se realiza desde los archivos del proyecto; no hay importación automática en el panel.
+
+## Uso compartido y publicación en internet
+
+El servidor escucha en `127.0.0.1`. El panel guarda en los archivos de **esa copia del proyecto**. No envía commits a GitHub ni publica automáticamente un alojamiento externo.
+
+Para un enlace temporal con el reenvío de puertos de VS Code, configura primero la contraseña desde localhost. Comparte el puerto del servidor del CERI, mantén la PC encendida y la terminal abierta. Si el túnel cambia la cabecera Host y el panel rechaza el origen, permite la dirección HTTPS exacta del túnel al reiniciar:
+
+```powershell
+$env:CERI_ADMIN_ORIGIN = 'https://direccion-exacta-del-tunel'
+npm.cmd run sitio
+```
+
+Quien tenga la contraseña y acceso al enlace podrá editar los informes. Compartir solo la biblioteca no requiere dar la contraseña del estudio.
+
+**Un alojamiento estático como GitHub Pages no ejecuta la API de Node.** Para administrar y guardar desde internet de forma permanente, hay que desplegar el backend con almacenamiento persistente y HTTPS, o integrar un servicio de datos y autenticación. Servir los archivos JSON directamente desde un alojamiento estático tampoco aplica el filtrado de borradores que hace este servidor. Revisa ese flujo antes de subir la colección completa a un sitio público.
+
+## Otros contenidos y CMS anterior
+
+Eventos, participación, alianzas, equipo, convocatoria y configuración del sitio conservan sus archivos y formularios anteriores en `/admin/cms.html`. Para ese CMS heredado de Decap se necesita internet y su conector local:
+
+```powershell
+npm.cmd run cms
+```
+
+Mantén `npm.cmd run sitio` en otra terminal, o usa `npm.cmd run dev` para ambos procesos. El conector local de Decap es una herramienta de la computadora del editor: no tiene el acceso por contraseña del nuevo estudio y no debes compartir su puerto 8081 públicamente. Usa el estudio nuevo para los informes.
+
+Para cambiar el logo manualmente, guarda la imagen en `assets/img/` y actualiza el campo `logo` de `contenido/sitio.json`. El menú y el pie se construyen en `js/layout.js`.
+
+## Arquitectura
+
+El sitio conserva HTML, CSS y JavaScript sin framework. El panel usa los mismos datos y el mismo lector editorial que la biblioteca pública.
+
+| Ruta | Función |
+|---|---|
+| `index.html` | Inicio institucional |
+| `analisis.html` | Biblioteca, filtros y lector integrado |
+| `articulo.html` | Vista individual de publicaciones |
+| `eventos.html`, `participacion.html`, `alianzas.html` | Secciones institucionales |
+| `nosotros.html`, `convocatoria.html`, `contacto.html` | Equipo, convocatoria y contacto |
+| `css/styles.css` | Identidad institucional y estilos generales |
+| `css/periodico.css` | Portadas, biblioteca y lector |
+| `js/visor-editorial.js` | Renderizado compartido y animación de hojas 3D |
+| `js/datos.js`, `js/main.js`, `js/layout.js`, `js/utils.js` | Datos, páginas y utilidades públicas |
+| `contenido/*.json` | Contenido del sitio |
+| `admin/index.html`, `admin/studio.css`, `admin/studio.js` | Interfaz del estudio editorial |
+| `admin/model.js` | Plantillas y validación compartidas por navegador y servidor |
+| `admin/cms.html`, `admin/config.yml` | CMS anterior para otros contenidos |
+| `herramientas/servidor.js`, `herramientas/admin-api.js` | Servidor y API de administración |
+| `assets/img/subidas/` | Imágenes cargadas desde el panel |
+| `.ceri/` | Credenciales y respaldos locales, ignorados por Git |
+
+Paleta institucional: `#1f2f49`, `#27446e`, `#587eac`, `#f0efda`.
+
+La edición original de Brasil conserva sus 14 páginas e imágenes. Está identificada como archivo con fecha de corte al **13 de octubre de 2026**. La integración técnica no constituye una nueva verificación de sus afirmaciones ni de sus referencias.
+
+## Comprobaciones
+
+```powershell
+npm.cmd run validar
+npm.cmd run test:admin
+```
+
+El validador revisa el contenido existente. Las pruebas del panel utilizan una carpeta temporal: comprueban acceso, sesiones, escrituras, carga de imágenes, borradores privados, publicación, conflictos de versión y conservación de informes anteriores. No cambian los informes del proyecto ni configuran su contraseña real.
+
+La comprobación visual debe cubrir computadora y celular: inicio de sesión, creación, guardado, carga de fotos y páginas, vista previa y apertura de una edición publicada.
+
+## Colaboración y pendientes
+
+Trabaja en una rama, valida antes de subir cambios y abre un Pull Request para revisión. Mantén HTML, estilos y scripts en sus archivos correspondientes. No incluyas contraseñas ni datos de postulantes en el repositorio. Respeta los principios editoriales del CERI: independencia, imparcialidad, fuentes verificables y distinción entre hechos, interpretaciones y escenarios.
+
+Los roles de autor, revisor y editor describen el flujo del equipo; los permisos por persona y un backend permanente para internet siguen pendientes. También quedan la confirmación de datos institucionales, el correo de contacto, las integraciones de formularios y las futuras secciones que acuerde el equipo.

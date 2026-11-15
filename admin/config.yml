@@ -96,7 +96,7 @@ collections:
                       - { name: tipo, label: Tipo de página, widget: select, options: ["portada", "interior"], default: interior }
                       - { name: titulo, label: Título, widget: string }
                       - { name: seccion, label: Sección o capítulo, widget: string, required: false }
-                      - { name: diseno, label: Composición, widget: select, options: ["texto", "columnas", "referencias"], default: texto, required: false }
+                      - { name: diseno, label: Composición, widget: select, options: ["texto", "columnas", "referencias", "lamina"], default: texto, required: false }
                       - { name: bajada, label: Subtítulo de portada, widget: text, required: false }
                       - { name: contenido, label: Texto simple, widget: text, required: false, hint: "Separa párrafos con una línea en blanco. Usa **negrita** para destacar." }
                       - { name: imagen, label: Imagen de portada o de página simple, widget: image, required: false }

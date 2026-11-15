@@ -7,6 +7,7 @@
     "sitio": "node herramientas/servidor.js",
     "cms": "npx --yes decap-server",
     "dev": "npx --yes concurrently -n sitio,panel -c blue,green \"npm:sitio\" \"npm:cms\"",
-    "validar": "node herramientas/validar.js"
+    "validar": "node herramientas/validar.js",
+    "test:admin": "node --test herramientas/admin.test.js"
   }
 }

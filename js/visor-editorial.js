@@ -32,6 +32,7 @@
 
   function page(pub, p, i) {
     const total = pub.editorial.paginas.length, cover = p.tipo === "portada";
+    if (p.diseno === "lamina") return `<article class="paper paper--plate" aria-label="Página ${i+1}: ${esc(p.titulo || pub.titulo)}"><img src="${esc(rutaImagen(p.imagen || ""))}" alt="${esc(p.alt || p.titulo || pub.titulo)}" draggable="false"><span class="sr-only">${esc(p.pie || "")}</span></article>`;
     let blocks = (p.bloques?.length ? p.bloques : null) || String(p.contenido || "").split(/\n\s*\n/).filter(Boolean).map(texto => ({ tipo: "parrafo", texto }));
     if (!p.bloques?.length && p.imagen && !cover) {
       blocks = [...blocks];
