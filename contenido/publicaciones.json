@@ -1,6 +1,82 @@
 {
   "items": [
     {
+      "id": "fabricantes-pierden-la-vida-despues-de-terminar-su-labor",
+      "titulo": "Fabricantes pierden la vida despues de terminar su labor",
+      "subtitulo": "Waza",
+      "tipo": "Análisis",
+      "ambito": "Internacional",
+      "temas": [
+        "Accidentes"
+      ],
+      "autor": "hyy",
+      "revisadoPor": "",
+      "fecha": "2026-11-17",
+      "actualizado": "2026-11-17",
+      "estado": "borrador",
+      "destacado": false,
+      "imagen": "",
+      "resumen": "hvjv",
+      "hechos": [],
+      "posturas": [],
+      "desarrollo": "",
+      "escenarios": [],
+      "fuentes": [
+        {
+          "nombre": "",
+          "url": ""
+        }
+      ],
+      "correcciones": [],
+      "editorial": {
+        "edicion": "02",
+        "nota": "",
+        "paginas": [
+          {
+            "tipo": "portada",
+            "titulo": "Fabricantes pierden la vida despues de terminar su labor",
+            "bajada": "Waza",
+            "imagen": "",
+            "alt": "",
+            "diseno": "texto"
+          },
+          {
+            "tipo": "interior",
+            "titulo": "Resumen ejecutivo",
+            "seccion": "",
+            "diseno": "texto",
+            "bloques": [
+              {
+                "tipo": "parrafo",
+                "texto": ""
+              },
+              {
+                "tipo": "destacado",
+                "texto": ""
+              }
+            ]
+          },
+          {
+            "tipo": "interior",
+            "titulo": "Fuentes y referencias",
+            "seccion": "",
+            "diseno": "referencias",
+            "bloques": [
+              {
+                "tipo": "fuentes",
+                "items": [
+                  {
+                    "nombre": "",
+                    "url": ""
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
       "id": "brasil-futuro-politico-america-latina",
       "titulo": "Brasil y el futuro político de América Latina",
       "subtitulo": "Escenarios e implicancias de un eventual gobierno de Flávio Bolsonaro",
