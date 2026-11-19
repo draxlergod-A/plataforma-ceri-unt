@@ -470,3 +470,15 @@
     }
   };
 })();
+
+/* Marca las fotos del lector cuando terminan de cargar (o fallan) para quitar el fondo animado. */
+["load", "error"].forEach(tipo =>
+  document.addEventListener(
+    tipo,
+    e => {
+      if (e.target instanceof HTMLImageElement && e.target.closest(".paper-photo"))
+        e.target.dataset.cargada = "";
+    },
+    true
+  )
+);

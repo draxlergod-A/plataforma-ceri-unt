@@ -13,7 +13,7 @@
       "console": "integratedTerminal",
       "outputCapture": "std",
       "serverReadyAction": {
-        "pattern": "Panel editorial: (http://localhost:[0-9]+/admin/)",
+        "pattern": "Estudio editorial: (http://localhost:[0-9]+/admin/)",
         "uriFormat": "%s",
         "action": "openExternally"
       },

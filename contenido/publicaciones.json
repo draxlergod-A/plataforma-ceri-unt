@@ -81,7 +81,7 @@
             "bloques": [
               {
                 "tipo": "imagen",
-                "src": "assets/img/editorial/fuentes/pagina-03.jpg",
+                "src": "assets/img/editorial/fuentes/pagina-03.webp",
                 "recorte": [
                   86,
                   62,
@@ -108,7 +108,7 @@
               },
               {
                 "tipo": "imagen",
-                "src": "assets/img/editorial/fuentes/pagina-03.jpg",
+                "src": "assets/img/editorial/fuentes/pagina-03.webp",
                 "recorte": [
                   401,
                   484,
@@ -126,7 +126,7 @@
                 "texto": "Lo que finalmente cambie dependerá del equipo diplomático que elija, de los apoyos que consiga en el Congreso y de las decisiones de su eventual Gobierno."
               }
             ],
-            "miniatura": "assets/img/editorial/fuentes/pagina-03.jpg"
+            "miniatura": "assets/img/editorial/fuentes/pagina-03.webp"
           },
           {
             "tipo": "interior",
@@ -139,7 +139,7 @@
               },
               {
                 "tipo": "imagen",
-                "src": "assets/img/editorial/fuentes/pagina-04.jpg",
+                "src": "assets/img/editorial/fuentes/pagina-04.webp",
                 "recorte": [
                   78,
                   261,
@@ -162,7 +162,7 @@
               },
               {
                 "tipo": "imagen",
-                "src": "assets/img/editorial/fuentes/pagina-04.jpg",
+                "src": "assets/img/editorial/fuentes/pagina-04.webp",
                 "recorte": [
                   412,
                   575,
@@ -176,7 +176,7 @@
                 "alt": "Manifestante con un retrato de Jair Bolsonaro"
               }
             ],
-            "miniatura": "assets/img/editorial/fuentes/pagina-04.jpg",
+            "miniatura": "assets/img/editorial/fuentes/pagina-04.webp",
             "diseno": "columnas"
           },
           {
@@ -214,7 +214,7 @@
                 ]
               }
             ],
-            "miniatura": "assets/img/editorial/fuentes/pagina-05.jpg"
+            "miniatura": "assets/img/editorial/fuentes/pagina-05.webp"
           },
           {
             "tipo": "interior",
@@ -227,7 +227,7 @@
               },
               {
                 "tipo": "imagen",
-                "src": "assets/img/editorial/fuentes/pagina-06.jpg",
+                "src": "assets/img/editorial/fuentes/pagina-06.webp",
                 "recorte": [
                   75,
                   261,
@@ -249,7 +249,7 @@
                 "texto": "También ha sido importante la organización de grupos evangélicos y de sectores conservadores, que han ayudado a movilizar votantes. Las redes sociales facilitan que los mensajes circulen rápidamente. **La estructura del Partido Liberal y su presencia en el Congreso podrían ser decisivas** para impulsar reformas y conseguir apoyo legislativo."
               }
             ],
-            "miniatura": "assets/img/editorial/fuentes/pagina-06.jpg"
+            "miniatura": "assets/img/editorial/fuentes/pagina-06.webp"
           },
           {
             "tipo": "interior",
@@ -262,7 +262,7 @@
               },
               {
                 "tipo": "imagen",
-                "src": "assets/img/editorial/fuentes/pagina-07.jpg",
+                "src": "assets/img/editorial/fuentes/pagina-07.webp",
                 "recorte": [
                   82,
                   248,
@@ -280,7 +280,7 @@
                 "texto": "Una diferencia que señalan algunos observadores es el tono: Flávio suele mostrarse menos confrontacional que su padre, algo que podría ayudarlo a atraer a votantes moderados. Una forma de hablar más mesurada no implica necesariamente que haya cambiado sus posiciones de fondo. La propuesta de conceder un indulto a su padre es un ejemplo de esa continuidad (El País, 2026)."
               }
             ],
-            "miniatura": "assets/img/editorial/fuentes/pagina-07.jpg"
+            "miniatura": "assets/img/editorial/fuentes/pagina-07.webp"
           },
           {
             "tipo": "interior",
@@ -297,7 +297,7 @@
               },
               {
                 "tipo": "imagen",
-                "src": "assets/img/editorial/fuentes/pagina-08.jpg",
+                "src": "assets/img/editorial/fuentes/pagina-08.webp",
                 "recorte": [
                   97,
                   384,
@@ -315,7 +315,7 @@
                 "texto": "El CIDOB advierte que no conviene interpretar lo que ocurre en la región como un giro ideológico uniforme (Ayuso & Mejía, 2026)."
               }
             ],
-            "miniatura": "assets/img/editorial/fuentes/pagina-08.jpg"
+            "miniatura": "assets/img/editorial/fuentes/pagina-08.webp"
           },
           {
             "tipo": "interior",
@@ -352,7 +352,7 @@
                 ]
               }
             ],
-            "miniatura": "assets/img/editorial/fuentes/pagina-09.jpg"
+            "miniatura": "assets/img/editorial/fuentes/pagina-09.webp"
           },
           {
             "tipo": "interior",
@@ -365,7 +365,7 @@
               },
               {
                 "tipo": "imagen",
-                "src": "assets/img/editorial/fuentes/pagina-10.jpg",
+                "src": "assets/img/editorial/fuentes/pagina-10.webp",
                 "recorte": [
                   149,
                   352,
@@ -391,7 +391,7 @@
                 "texto": "Una victoria de Flávio podría convertirse en un ejemplo para otros grupos conservadores. Su influencia real dependería de las circunstancias de cada país y de su capacidad para responder a las preocupaciones de sus propios votantes."
               }
             ],
-            "miniatura": "assets/img/editorial/fuentes/pagina-10.jpg"
+            "miniatura": "assets/img/editorial/fuentes/pagina-10.webp"
           },
           {
             "tipo": "interior",
@@ -432,7 +432,7 @@
                 ]
               }
             ],
-            "miniatura": "assets/img/editorial/fuentes/pagina-11.jpg"
+            "miniatura": "assets/img/editorial/fuentes/pagina-11.webp"
           },
           {
             "tipo": "interior",
@@ -445,7 +445,7 @@
               },
               {
                 "tipo": "imagen",
-                "src": "assets/img/editorial/fuentes/pagina-12.jpg",
+                "src": "assets/img/editorial/fuentes/pagina-12.webp",
                 "recorte": [
                   98,
                   323,
@@ -467,7 +467,7 @@
                 "texto": "Mientras no haya medidas oficiales de un nuevo Gobierno, estas ideas deben leerse como escenarios posibles y no como decisiones ya tomadas."
               }
             ],
-            "miniatura": "assets/img/editorial/fuentes/pagina-12.jpg"
+            "miniatura": "assets/img/editorial/fuentes/pagina-12.webp"
           },
           {
             "tipo": "interior",
@@ -480,7 +480,7 @@
               },
               {
                 "tipo": "imagen",
-                "src": "assets/img/editorial/fuentes/pagina-13.jpg",
+                "src": "assets/img/editorial/fuentes/pagina-13.webp",
                 "recorte": [
                   122,
                   261,
@@ -502,7 +502,7 @@
                 "texto": "En política exterior, Brasil podría acercarse a Washington y a gobiernos afines. Tendría que cuidar al mismo tiempo sus relaciones con China, el Mercosur y otros socios. La dirección definitiva dependería del resultado de la segunda vuelta y de las decisiones de la nueva administración."
               }
             ],
-            "miniatura": "assets/img/editorial/fuentes/pagina-13.jpg"
+            "miniatura": "assets/img/editorial/fuentes/pagina-13.webp"
           },
           {
             "tipo": "interior",
@@ -548,7 +548,7 @@
                 ]
               }
             ],
-            "miniatura": "assets/img/editorial/fuentes/pagina-14.jpg"
+            "miniatura": "assets/img/editorial/fuentes/pagina-14.webp"
           }
         ]
       },

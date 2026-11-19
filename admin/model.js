@@ -72,7 +72,8 @@
     delete p.editorial;
     return { ...p, formato: "nota", tipo: "Nota de coyuntura", imagenAlt: "" };
   }
-  const isNote = p => !!p && p.formato === "nota";
+  // Las publicaciones antiguas sin páginas de edición también se tratan como notas.
+  const isNote = p => !!p && (p.formato === "nota" || (p.formato === undefined && !p.editorial));
   function mediaIn(p) {
     const paths = [];
     if (p.imagen) paths.push(p.imagen);

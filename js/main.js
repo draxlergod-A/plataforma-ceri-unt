@@ -272,7 +272,7 @@ function paginaArticulo(D) {
     <p class="temas">${(p.temas || [])
       .map(t => `<a class="chip" href="analisis.html?tema=${encodeURIComponent(t)}">${esc(t)}</a>`)
       .join("")}</p>
-    ${p.imagen ? `<img class="articulo-img" src="${esc(rutaImagen(p.imagen))}" alt="">` : ""}
+    ${p.imagen ? `<img class="articulo-img" src="${esc(rutaImagen(p.imagen))}" alt="${esc(p.imagenAlt || "")}">` : ""}
 
     ${seccion("Resumen", p.resumen ? `<p>${esc(p.resumen)}</p>` : "")}
     ${seccion("Hechos verificados", lista(p.hechos) && `<ul>${lista(p.hechos)}</ul>`)}
@@ -417,9 +417,10 @@ function paginaConvocatoria(D) {
 /* ---------- CONTACTO ---------- */
 function paginaContacto(D) {
   const s = D.sitio;
-  document.getElementById("contacto-correo").innerHTML = s.correo
-    ? `<a href="mailto:${esc(s.correo)}">${esc(s.correo)}</a>`
-    : "Por definir";
+  document.getElementById("contacto-correo").innerHTML =
+    s.correo && !/^correo@/i.test(s.correo)
+      ? `<a href="mailto:${esc(s.correo)}">${esc(s.correo)}</a>`
+      : "Por definir";
   document.getElementById("contacto-redes").innerHTML = [
     s.instagram && `<a href="${esc(urlSegura(s.instagram))}" target="_blank" rel="noopener">Instagram</a>`,
     s.facebook && `<a href="${esc(urlSegura(s.facebook))}" target="_blank" rel="noopener">Facebook</a>`,
@@ -429,15 +430,46 @@ function paginaContacto(D) {
     .filter(Boolean)
     .join(" · ");
 
-  /* Por ahora el formulario abre el correo del visitante con el mensaje listo.
-     TODO (cuando se publique): conectar con Formspree para recibirlo sin abrir el correo. */
-  document.getElementById("form-contacto").addEventListener("submit", ev => {
+  /* El mensaje se guarda en el servidor del CERI y el equipo lo lee en el estudio.
+     Si la web se abre sin ese servidor, se ofrece el correo como alternativa. */
+  const form = document.getElementById("form-contacto");
+  const estado = document.getElementById("contacto-estado");
+  const correoReal = s.correo && !/^correo@/i.test(s.correo) ? s.correo : "";
+  form.addEventListener("submit", async ev => {
     ev.preventDefault();
-    const f = ev.target;
-    if (!f.reportValidity()) return;
-    const asunto = `[Web CERI] ${f.motivo.value} – ${f.nombre.value}`;
-    const cuerpo = `${f.mensaje.value}\n\n—\nNombre: ${f.nombre.value}\nCorreo: ${f.correo.value}`;
-    location.href = `mailto:${s.correo}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+    if (!form.reportValidity()) return;
+    const datos = Object.fromEntries(new FormData(form));
+    const boton = form.querySelector('button[type="submit"]');
+    boton.disabled = true;
+    estado.className = "form-estado";
+    estado.textContent = "Enviando…";
+    try {
+      const r = await fetch("api/contacto", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(datos)
+      });
+      const respuesta = await r.json().catch(() => ({}));
+      if (r.ok) {
+        form.reset();
+        estado.className = "form-estado form-estado--ok";
+        estado.textContent = "¡Gracias! Recibimos tu mensaje y te responderemos pronto.";
+        return;
+      }
+      if (r.status !== 404) throw new Error(respuesta.error || "No pudimos enviar tu mensaje.");
+      throw new Error("sin-servidor");
+    } catch (err) {
+      estado.className = "form-estado form-estado--error";
+      if (err.message !== "sin-servidor" && !(err instanceof TypeError)) estado.textContent = err.message;
+      else if (correoReal) {
+        estado.textContent = "No pudimos enviarlo desde la web. Se abrirá tu correo con el mensaje listo.";
+        const asunto = `[Web CERI] ${datos.motivo} – ${datos.nombre}`;
+        const cuerpo = `${datos.mensaje}\n\n—\nNombre: ${datos.nombre}\nCorreo: ${datos.correo}`;
+        location.href = `mailto:${correoReal}?subject=${encodeURIComponent(asunto)}&body=${encodeURIComponent(cuerpo)}`;
+      } else estado.textContent = "No pudimos enviar tu mensaje. Escríbenos por nuestras redes sociales.";
+    } finally {
+      boton.disabled = false;
+    }
   });
 }
 

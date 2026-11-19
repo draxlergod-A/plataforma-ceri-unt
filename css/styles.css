@@ -1171,3 +1171,39 @@ code {
 .article-intro > .eyebrow {
   margin-top: 25px;
 }
+
+/* Página 404 */
+.error-404 {
+  padding: 6rem 1.25rem;
+  max-width: 720px;
+}
+.error-404 .btn-sec {
+  color: var(--institucional, #27446e);
+  border-color: currentColor;
+}
+
+/* Formulario de contacto */
+.campo-trampa {
+  position: absolute !important;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+.form-estado:empty {
+  display: none;
+}
+.form-estado {
+  margin: 0.5rem 0 0;
+  padding: 0.75rem 1rem;
+  border-left: 3px solid var(--azul-claro, #587eac);
+  background: rgba(88, 126, 172, 0.08);
+}
+.form-estado--ok {
+  border-color: #2f6b45;
+  background: rgba(47, 107, 69, 0.08);
+}
+.form-estado--error {
+  border-color: #9b2c2c;
+  background: rgba(155, 44, 44, 0.06);
+}

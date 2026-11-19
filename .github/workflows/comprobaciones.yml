@@ -1,0 +1,28 @@
+name: Comprobaciones
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  comprobar:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node: [20, 22]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - name: Contenido válido
+        run: npm run validar
+      - name: Pruebas del servidor y del estudio
+        run: npm test
+      - name: Formato del código
+        run: npm run revisar-formato

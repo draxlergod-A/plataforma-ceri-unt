@@ -4,3 +4,8 @@ contenido/
 *.html
 *.md
 package-lock.json
+.vscode/
+.github/
+assets/
+*.svg
+*.webmanifest

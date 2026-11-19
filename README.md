@@ -1,6 +1,6 @@
 # Web del CERI - UNT
 
-Sitio del **Círculo de Estudios de Relaciones Internacionales de la Universidad Nacional de Trujillo**. Incluye la biblioteca de informes digitales, el lector de libros y el estudio editorial para prepararlos sin editar código.
+Sitio del **Círculo de Estudios de Relaciones Internacionales de la Universidad Nacional de Trujillo**. Incluye la biblioteca de informes digitales, el lector de libros y el **estudio editorial**: un panel con cuentas por persona y roles para preparar, revisar y publicar todo el contenido sin editar código.
 
 ## Iniciar en VS Code
 
@@ -14,128 +14,141 @@ npm.cmd run sitio
 - Biblioteca: http://localhost:5500/analisis.html
 - Estudio editorial: http://localhost:5500/admin/
 
-Mantén la terminal abierta. Para detener el servidor, pulsa `Ctrl + C`. Si ya había una vista previa encendida, detenla y vuelve a iniciarla para cargar la nueva API del panel. Si el puerto 5500 está ocupado por Live Server, detén Live Server o usa otro puerto:
+Mantén la terminal abierta. Para detener el servidor, pulsa `Ctrl + C`. Si el puerto 5500 está ocupado (por ejemplo, por Live Server), usa otro:
 
 ```powershell
 $env:PORT = '5501'
 npm.cmd run sitio
 ```
 
-Usa la dirección que indique la terminal. `npm.cmd` evita el bloqueo de `npm.ps1` en PowerShell sin cambiar la política de ejecución. También puedes ejecutar `node herramientas/servidor.js`.
+`npm.cmd` evita el bloqueo de `npm.ps1` en PowerShell. También puedes usar **F5** en VS Code con el perfil **CERI: iniciar y abrir el administrador** (puerto 5501).
 
-Para abrirlo con **F5**, entra en **Run and Debug** de VS Code y selecciona **CERI: iniciar y abrir el administrador**. Este perfil enciende el servidor en el puerto **5501** y abre `http://localhost:5501/admin/`. El perfil **CERI: iniciar y abrir la web** usa el mismo puerto y abre el inicio. Mantén la ejecución activa mientras utilices el sitio o compartas ese puerto; si el servidor ya está encendido, abre su dirección directamente.
+El sitio no necesita instalar paquetes para funcionar. Abrir el HTML con doble clic o usar solo Live Server no permite guardar ni publicar: hace falta este servidor.
 
-El estudio de informes funciona con Node, sin instalar paquetes ni descargar un CMS. Abrir el HTML con doble clic o usar solo Live Server no permite guardar y publicar mediante este panel.
+## Cuentas y roles
 
-## Acceso al estudio
+Cada persona del equipo entra con **su propio usuario y contraseña**. El rol define qué puede hacer, y el servidor lo comprueba en cada acción (ocultar un botón no basta para saltarse un permiso).
 
-La primera vez, abre `/admin/` desde **localhost en la computadora del proyecto** y crea una contraseña de entre 10 y 128 caracteres. Después podrás iniciar y cerrar sesión. No hay una contraseña predeterminada.
-
-La contraseña se guarda con sal y scrypt en `.ceri/admin.json`, fuera de Git; no se guarda en texto plano. Las sesiones caducan a las ocho horas o al reiniciar el servidor. Las escrituras requieren sesión, origen permitido y token CSRF; los intentos de acceso fallidos tienen un límite.
-
-Este panel tiene **un acceso administrativo compartido**. Los campos Autor y Revisado por identifican a los responsables del informe; todavía no son cuentas con permisos separados.
-
-Para restablecer una contraseña olvidada, detén el servidor, elimina **solo** `.ceri/admin.json`, vuelve a iniciarlo y configura el acceso desde localhost. Conserva `.ceri/backups/`. No compartas ni subas a Git los archivos privados de `.ceri/`.
-
-## Crear y publicar un informe
-
-1. Pulsa **Nuevo informe** en la biblioteca del estudio.
-2. En **Información**, completa título, autor, resumen, fecha, número de edición, ámbito y temas. El identificador del enlace se genera automáticamente.
-3. En **Portada**, sube una foto o selecciónala de la galería. Elige una composición editorial con título y foto o una imagen que contenga el diseño completo. Describe la imagen para quienes usan lectores de pantalla.
-4. En **Páginas**, agrega plantillas de texto, resumen ejecutivo, cronología, referencias o página diseñada. Combina párrafos, destacados, fotos, fichas y fuentes. Reordena las páginas con flechas o arrastrándolas; también puedes duplicarlas.
-5. Usa **Vista previa** para leer la edición con el mismo lector de la web: hojas animadas, índice, navegación por teclado, vista de texto y adaptación al celular.
-6. En **Revisar y publicar**, resuelve los campos pendientes. Guarda como borrador, pasa a revisión o publica. La publicación requiere portada, contenido interior, descripciones de las fotos y al menos una fuente con nombre y enlace.
-7. Pulsa **Ver en la web** o **Copiar enlace**. La nueva edición aparece en la biblioteca pública como libro. Las páginas que ya estaban abiertas deben recargarse para mostrar los cambios.
-
-No hace falta crear otro HTML ni modificar el lector. Para preparar informes parecidos, usa **Duplicar** en la biblioteca. Para ocultar una edición publicada sin perder su contenido, usa **Retirar a borrador**.
-
-### Subir fotos y páginas completas
-
-En un bloque de imagen, selecciona una foto existente o sube JPG, PNG, WebP o GIF. El panel optimiza las fotos grandes cuando puede reducir su peso y conserva los GIF. El límite de cada archivo enviado al servidor es 12 MB.
-
-Si ya tienes páginas diseñadas como imágenes, usa **Subir páginas diseñadas** para añadir varias a la vez. Cada imagen se convierte en una hoja del libro, sin recortar su composición. Revisa títulos, orden, descripciones y fuentes antes de publicar. Para contenido nuevo se recomienda usar texto y fotos por bloques: el texto se puede seleccionar y la lectura continua resulta más accesible. La carga directa de PDF no forma parte de este flujo.
-
-### Borradores y respaldos
-
-| Estado | Visibilidad con el servidor del CERI |
+| Rol | Puede |
 |---|---|
-| Borrador | Solo en el estudio |
-| En revisión | Solo en el estudio |
-| Publicado | Biblioteca pública |
+| **Autor/a** | Crear informes y notas, editar los suyos mientras sean borradores o estén en revisión, enviarlos a revisión y subir imágenes. No publica. |
+| **Revisor/a** | Lo anterior, y además revisar, corregir y **firmar como revisor** cualquier publicación que aún no esté publicada. No publica. |
+| **Editor/a** | Lo anterior, y además **publicar, actualizar, retirar y eliminar** publicaciones, borrar imágenes sin uso, editar eventos, participación, alianzas, equipo y convocatoria, leer los mensajes de contacto y descargar copias. |
+| **Administrador/a** | Todo, y además crear cuentas, cambiar roles, restablecer contraseñas, editar los datos institucionales (correo, redes, lema), restaurar respaldos y ver el registro de actividad. |
 
-**Guardar** escribe el informe en `contenido/publicaciones.json`. Los cambios sin guardar se conservan de forma recuperable en ese navegador; al volver a editar, el estudio ofrece recuperarlos. Usa Guardar o descarga un respaldo para conservarlos fuera del navegador.
+Los permisos están definidos en un solo lugar: `admin/permisos.js`.
 
-Antes de cada escritura, el servidor respalda la colección anterior en `.ceri/backups/` y conserva los últimos 20 respaldos. Puedes descargar el informe actual o un respaldo JSON completo desde el panel. Si dos personas guardan a partir de la misma versión, la segunda recibe un aviso de conflicto y sus cambios no sobrescriben la colección. Descarga su copia antes de recargar y comparar.
+### Primera vez
 
-La restauración de respaldos se realiza desde los archivos del proyecto; no hay importación automática en el panel.
+Abre `/admin/` desde **localhost en la computadora del servidor** y crea la cuenta de administración (usuario, nombre y contraseña de 10 a 128 caracteres). No hay contraseña predeterminada.
 
-## Uso compartido y publicación en internet
+Después, en **Cuentas y roles**, invita a cada persona: escribe su nombre, su usuario y su rol. El estudio muestra **una sola vez** una contraseña temporal. Entrégala en persona o por un canal privado. Al entrar, la persona debe crear su propia contraseña.
 
-El servidor escucha en `127.0.0.1`. El panel guarda en los archivos de **esa copia del proyecto**. No envía commits a GitHub ni publica automáticamente un alojamiento externo.
+### Si vienes de la versión anterior (contraseña compartida)
 
-Para un enlace temporal con el reenvío de puertos de VS Code, configura primero la contraseña desde localhost. Comparte el puerto del servidor del CERI, mantén la PC encendida y la terminal abierta. Si el túnel cambia la cabecera Host y el panel rechaza el origen, permite la dirección HTTPS exacta del túnel al reiniciar:
+Al iniciar el servidor, el acceso compartido anterior (`.ceri/admin.json`) se convierte en la cuenta **`admin`**, con la misma contraseña. Entra con el usuario `admin`, crea las cuentas del equipo y, si quieres, desactiva o cambia la cuenta `admin`.
 
-```powershell
-$env:CERI_ADMIN_ORIGIN = 'https://direccion-exacta-del-tunel'
-npm.cmd run sitio
-```
+Los informes también se reorganizan solos: los borradores pasan al almacén privado `.ceri/publicaciones.json` y `contenido/publicaciones.json` queda solo con lo publicado. **Antes de actualizar**, si tenías borradores que no estaban en Git, descarga un respaldo desde el estudio anterior.
 
-Quien tenga la contraseña y acceso al enlace podrá editar los informes. Compartir solo la biblioteca no requiere dar la contraseña del estudio.
+### Olvidé mi contraseña
 
-**Un alojamiento estático como GitHub Pages no ejecuta la API de Node.** Para administrar y guardar desde internet de forma permanente, hay que desplegar el backend con almacenamiento persistente y HTTPS, o integrar un servicio de datos y autenticación. Servir los archivos JSON directamente desde un alojamiento estático tampoco aplica el filtrado de borradores que hace este servidor. Revisa ese flujo antes de subir la colección completa a un sitio público.
-
-## Otros contenidos y CMS anterior
-
-Eventos, participación, alianzas, equipo, convocatoria y configuración del sitio conservan sus archivos y formularios anteriores en `/admin/cms.html`. Para ese CMS heredado de Decap se necesita internet y su conector local:
+Una persona con rol de administración la restablece desde **Cuentas y roles**. Si nadie puede entrar, en la terminal del servidor:
 
 ```powershell
-npm.cmd run cms
+npm.cmd run cuentas -- listar
+npm.cmd run cuentas -- restablecer <usuario>
+npm.cmd run cuentas -- crear-admin <usuario> "<Nombre completo>"
 ```
 
-Mantén `npm.cmd run sitio` en otra terminal, o usa `npm.cmd run dev` para ambos procesos. El conector local de Decap es una herramienta de la computadora del editor: no tiene el acceso por contraseña del nuevo estudio y no debes compartir su puerto 8081 públicamente. Usa el estudio nuevo para los informes.
+### Seguridad del acceso
 
-Para cambiar el logo manualmente, guarda la imagen en `assets/img/` y actualiza el campo `logo` de `contenido/sitio.json`. El menú y el pie se construyen en `js/layout.js`.
+- Las contraseñas se guardan con sal y scrypt; nunca en texto plano.
+- Las sesiones duran 8 horas y sobreviven a un reinicio del servidor. Cambiar la contraseña, el rol o desactivar una cuenta cierra sus sesiones.
+- Tras 5 intentos fallidos, la cuenta se bloquea 15 minutos; también hay un límite por dirección. Los intentos fallidos quedan en el registro de actividad.
+- Toda escritura exige sesión, origen permitido y token CSRF. La cookie es `HttpOnly`, `SameSite=Strict` y `Secure` con HTTPS.
+- No compartas ni subas a Git la carpeta `.ceri/`.
+
+## Flujo editorial
+
+1. **Autor/a**: pulsa **+ Nueva edición** (libro con páginas) o **+ Nueva nota** (texto continuo).
+2. Completa los pasos **Información**, **Portada** o **Imagen**, y **Páginas** o **Contenido**. Usa **Vista previa** para leerlo como lo verá el público.
+3. En **Revisar y enviar**, pulsa **Enviar a revisión**.
+4. **Revisor/a**: abre las publicaciones en revisión (aparecen en **Pendientes**), corrige y pulsa **Firmar como revisor/a**.
+5. **Editor/a o administración**: resuelve los puntos pendientes y pulsa **Publicar en la biblioteca**. La publicación exige portada, contenido, descripciones de las fotos y al menos una fuente con nombre y enlace.
+6. Pulsa **Ver en la web** o **Copiar enlace**. Al compartir el enlace en WhatsApp, Facebook o X aparece con su título, resumen e imagen.
+
+Para ocultar una publicación sin perderla, usa **Retirar a borrador**. Para borrarla, usa **Eliminar**; queda una copia en los respaldos.
+
+### Imágenes
+
+En un bloque de imagen, elige una foto de la biblioteca o sube JPG, PNG, WebP o GIF (hasta 12 MB). El estudio optimiza las fotos grandes. En **Imágenes** se ve dónde se usa cada una; edición y administración pueden **eliminar las que no se usan**.
+
+Si ya tienes páginas diseñadas como imágenes, usa **Subir páginas diseñadas**. Para contenido nuevo es mejor usar texto y fotos por bloques: el texto se puede seleccionar y es más accesible.
+
+## Contenido del sitio
+
+En **Contenido del sitio** se editan eventos, participación, alianzas, equipo y convocatoria (editor/a y administración), y los **datos institucionales** como el correo, las redes y el lema (solo administración). Al guardar, los cambios se ven de inmediato en la web. Cada campo se valida: fechas, horas, enlaces `https://` y rutas de imagen.
+
+El estudio muestra una lista de **Pendientes** con lo que falta antes de publicar el sitio. Hoy faltan el correo institucional real y los nombres de la directiva.
+
+## Mensajes de contacto
+
+El formulario de **Contacto** guarda los mensajes en el servidor. Editor/a y administración los leen en **Mensajes**, los marcan como leídos y los responden por correo. Para evitar abusos hay un límite de mensajes por hora y un campo trampa para robots. Los mensajes contienen datos personales: trátalos con cuidado y elimina los que ya no sean necesarios.
+
+## Respaldos y actividad
+
+Cada guardado respalda la versión anterior en `.ceri/backups/` y conserva los últimos 30 respaldos por sección. En **Respaldos y actividad**, administración puede descargarlos o **restaurarlos**. Restaurar también respalda el estado actual, así que se puede deshacer. El **registro de actividad** muestra quién creó, publicó, eliminó o cambió algo, y cuándo.
+
+Si dos personas guardan a partir de la misma versión, la segunda recibe un aviso de conflicto y sus cambios no sobrescriben los de la otra. Los cambios sin guardar quedan recuperables en ese navegador.
+
+## Publicar en internet
+
+Todavía no está publicado. Cuando el equipo decida hacerlo, sigue **[DESPLIEGUE.md](DESPLIEGUE.md)**: explica cómo elegir el alojamiento, qué variables configurar, cómo crear la primera cuenta y una lista de verificación de seguridad.
+
+Resumen: el sitio necesita un servidor Node.js con **HTTPS** y un **disco persistente** para la carpeta de datos. Un alojamiento estático como GitHub Pages **no** sirve para el estudio. Aun así, el archivo público ya no contiene borradores.
 
 ## Arquitectura
 
-El sitio conserva HTML, CSS y JavaScript sin framework. El panel usa los mismos datos y el mismo lector editorial que la biblioteca pública.
+HTML, CSS y JavaScript sin framework. El servidor no tiene dependencias externas; Prettier solo se usa para dar formato al código.
 
 | Ruta | Función |
 |---|---|
-| `index.html` | Inicio institucional |
-| `analisis.html` | Biblioteca, filtros y lector integrado |
-| `articulo.html` | Vista individual de publicaciones |
-| `eventos.html`, `participacion.html`, `alianzas.html` | Secciones institucionales |
-| `nosotros.html`, `convocatoria.html`, `contacto.html` | Equipo, convocatoria y contacto |
-| `css/styles.css` | Identidad institucional y estilos generales |
-| `css/periodico.css` | Portadas, biblioteca y lector |
-| `js/visor-editorial.js` | Renderizado compartido y animación de hojas 3D |
-| `js/datos.js`, `js/main.js`, `js/layout.js`, `js/utils.js` | Datos, páginas y utilidades públicas |
-| `contenido/*.json` | Contenido del sitio |
-| `admin/index.html`, `admin/studio.css`, `admin/studio.js` | Interfaz del estudio editorial |
-| `admin/model.js` | Plantillas y validación compartidas por navegador y servidor |
-| `admin/cms.html`, `admin/config.yml` | CMS anterior para otros contenidos |
-| `herramientas/servidor.js`, `herramientas/admin-api.js` | Servidor y API de administración |
-| `assets/img/subidas/` | Imágenes cargadas desde el panel |
-| `.ceri/` | Credenciales y respaldos locales, ignorados por Git |
+| `index.html`, `analisis.html`, `articulo.html`… | Páginas públicas |
+| `css/`, `js/` | Estilos, lector editorial (`js/visor-editorial.js`) y lógica de cada página |
+| `contenido/*.json` | Contenido público (solo lo publicado) |
+| `admin/index.html`, `admin/studio.css` | Interfaz del estudio |
+| `admin/studio.js` | Biblioteca y editor de publicaciones |
+| `admin/secciones.js` | Contenido del sitio, mensajes, cuentas, respaldos y mi cuenta |
+| `admin/permisos.js` | Roles y permisos (navegador y servidor) |
+| `admin/model.js` | Modelo y validación de ediciones y notas |
+| `admin/colecciones.js` | Esquemas del contenido del sitio |
+| `herramientas/servidor.js` | Servidor: archivos públicos, seguridad, metadatos, `robots.txt`, `sitemap.xml` |
+| `herramientas/admin-api.js` | API del estudio |
+| `herramientas/usuarios.js` | Cuentas, sesiones y límite de intentos |
+| `herramientas/almacen.js` | Escrituras atómicas, respaldos, almacén privado y registro de actividad |
+| `herramientas/contacto.js` | Formulario de contacto |
+| `herramientas/cuentas.js` | Gestión de cuentas desde la terminal |
+| `herramientas/config.js` | Variables de entorno |
+| `assets/img/subidas/` | Imágenes subidas desde el estudio |
+| `.ceri/` | Cuentas, sesiones, borradores, mensajes, respaldos y registro (privado, fuera de Git) |
+
+El servidor solo entrega archivos de una lista permitida: el código del servidor, `package.json`, el README y `.ceri/` no son accesibles desde el navegador.
 
 Paleta institucional: `#1f2f49`, `#27446e`, `#587eac`, `#f0efda`.
 
-La edición original de Brasil conserva sus 14 páginas e imágenes. Está identificada como archivo con fecha de corte al **13 de octubre de 2026**. La integración técnica no constituye una nueva verificación de sus afirmaciones ni de sus referencias.
+La edición original de Brasil conserva sus 14 páginas (ahora en WebP, con la mitad de peso). Está identificada como archivo con fecha de corte al **13 de octubre de 2026**. La integración técnica no constituye una nueva verificación de sus afirmaciones ni de sus referencias.
 
 ## Comprobaciones
 
 ```powershell
-npm.cmd run validar
-npm.cmd run test:admin
+npm.cmd install
+npm.cmd run comprobar
 ```
 
-El validador revisa el contenido existente. Las pruebas del panel utilizan una carpeta temporal: comprueban acceso, sesiones, escrituras, carga de imágenes, borradores privados, publicación, conflictos de versión y conservación de informes anteriores. No cambian los informes del proyecto ni configuran su contraseña real.
+`comprobar` ejecuta el validador de contenido, las pruebas y la revisión de formato. Las pruebas usan carpetas temporales y cubren roles y permisos, sesiones, bloqueo por intentos, migración de la cuenta anterior, borradores privados, conflictos, imágenes, contenido del sitio, respaldos, contacto y la protección de archivos. GitHub Actions las ejecuta en cada push y Pull Request.
 
-La comprobación visual debe cubrir computadora y celular: inicio de sesión, creación, guardado, carga de fotos y páginas, vista previa y apertura de una edición publicada.
+Para dar formato al código antes de subir cambios: `npm.cmd run formato`.
 
-## Colaboración y pendientes
+## Colaboración
 
-Trabaja en una rama, valida antes de subir cambios y abre un Pull Request para revisión. Mantén HTML, estilos y scripts en sus archivos correspondientes. No incluyas contraseñas ni datos de postulantes en el repositorio. Respeta los principios editoriales del CERI: independencia, imparcialidad, fuentes verificables y distinción entre hechos, interpretaciones y escenarios.
-
-Los roles de autor, revisor y editor describen el flujo del equipo; los permisos por persona y un backend permanente para internet siguen pendientes. También quedan la confirmación de datos institucionales, el correo de contacto, las integraciones de formularios y las futuras secciones que acuerde el equipo.
+Trabaja en una rama, ejecuta `npm.cmd run comprobar` y abre un Pull Request para revisión. No incluyas contraseñas, la carpeta `.ceri/` ni datos de postulantes en el repositorio. Respeta los principios editoriales del CERI: independencia, imparcialidad, fuentes verificables y distinción entre hechos, interpretaciones y escenarios.

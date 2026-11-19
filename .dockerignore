@@ -1,0 +1,8 @@
+.git
+.github
+.vscode
+.ceri
+node_modules
+*.log
+Dockerfile
+.dockerignore
