@@ -588,30 +588,6 @@
         }
       ],
       "correcciones": []
-    },
-    {
-      "id": "borrador-de-ejemplo",
-      "titulo": "[BORRADOR] Ejemplo de publicación en revisión",
-      "subtitulo": "Este texto no aparece en la web porque su estado es 'borrador'",
-      "tipo": "Nota de coyuntura",
-      "ambito": "Nacional",
-      "temas": [
-        "Ejemplo"
-      ],
-      "autor": "Nombre del autor",
-      "revisadoPor": "",
-      "fecha": "2026-11-10",
-      "actualizado": "",
-      "estado": "borrador",
-      "destacado": false,
-      "imagen": "",
-      "resumen": "Ejemplo.",
-      "hechos": [],
-      "posturas": [],
-      "desarrollo": "",
-      "escenarios": [],
-      "fuentes": [],
-      "correcciones": []
     }
   ]
 }

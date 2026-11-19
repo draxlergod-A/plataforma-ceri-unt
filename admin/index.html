@@ -7,38 +7,183 @@
   <meta name="theme-color" content="#1f2f49">
   <base href="../">
   <title>Estudio editorial | CERI · UNT</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="stylesheet" href="css/periodico.css">
   <link rel="stylesheet" href="admin/studio.css">
 </head>
 <body class="admin-body">
   <a class="skip" href="#workspace">Saltar al espacio de trabajo</a>
+
   <section id="access-screen" class="access-screen">
-    <aside class="access-story"><a class="studio-brand" href="index.html"><b>CERI</b><span>Universidad Nacional<br>de Trujillo</span></a><div><p class="eyebrow">Estudio editorial / CERI</p><h1>Del análisis<br>a la próxima<br><em>edición.</em></h1><p>Un espacio para preparar, revisar y publicar los informes del CERI como libros digitales.</p><div class="access-steps"><span>01 · Construye</span><span>02 · Previsualiza</span><span>03 · Publica</span></div></div><small>Círculo de Estudios de Relaciones Internacionales</small></aside>
-    <div class="access-form"><div><p class="eyebrow">Acceso al equipo editorial</p><h2 id="access-title">Conectando con el estudio…</h2><p id="access-description">Estamos comprobando el acceso al panel.</p><form id="access-form" hidden><label>Contraseña<input id="access-password" type="password" autocomplete="current-password" required minlength="10" maxlength="128"></label><label id="password-confirm-label" hidden>Repite la contraseña<input id="access-confirm" type="password" autocomplete="new-password" maxlength="128"></label><button class="studio-button studio-button--primary" id="access-submit" type="submit">Entrar al estudio →</button></form><p id="access-error" class="studio-error" role="alert"></p><a href="analisis.html" class="studio-link">← Volver a la biblioteca pública</a></div></div>
+    <aside class="access-story">
+      <a class="studio-brand" href="index.html"><b>CERI</b><span>Universidad Nacional<br>de Trujillo</span></a>
+      <div>
+        <p class="eyebrow">Estudio editorial / CERI</p>
+        <h1>Del análisis<br>a la próxima<br><em>edición.</em></h1>
+        <p>Un espacio para preparar, revisar y publicar los informes del CERI como libros digitales.</p>
+        <div class="access-steps"><span>01 · Construye</span><span>02 · Revisa</span><span>03 · Publica</span></div>
+      </div>
+      <small>Círculo de Estudios de Relaciones Internacionales</small>
+    </aside>
+    <div class="access-form">
+      <div>
+        <p class="eyebrow">Acceso al equipo editorial</p>
+        <h2 id="access-title">Conectando con el estudio…</h2>
+        <p id="access-description">Estamos comprobando el acceso al panel.</p>
+        <form id="access-form" hidden>
+          <label id="access-user-label">Usuario<input id="access-user" autocomplete="username" autocapitalize="none" spellcheck="false" maxlength="32"></label>
+          <label id="access-name-label" hidden>Tu nombre<input id="access-name" autocomplete="name" maxlength="80"></label>
+          <label id="access-current-label" hidden>Contraseña temporal<input id="access-current" type="password" autocomplete="current-password" maxlength="128"></label>
+          <label><span id="access-password-text">Contraseña</span><input id="access-password" type="password" autocomplete="current-password" required minlength="10" maxlength="128"></label>
+          <label id="password-confirm-label" hidden>Repite la contraseña<input id="access-confirm" type="password" autocomplete="new-password" maxlength="128"></label>
+          <button class="studio-button studio-button--primary" id="access-submit" type="submit">Entrar al estudio →</button>
+        </form>
+        <p id="access-error" class="studio-error" role="alert"></p>
+        <p class="studio-caption">¿Olvidaste tu contraseña? Pide a administración que la restablezca.</p>
+        <a href="analisis.html" class="studio-link">← Volver a la biblioteca pública</a>
+      </div>
+    </div>
   </section>
+
   <div id="studio-shell" class="studio-shell" hidden>
-    <aside class="studio-sidebar"><a class="studio-brand" href="admin/"><b>CERI</b><span>Estudio<br>editorial</span></a><p class="studio-nav-label">Espacio de trabajo</p><nav aria-label="Administración"><button type="button" data-view="library" class="studio-nav-item" aria-current="page"><span aria-hidden="true">▤</span> Informes</button><button type="button" data-view="media" class="studio-nav-item"><span aria-hidden="true">▧</span> Imágenes</button><button type="button" data-view="guide" class="studio-nav-item"><span aria-hidden="true">?</span> Guía editorial</button></nav><div class="studio-sidebar__bottom"><a href="analisis.html" target="_blank" rel="noopener">Ver biblioteca ↗</a><a href="admin/cms.html" target="_blank" rel="noopener">Otros contenidos ↗</a><button id="logout" type="button">Cerrar sesión</button><small>CERI · UNT<br>Gestión de ediciones digitales</small></div></aside>
-    <div class="studio-workspace"><header class="studio-topbar"><span id="workspace-label">Biblioteca editorial</span><div><span class="studio-connection"><i></i> Conectado</span><a href="index.html" target="_blank" rel="noopener">Ver sitio ↗</a></div></header>
+    <aside class="studio-sidebar">
+      <a class="studio-brand" href="admin/"><b>CERI</b><span>Estudio<br>editorial</span></a>
+      <p class="studio-nav-label">Publicaciones</p>
+      <nav aria-label="Administración">
+        <button type="button" data-view="library" class="studio-nav-item" aria-current="page"><span aria-hidden="true">▤</span> Informes y notas</button>
+        <button type="button" data-view="media" class="studio-nav-item"><span aria-hidden="true">▧</span> Imágenes</button>
+        <p class="studio-nav-label" data-requires="contenido.editar|sitio.editar|mensajes.ver">Sitio web</p>
+        <button type="button" data-view="contenido" class="studio-nav-item" data-requires="contenido.editar|sitio.editar"><span aria-hidden="true">☰</span> Contenido del sitio</button>
+        <button type="button" data-view="mensajes" class="studio-nav-item" data-requires="mensajes.ver"><span aria-hidden="true">✉</span> Mensajes <b id="unread-badge" class="studio-count" hidden></b></button>
+        <p class="studio-nav-label" data-requires="usuarios.gestionar|respaldos.restaurar">Administración</p>
+        <button type="button" data-view="equipo" class="studio-nav-item" data-requires="usuarios.gestionar"><span aria-hidden="true">◎</span> Cuentas y roles</button>
+        <button type="button" data-view="seguridad" class="studio-nav-item" data-requires="respaldos.restaurar|auditoria.ver"><span aria-hidden="true">↺</span> Respaldos y actividad</button>
+        <p class="studio-nav-label">Tú</p>
+        <button type="button" data-view="cuenta" class="studio-nav-item"><span aria-hidden="true">●</span> Mi cuenta</button>
+        <button type="button" data-view="guide" class="studio-nav-item"><span aria-hidden="true">?</span> Guía editorial</button>
+      </nav>
+      <div class="studio-sidebar__bottom">
+        <div class="studio-user"><strong id="user-name"></strong><span id="user-role"></span></div>
+        <a href="analisis.html" target="_blank" rel="noopener">Ver biblioteca ↗</a>
+        <button id="logout" type="button">Cerrar sesión</button>
+        <small>CERI · UNT<br>Gestión editorial</small>
+      </div>
+    </aside>
+
+    <div class="studio-workspace">
+      <header class="studio-topbar"><span id="workspace-label">Biblioteca editorial</span><div><span class="studio-connection"><i></i> Conectado</span><a href="index.html" target="_blank" rel="noopener">Ver sitio ↗</a></div></header>
       <main id="workspace" class="studio-main">
-        <section id="library-view"><div class="studio-heading"><div><p class="eyebrow">La colección / Cuadernos CERI</p><h1>Cada informe,<br>una nueva perspectiva.</h1><p>Organiza tus ediciones y continúa donde lo dejaste.</p></div><button type="button" class="studio-button studio-button--primary" data-action="new">+ Nuevo informe</button></div><div id="dashboard-stats" class="dashboard-stats"></div><div class="studio-section-title"><h2>Tu biblioteca</h2><div><button type="button" class="studio-button studio-button--quiet" id="refresh-library">↻ Actualizar</button><button type="button" class="studio-button studio-button--quiet" id="download-backup">Descargar respaldo</button></div></div><div class="studio-filters"><div id="status-tabs" class="status-tabs" role="group" aria-label="Filtrar por estado"><button type="button" data-status="" aria-pressed="true">Todos</button><button type="button" data-status="borrador" aria-pressed="false">Borradores</button><button type="button" data-status="revision" aria-pressed="false">En revisión</button><button type="button" data-status="publicado" aria-pressed="false">Publicados</button></div><label class="studio-search"><span class="sr-only">Buscar informes</span><input type="search" id="report-search" placeholder="Buscar título, tema o autor…"></label></div><p id="library-status" class="studio-caption" role="status"></p><div id="report-list" class="report-list"></div></section>
-        <section id="media-view" hidden><div class="studio-heading"><div><p class="eyebrow">Recursos editoriales</p><h1>Imágenes que<br>cuentan historias.</h1><p>Reutiliza fotos de tu biblioteca o añade nuevos recursos.</p></div><button type="button" class="studio-button studio-button--primary" id="upload-library">+ Subir imágenes</button></div><div id="media-library" class="media-grid"></div></section>
-        <section id="guide-view" hidden><div class="studio-heading"><div><p class="eyebrow">Una edición, paso a paso</p><h1>Del borrador<br>a la biblioteca.</h1><p>Un proceso sencillo para cuidar el contenido y su presentación.</p></div></div><div class="guide-grid"><article><b>01</b><h2>Define el informe</h2><p>Completa el título, el equipo autor, el ámbito y un resumen breve. Cada edición tiene un enlace propio.</p></article><article><b>02</b><h2>Prepara la portada</h2><p>Elige una foto para la portada editorial o sube un diseño completo. Describe la imagen para facilitar la lectura accesible.</p></article><article><b>03</b><h2>Construye las páginas</h2><p>Añade texto, imágenes, citas, cronologías o fuentes. Puedes duplicar páginas y cambiar el orden, o subir varias páginas ya diseñadas de una vez.</p></article><article><b>04</b><h2>Revisa y publica</h2><p>Comprueba la vista previa del libro. Guardar conserva el estado actual; publicar hace que la edición aparezca en la biblioteca. Los borradores siguen disponibles en este panel.</p></article><article><b>↻</b><h2>Cuida tu trabajo</h2><p>El editor recupera cambios en este navegador. Cada guardado crea un respaldo en el servidor. Descarga también una copia desde tu biblioteca.</p></article><article><b>↗</b><h2>Comparte la edición</h2><p>Después de publicar, abre “Ver en la web” para comprobarla. Mientras el sitio funcione en tu computadora, esta debe permanecer encendida para recibir nuevas publicaciones.</p></article></div></section>
-        <section id="editor-view" hidden>
+
+        <section id="library-view" data-view-section="library">
+          <div class="studio-heading">
+            <div><p class="eyebrow">La colección / Cuadernos CERI</p><h1>Cada informe,<br>una nueva perspectiva.</h1><p>Organiza tus ediciones y notas, y continúa donde lo dejaste.</p></div>
+            <div class="studio-heading__actions" data-requires="informes.crear">
+              <button type="button" class="studio-button studio-button--primary" data-action="new" data-kind="edicion">+ Nueva edición</button>
+              <button type="button" class="studio-button" data-action="new" data-kind="nota">+ Nueva nota</button>
+            </div>
+          </div>
+          <div id="dashboard-stats" class="dashboard-stats"></div>
+          <section id="pending-panel" class="pending-panel" hidden aria-labelledby="pending-title"><h2 id="pending-title">Pendientes</h2><ul id="pending-list"></ul></section>
+          <div class="studio-section-title"><h2>Tu biblioteca</h2><div><button type="button" class="studio-button studio-button--quiet" id="refresh-library">↻ Actualizar</button><button type="button" class="studio-button studio-button--quiet" id="download-backup" data-requires="respaldos.descargar">Descargar respaldo</button></div></div>
+          <div class="studio-filters"><div id="status-tabs" class="status-tabs" role="group" aria-label="Filtrar por estado"><button type="button" data-status="" aria-pressed="true">Todos</button><button type="button" data-status="borrador" aria-pressed="false">Borradores</button><button type="button" data-status="revision" aria-pressed="false">En revisión</button><button type="button" data-status="publicado" aria-pressed="false">Publicados</button></div><label class="studio-search"><span class="sr-only">Buscar publicaciones</span><input type="search" id="report-search" placeholder="Buscar título, tema o autor…"></label></div>
+          <p id="library-status" class="studio-caption" role="status"></p>
+          <div id="report-list" class="report-list"></div>
+        </section>
+
+        <section id="media-view" data-view-section="media" hidden>
+          <div class="studio-heading"><div><p class="eyebrow">Recursos editoriales</p><h1>Imágenes que<br>cuentan historias.</h1><p>Reutiliza fotos de tu biblioteca o añade nuevos recursos. Las imágenes sin uso se pueden eliminar.</p></div><button type="button" class="studio-button studio-button--primary" id="upload-library" data-requires="medios.subir">+ Subir imágenes</button></div>
+          <div id="media-library" class="media-grid"></div>
+        </section>
+
+        <section data-view-section="contenido" hidden>
+          <div class="studio-heading"><div><p class="eyebrow">Sitio web</p><h1>El CERI,<br>siempre al día.</h1><p>Edita eventos, equipo, convocatoria, alianzas y datos institucionales sin tocar archivos.</p></div></div>
+          <div id="content-home" class="collection-grid"></div>
+          <div id="content-editor" hidden></div>
+        </section>
+
+        <section data-view-section="mensajes" hidden>
+          <div class="studio-heading"><div><p class="eyebrow">Formulario de contacto</p><h1>Mensajes<br>recibidos.</h1><p>Consultas, propuestas y pedidos de corrección que llegan desde la web. Contienen datos personales: trátalos con cuidado.</p></div></div>
+          <div id="messages-list" class="messages-list"></div>
+        </section>
+
+        <section data-view-section="equipo" hidden>
+          <div class="studio-heading"><div><p class="eyebrow">Administración</p><h1>Cuentas<br>y roles.</h1><p>Cada persona entra con su propio usuario. El rol define qué puede hacer.</p></div></div>
+          <div id="roles-help" class="roles-grid"></div>
+          <form id="user-form" class="editor-panel-card user-form">
+            <h2>Invitar a una persona</h2>
+            <div class="studio-fields">
+              <label class="studio-field">Nombre completo<input name="nombre" required maxlength="80"></label>
+              <label class="studio-field">Usuario<input name="usuario" required maxlength="32" pattern="[a-z0-9][a-z0-9._\-]{2,31}" autocapitalize="none" spellcheck="false"><small>Minúsculas, números, punto o guion. Ej.: ana.perez</small></label>
+              <label class="studio-field">Rol<select name="rol" id="user-role-select"></select></label>
+            </div>
+            <button class="studio-button studio-button--primary" type="submit">Crear cuenta</button>
+            <div id="user-created" role="status"></div>
+          </form>
+          <div id="users-list" class="users-list"></div>
+        </section>
+
+        <section data-view-section="seguridad" hidden>
+          <div class="studio-heading"><div><p class="eyebrow">Administración</p><h1>Respaldos<br>y actividad.</h1><p>Cada guardado crea un respaldo automático. Restaurar también respalda el estado actual, así que se puede deshacer.</p></div></div>
+          <div class="security-grid">
+            <section class="editor-panel-card" data-requires="respaldos.restaurar"><h2>Respaldos</h2><label class="studio-field">Mostrar<select id="backup-filter"><option value="">Todos</option><option value="publicaciones">Publicaciones</option><option value="eventos">Eventos</option><option value="participacion">Participación</option><option value="alianzas">Alianzas</option><option value="equipo">Equipo</option><option value="convocatoria">Convocatoria</option><option value="sitio">Datos institucionales</option></select></label><div id="backups-list" class="backups-list"></div></section>
+            <section class="editor-panel-card" data-requires="auditoria.ver"><h2>Registro de actividad</h2><p class="studio-caption">Quién hizo qué y cuándo. Incluye accesos fallidos.</p><div id="audit-list" class="audit-list"></div></section>
+          </div>
+        </section>
+
+        <section data-view-section="cuenta" hidden>
+          <div class="studio-heading"><div><p class="eyebrow">Tu acceso</p><h1>Mi cuenta.</h1><p id="account-summary"></p></div></div>
+          <div class="editor-split">
+            <form id="password-form" class="editor-panel-card">
+              <h2>Cambiar contraseña</h2>
+              <p class="studio-caption">Usa al menos 10 caracteres. Una frase de varias palabras es fácil de recordar y difícil de adivinar. Al cambiarla se cierran tus otras sesiones.</p>
+              <div class="studio-fields">
+                <label class="studio-field studio-field--wide">Contraseña actual<input type="password" name="actual" autocomplete="current-password" required maxlength="128"></label>
+                <label class="studio-field">Nueva contraseña<input type="password" name="nueva" autocomplete="new-password" required minlength="10" maxlength="128"></label>
+                <label class="studio-field">Repite la nueva contraseña<input type="password" name="repetir" autocomplete="new-password" required minlength="10" maxlength="128"></label>
+              </div>
+              <button class="studio-button studio-button--primary" type="submit">Actualizar contraseña</button>
+              <p id="password-status" class="studio-caption" role="status"></p>
+            </form>
+            <aside><div class="editor-tip"><p class="eyebrow">Lo que puedes hacer</p><ul id="my-permissions"></ul></div></aside>
+          </div>
+        </section>
+
+        <section id="guide-view" data-view-section="guide" hidden>
+          <div class="studio-heading"><div><p class="eyebrow">Una edición, paso a paso</p><h1>Del borrador<br>a la biblioteca.</h1><p>Un proceso sencillo para cuidar el contenido y su presentación.</p></div></div>
+          <div class="guide-grid">
+            <article><b>01</b><h2>Define la publicación</h2><p>Elige una edición (libro con páginas) o una nota (texto continuo). Completa título, ámbito, temas y un resumen breve.</p></article>
+            <article><b>02</b><h2>Prepara la portada</h2><p>Elige una foto o sube un diseño completo. Describe la imagen para facilitar la lectura accesible.</p></article>
+            <article><b>03</b><h2>Construye el contenido</h2><p>Añade texto, imágenes, citas, cronologías o fuentes. Puedes duplicar páginas, cambiar el orden o subir páginas ya diseñadas.</p></article>
+            <article><b>04</b><h2>Envía a revisión</h2><p>Autores y autoras envían su trabajo a revisión. Revisión corrige y firma. Edición o administración publica.</p></article>
+            <article><b>↻</b><h2>Cuida tu trabajo</h2><p>El editor recupera cambios en este navegador. Cada guardado crea un respaldo en el servidor que administración puede restaurar.</p></article>
+            <article><b>↗</b><h2>Comparte la publicación</h2><p>Después de publicar, abre “Ver en la web” y copia el enlace: al compartirlo aparece con su título, resumen e imagen.</p></article>
+          </div>
+        </section>
+
+        <section id="editor-view" data-view-section="editor" hidden>
           <header class="editor-heading"><div><button type="button" class="studio-link" id="back-library">← Biblioteca</button><h1 id="editor-title">Nuevo informe</h1><span id="save-status" class="studio-caption" role="status">Sin guardar</span></div><div class="editor-actions"><button class="studio-button studio-button--quiet" id="export-report" type="button">Respaldo</button><button class="studio-button" id="save-report" type="button">Guardar</button><button class="studio-button studio-button--primary" id="preview-report" type="button">Vista previa ↗</button></div></header>
-          <nav id="editor-steps" class="editor-steps" aria-label="Preparar informe"><button type="button" data-step="0" aria-current="step"><b>01</b> Información</button><button type="button" data-step="1"><b>02</b> Portada</button><button type="button" data-step="2"><b>03</b> Páginas</button><button type="button" data-step="3"><b>04</b> Revisar y publicar</button></nav>
+          <nav id="editor-steps" class="editor-steps" aria-label="Preparar publicación"><button type="button" data-step="0" aria-current="step"><b>01</b> Información</button><button type="button" data-step="1"><b>02</b> Portada</button><button type="button" data-step="2"><b>03</b> Páginas</button><button type="button" data-step="3"><b>04</b> Revisar y enviar</button></nav>
           <div id="editor-error" class="studio-error" role="alert" hidden></div><form id="editor-form" novalidate><div id="editor-panel"></div></form>
           <footer class="editor-footer"><button type="button" class="studio-button studio-button--quiet" id="previous-step">← Anterior</button><span id="editor-page-count" class="studio-caption"></span><button type="button" class="studio-button studio-button--primary" id="next-step">Continuar →</button></footer>
         </section>
-      </main><footer class="studio-footer"><span>CERI · Universidad Nacional de Trujillo</span><span>Estudio editorial</span></footer>
+      </main>
+      <footer class="studio-footer"><span>CERI · Universidad Nacional de Trujillo</span><span>Estudio editorial</span></footer>
     </div>
   </div>
-  <dialog id="preview-dialog" class="studio-dialog studio-dialog--preview"><header><div><p class="eyebrow">Así lo verá el lector</p><h2>Vista previa de la edición</h2></div><button type="button" class="studio-button" data-close="preview-dialog">✕ Cerrar</button></header><div id="admin-preview"></div></dialog>
+
+  <dialog id="preview-dialog" class="studio-dialog studio-dialog--preview"><header><div><p class="eyebrow">Así lo verá el lector</p><h2>Vista previa</h2></div><button type="button" class="studio-button" data-close="preview-dialog">✕ Cerrar</button></header><div id="admin-preview"></div></dialog>
   <dialog id="media-dialog" class="studio-dialog"><header><div><p class="eyebrow">Biblioteca de imágenes</p><h2>Elige una imagen</h2></div><button type="button" class="studio-button" data-close="media-dialog">✕ Cerrar</button></header><label class="media-drop" id="media-drop"><strong>Arrastra tus imágenes aquí</strong><span>o selecciónalas desde tu dispositivo · JPG, PNG, WebP o GIF · hasta 12 MB</span><input id="media-upload" type="file" accept="image/jpeg,image/png,image/webp,image/gif" multiple></label><p id="upload-status" class="studio-caption" role="status"></p><label class="studio-search"><span class="sr-only">Buscar imágenes</span><input id="media-search" type="search" placeholder="Buscar una imagen…"></label><div id="media-picker-grid" class="media-grid"></div></dialog>
   <dialog id="template-dialog" class="studio-dialog"><header><div><p class="eyebrow">Una página a tu medida</p><h2>¿Cómo quieres empezar?</h2></div><button type="button" class="studio-button" data-close="template-dialog">✕ Cerrar</button></header><div class="template-grid"><button type="button" data-template="texto"><b>¶</b><strong>Texto y fotos</strong><span>Construye el contenido con bloques.</span></button><button type="button" data-template="resumen"><b>≡</b><strong>Resumen ejecutivo</strong><span>Texto y una idea destacada.</span></button><button type="button" data-template="cronologia"><b>⋮</b><strong>Cronología</strong><span>Años, hitos y antecedentes.</span></button><button type="button" data-template="referencias"><b>↗</b><strong>Referencias</strong><span>Fuentes con sus enlaces.</span></button><button type="button" data-template="lamina"><b>▧</b><strong>Diseño completo</strong><span>Sube la imagen de una página diseñada.</span></button></div></dialog>
   <dialog id="confirm-dialog" class="studio-dialog studio-dialog--small"><h2 id="confirm-title"></h2><p id="confirm-message"></p><form method="dialog"><button class="studio-button" value="cancel">Cancelar</button><button class="studio-button studio-button--primary" id="confirm-accept" value="accept">Continuar</button></form></dialog>
   <input id="bulk-pages-input" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden>
   <div id="studio-toast" class="studio-toast" role="status" hidden></div>
-  <script src="js/utils.js"></script><script src="js/visor-editorial.js"></script><script src="admin/model.js"></script><script src="admin/studio.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/visor-editorial.js"></script>
+  <script src="admin/model.js"></script>
+  <script src="admin/permisos.js"></script>
+  <script src="admin/colecciones.js"></script>
+  <script src="admin/studio.js"></script>
+  <script src="admin/secciones.js"></script>
 </body>
 </html>

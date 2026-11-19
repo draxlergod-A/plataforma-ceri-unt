@@ -19,8 +19,15 @@
     dirty: false,
     saving: false,
     setup: false,
-    mediaTarget: null
+    mediaTarget: null,
+    user: null,
+    permisos: []
   };
+  const P = window.CeriPermisos;
+  const can = permiso => state.permisos.includes(permiso);
+  const canEdit = p => P.puedeEditarInforme({ ...state.user, activo: true }, p || null);
+  const isNote = p => M.isNote(p);
+  const kindName = p => (isNote(p) ? "nota" : "informe");
   const labels = { borrador: "Borrador", revision: "En revisión", publicado: "Publicado" };
   const blockLabels = {
     parrafo: "Párrafo",
@@ -45,8 +52,7 @@
   const pagePath = () => `editorial.paginas.${state.page}`;
   const currentPage = () => state.report.editorial.paginas[state.page];
   const draftKey = () => `ceri:editorial:draft:${state.originalId || "new"}`;
-  const publicLink = p =>
-    new URL(`analisis.html?edicion=${encodeURIComponent(p.id)}#sala-de-lectura`, document.baseURI).href;
+  const publicLink = p => new URL(`articulo.html?id=${encodeURIComponent(p.id)}`, document.baseURI).href;
   function toast(message) {
     clearTimeout(toastTimer);
     $("studio-toast").textContent = message;
@@ -117,8 +123,12 @@
   function field(label, route, options = {}) {
     const value = deepGet(state.report, route),
       type = options.type || "text";
-    const attributes = `data-bind="${E(route)}"${options.array ? ' data-array="true"' : ""}${options.rerender ? ' data-rerender="true"' : ""}${options.max ? ' maxlength="' + options.max + '"' : ""}`;
-    const shown = options.array ? (value || []).join(", ") : (value ?? "");
+    const attributes = `data-bind="${E(route)}"${options.disabled ? " disabled" : ""}${options.lines ? ' data-lines="true"' : ""}${options.array ? ' data-array="true"' : ""}${options.rerender ? ' data-rerender="true"' : ""}${options.max ? ' maxlength="' + options.max + '"' : ""}`;
+    const shown = options.array
+      ? (value || []).join(", ")
+      : options.lines
+        ? (value || []).join("\n")
+        : (value ?? "");
     let control;
     if (type === "textarea")
       control = `<textarea ${attributes} rows="${options.rows || 4}" placeholder="${E(options.placeholder || "")}">${E(shown)}</textarea>`;
@@ -134,7 +144,7 @@
     return `<label class="studio-field${options.wide ? " studio-field--wide" : ""}">${E(label)}${control}${options.hint ? `<small>${E(options.hint)}</small>` : ""}</label>`;
   }
   function imageWell(route, key = "imagen") {
-    const object = deepGet(state.report, route),
+    const object = route ? deepGet(state.report, route) : state.report,
       src = object?.[key];
     return `<button type="button" class="image-well" data-pick="${E(route)}" data-image-key="${key}">${src ? `<img src="${E(rutaImagen(src))}" alt="${E(object.alt || "Imagen seleccionada")}">` : ""}<strong>${src ? "Cambiar imagen" : "+ Elegir o subir imagen"}</strong><small>${src ? "Se conserva el encuadre original hasta que cambies esta imagen." : "JPG, PNG, WebP o GIF · desde tu dispositivo o la biblioteca"}</small></button>${src ? `<button type="button" class="studio-link" data-remove-image="${E(route)}" data-image-key="${key}">Quitar imagen</button>` : ""}`;
   }
@@ -163,15 +173,38 @@
       )
       .sort((a, b) => String(b.actualizado || b.fecha).localeCompare(String(a.actualizado || a.fecha)));
     $("library-status").textContent =
-      `${items.length} ${items.length === 1 ? "informe" : "informes"} · Los borradores se conservan en el estudio.`;
+      `${items.length} ${items.length === 1 ? "publicación" : "publicaciones"} · Los borradores solo se ven en el estudio.`;
     $("report-list").innerHTML = items.length
-      ? items
-          .map(
-            p =>
-              `<article class="report-card"><button type="button" class="report-card__cover" data-edit="${E(p.id)}" aria-label="Editar ${E(p.titulo)}">${p.editorial?.paginas?.length ? CeriEditorial.cover(p) : '<span class="report-card__empty">CERI</span>'}</button><div><div class="report-card__meta"><span class="studio-badge studio-badge--${E(p.estado)}">${E(labels[p.estado] || p.estado)}</span><span>${E(p.ambito)}</span><span>${p.editorial?.paginas?.length || 0} páginas</span></div><h3>${E(p.titulo)}</h3><p>${E(p.autor || "Autor por completar")} · ${formatearFecha(p.actualizado || p.fecha)}</p></div><div class="report-card__actions"><button type="button" class="studio-button" data-edit="${E(p.id)}">Editar informe →</button>${p.estado === "publicado" ? `<a class="studio-button studio-button--quiet" href="${E(publicLink(p))}" target="_blank" rel="noopener">Ver en la web ↗</a>` : ""}<button type="button" class="studio-button studio-button--quiet" data-duplicate="${E(p.id)}">Duplicar</button>${p.estado === "publicado" ? `<button type="button" class="studio-button studio-button--quiet" data-withdraw="${E(p.id)}">Retirar a borrador</button>` : ""}</div></article>`
-          )
-          .join("")
-      : '<div class="studio-empty"><h3>Una nueva edición comienza aquí.</h3><p>No hay informes que coincidan con esta búsqueda.</p><button type="button" class="studio-button studio-button--primary" data-action="new">+ Crear un informe</button></div>';
+      ? items.map(p => reportCard(p)).join("")
+      : `<div class="studio-empty"><h3>Una nueva edición comienza aquí.</h3><p>No hay informes que coincidan con esta búsqueda.</p>${can("informes.crear") ? '<button type="button" class="studio-button studio-button--primary" data-action="new">+ Crear un informe</button>' : ""}</div>`;
+  }
+  function reportCard(p) {
+    const editable = canEdit(p);
+    const cover = p.editorial?.paginas?.length
+      ? CeriEditorial.cover(p)
+      : p.imagen
+        ? `<img class="report-card__image" src="${E(rutaImagen(p.imagen))}" alt="">`
+        : `<span class="report-card__empty">${isNote(p) ? "Nota" : "CERI"}</span>`;
+    const extent = isNote(p)
+      ? `Nota · ${minutosLectura(p)} min`
+      : `${p.editorial?.paginas?.length || 0} páginas`;
+    const owner = p.meta?.creadoPorNombre ? ` · Creado por ${E(p.meta.creadoPorNombre)}` : "";
+    const actions = [
+      `<button type="button" class="studio-button" data-edit="${E(p.id)}">${editable ? `Editar ${kindName(p)} →` : "Ver vista previa"}</button>`,
+      p.estado === "publicado"
+        ? `<a class="studio-button studio-button--quiet" href="${E(publicLink(p))}" target="_blank" rel="noopener">Ver en la web ↗</a>`
+        : "",
+      can("informes.crear")
+        ? `<button type="button" class="studio-button studio-button--quiet" data-duplicate="${E(p.id)}">Duplicar</button>`
+        : "",
+      p.estado === "publicado" && can("informes.publicar")
+        ? `<button type="button" class="studio-button studio-button--quiet" data-withdraw="${E(p.id)}">Retirar a borrador</button>`
+        : "",
+      can("informes.eliminar")
+        ? `<button type="button" class="studio-button studio-button--quiet studio-button--danger" data-delete-report="${E(p.id)}">Eliminar</button>`
+        : ""
+    ].join("");
+    return `<article class="report-card"><button type="button" class="report-card__cover" data-edit="${E(p.id)}" aria-label="${editable ? "Editar" : "Ver"} ${E(p.titulo)}">${cover}</button><div><div class="report-card__meta"><span class="studio-badge studio-badge--${E(p.estado)}">${E(labels[p.estado] || p.estado)}</span><span>${E(p.tipo || "")}</span><span>${E(p.ambito)}</span><span>${extent}</span></div><h3>${E(p.titulo)}</h3><p>${E(p.autor || "Autor por completar")} · ${formatearFecha(p.actualizado || p.fecha)}${owner}</p>${p.revisadoPor ? `<p class="studio-caption">Revisado por ${E(p.revisadoPor)}</p>` : ""}</div><div class="report-card__actions">${actions}</div></article>`;
   }
   async function loadLibrary() {
     const data = await api("publicaciones");
@@ -179,37 +212,83 @@
     state.revision = data.revision;
     renderLibrary();
   }
-  async function activate() {
+  function applySession(session) {
+    state.csrf = session.csrfToken || state.csrf;
+    state.user = session.usuario;
+    state.permisos = session.permisos || [];
+    document.querySelectorAll("[data-requires]").forEach(el => {
+      el.hidden = !el.dataset.requires.split("|").some(can);
+    });
+    $("user-name").textContent = state.user.nombre;
+    $("user-role").textContent = P.ROLES[state.user.rol]?.nombre || state.user.rol;
+  }
+  async function activate(session) {
+    applySession(session);
+    if (session.usuario.debeCambiar) {
+      showAccess("password");
+      return;
+    }
     $("access-screen").hidden = true;
     $("studio-shell").hidden = false;
+    window.scrollTo({ top: 0 });
     try {
       await loadLibrary();
+      await window.CeriSecciones?.alActivar();
     } catch (error) {
       toast(error.message);
     }
   }
+  /* Pantallas de acceso: "setup" (primera cuenta), "login" o "password" (cambio obligatorio). */
+  function showAccess(mode) {
+    state.accessMode = mode;
+    $("access-screen").hidden = false;
+    $("studio-shell").hidden = true;
+    $("access-form").hidden = false;
+    const text = {
+      setup: [
+        "Configura tu estudio.",
+        "Crea la cuenta de administración. Después podrás invitar al equipo con su propio usuario y rol.",
+        "Crear cuenta y entrar →"
+      ],
+      login: [
+        "Bienvenido de nuevo.",
+        "Ingresa con tu usuario personal para continuar con las ediciones del CERI.",
+        "Entrar al estudio →"
+      ],
+      password: [
+        "Crea tu contraseña.",
+        "Entraste con una contraseña temporal. Define una contraseña personal de al menos 10 caracteres para continuar.",
+        "Guardar y entrar →"
+      ]
+    }[mode];
+    [$("access-title").textContent, $("access-description").textContent, $("access-submit").textContent] =
+      text;
+    $("access-user-label").hidden = mode === "password";
+    $("access-name-label").hidden = mode !== "setup";
+    $("access-current-label").hidden = mode !== "password";
+    $("password-confirm-label").hidden = mode === "login";
+    $("access-user").required = mode !== "password";
+    $("access-name").required = mode === "setup";
+    $("access-current").required = mode === "password";
+    $("access-confirm").required = mode !== "login";
+    $("access-password").autocomplete = mode === "login" ? "current-password" : "new-password";
+    $("access-password-text").textContent = mode === "password" ? "Nueva contraseña" : "Contraseña";
+    (mode === "password" ? $("access-current") : $("access-user")).focus();
+  }
   async function access() {
     try {
       const session = await api("session");
-      state.csrf = session.csrfToken || "";
       if (session.authenticated) {
-        await activate();
+        await activate(session);
         return;
       }
-      state.setup = !session.configured;
-      $("access-title").textContent = state.setup ? "Configura tu estudio." : "Bienvenido de nuevo.";
-      $("access-description").textContent = state.setup
-        ? "Crea una contraseña para el equipo editorial. Podrás guardar informes y publicarlos desde este panel."
-        : "Ingresa la contraseña del equipo para continuar trabajando en las ediciones del CERI.";
-      if (state.setup && !session.setupAllowed) {
+      if (!session.configured && !session.setupAllowed) {
+        $("access-title").textContent = "Configura tu estudio.";
         $("access-description").textContent =
-          "El responsable debe crear primero la contraseña desde http://localhost:5500/admin/ en la computadora del proyecto.";
+          "La primera cuenta se crea desde http://localhost en la computadora del servidor, o con «npm run cuentas -- crear-admin» en su terminal.";
         return;
       }
-      $("access-form").hidden = false;
-      $("password-confirm-label").hidden = !state.setup;
-      $("access-password").autocomplete = state.setup ? "new-password" : "current-password";
-      $("access-submit").textContent = state.setup ? "Crear acceso y entrar →" : "Entrar al estudio →";
+      showAccess(session.configured ? "login" : "setup");
     } catch (error) {
       $("access-title").textContent = "Conectemos tu estudio.";
       $("access-description").textContent =
@@ -220,17 +299,22 @@
   $("access-form").addEventListener("submit", async e => {
     e.preventDefault();
     $("access-error").textContent = "";
+    const mode = state.accessMode;
     const password = $("access-password").value;
-    if (state.setup && password !== $("access-confirm").value) {
+    if (mode !== "login" && password !== $("access-confirm").value) {
       $("access-error").textContent = "Las contraseñas no coinciden.";
       return;
     }
     $("access-submit").disabled = true;
     try {
-      const data = await api(state.setup ? "setup" : "login", { method: "POST", body: { password } });
-      state.csrf = data.csrfToken;
-      $("access-password").value = $("access-confirm").value = "";
-      await activate();
+      const body =
+        mode === "password"
+          ? { actual: $("access-current").value, nueva: password }
+          : { usuario: $("access-user").value, nombre: $("access-name").value, password };
+      const route = { setup: "setup", login: "login", password: "cuenta/password" }[mode];
+      const data = await api(route, { method: "POST", body });
+      $("access-form").reset();
+      await activate(data);
     } catch (error) {
       $("access-error").textContent = error.message;
     } finally {
@@ -254,9 +338,12 @@
     clearTimeout(autosaveTimer);
     autosaveTimer = setTimeout(cacheDraft, 700);
     $("save-status").textContent = "Cambios sin guardar";
-    $("editor-title").textContent = state.report.titulo || "Nuevo informe";
-    $("editor-page-count").textContent =
-      `${state.report.editorial.paginas.length} páginas · ${labels[state.report.estado]}`;
+    $("editor-title").textContent = state.report.titulo || `Nueva ${kindName(state.report)}`;
+    $("editor-page-count").textContent = extentLabel();
+  }
+  function extentLabel() {
+    const p = state.report;
+    return `${isNote(p) ? "Nota" : p.editorial.paginas.length + " páginas"} · ${labels[p.estado]}`;
   }
   async function leaveEditor() {
     if (state.saving || state.uploading) {
@@ -274,25 +361,29 @@
   async function showView(view) {
     if (view !== "editor" && !(await leaveEditor())) return;
     state.view = view;
-    ["library", "media", "guide", "editor"].forEach(name => {
-      $(`${name}-view`).hidden = name !== view;
+    document.querySelectorAll("[data-view-section]").forEach(section => {
+      section.hidden = section.dataset.viewSection !== view;
     });
     document
       .querySelectorAll("[data-view]")
       .forEach(b => b.setAttribute("aria-current", b.dataset.view === view ? "page" : "false"));
-    $("workspace-label").textContent = {
-      library: "Biblioteca editorial",
-      media: "Biblioteca de imágenes",
-      guide: "Guía del estudio",
-      editor: "Editor de informes"
-    }[view];
+    $("workspace-label").textContent =
+      {
+        library: "Biblioteca editorial",
+        media: "Biblioteca de imágenes",
+        guide: "Guía del estudio",
+        editor: "Editor de publicaciones"
+      }[view] ||
+      window.CeriSecciones?.titulo(view) ||
+      "";
     if (view === "library") renderLibrary();
     if (view === "media") await loadMedia();
+    await window.CeriSecciones?.mostrar(view);
     window.scrollTo({ top: 0, behavior: "auto" });
   }
   function ensureBook(pub) {
     const p = M.clone(pub);
-    if (p.editorial?.paginas?.length) return p;
+    if (isNote(p) || p.editorial?.paginas?.length) return p;
     const initial = M.createReport();
     p.editorial = {
       ...initial.editorial,
@@ -329,18 +420,28 @@
     while (state.items.some(p => p.id === id && p.id !== state.originalId)) id = base + "-" + n++;
     return id;
   }
-  async function openReport(pub = null, duplicate = false) {
+  async function openReport(pub = null, duplicate = false, kind = "edicion") {
+    if (pub && !duplicate && !canEdit(pub)) {
+      previewPublication(pub);
+      toast("Tu rol permite ver esta publicación, pero no modificarla.");
+      return;
+    }
     if (!(await leaveEditor())) return;
     state.originalId = duplicate ? null : pub?.id || null;
-    let report = pub ? ensureBook(pub) : M.createReport(nextEdition());
+    let report = pub ? ensureBook(pub) : kind === "nota" ? M.createNote() : M.createReport(nextEdition());
+    if (!pub && state.user) report.autor = state.user.nombre;
     if (duplicate) {
       report.titulo += " — Copia";
       report.estado = "borrador";
       report.id = uniqueSlug(report.titulo);
       report.fecha = M.today();
       report.actualizado = "";
-      report.editorial.edicion = nextEdition();
-      report.editorial.paginas[0].titulo = report.titulo;
+      report.revisadoPor = "";
+      delete report.meta;
+      if (!isNote(report)) {
+        report.editorial.edicion = nextEdition();
+        report.editorial.paginas[0].titulo = report.titulo;
+      }
     }
     let recovered = false;
     if (!duplicate) {
@@ -372,7 +473,13 @@
       $("save-status").textContent = "Borrador recuperado · guarda para conservarlo en el servidor";
   }
   function renderEditor() {
-    $("editor-title").textContent = state.report.titulo || "Nuevo informe";
+    $("editor-title").textContent = state.report.titulo || `Nueva ${kindName(state.report)}`;
+    const stepNames = isNote(state.report)
+      ? ["Información", "Imagen", "Contenido", "Revisar y enviar"]
+      : ["Información", "Portada", "Páginas", "Revisar y enviar"];
+    document.querySelectorAll("[data-step]").forEach((b, i) => {
+      b.innerHTML = `<b>${String(i + 1).padStart(2, "0")}</b> ${stepNames[i]}`;
+    });
     $("save-report").textContent =
       state.report.estado === "publicado"
         ? "Guardar cambios en la web"
@@ -389,14 +496,17 @@
       .forEach(b => b.setAttribute("aria-current", Number(b.dataset.step) === state.step ? "step" : "false"));
     $("previous-step").hidden = state.step === 0;
     $("next-step").hidden = state.step === 3;
-    $("editor-page-count").textContent =
-      `${state.report.editorial.paginas.length} páginas · ${labels[state.report.estado]}`;
+    $("editor-page-count").textContent = extentLabel();
     $("editor-error").hidden = true;
-    $("editor-panel").innerHTML = [renderInfo, renderCover, renderPages, renderReview][state.step]();
+    $("editor-panel").innerHTML = (
+      isNote(state.report)
+        ? [renderInfo, renderNoteImage, renderNoteContent, renderReview]
+        : [renderInfo, renderCover, renderPages, renderReview]
+    )[state.step]();
     if (state.step === 1) updateCover();
   }
   function renderInfo() {
-    return `<div class="editor-split"><section class="editor-panel-card"><h2>La identidad del informe</h2><p>Estos datos aparecerán junto a la edición en la biblioteca pública.</p><div class="studio-fields">${field("Título del informe", "titulo", { wide: true, placeholder: "¿Qué tema analiza esta edición?", max: 220 })}${field("Subtítulo", "subtitulo", { wide: true, placeholder: "Una línea que amplíe el título", max: 400 })}${field("Autor o equipo responsable", "autor", { placeholder: "Nombre del autor o Equipo CERI" })}${field("Revisado por (opcional)", "revisadoPor", { placeholder: "Nombre de quien revisó la edición" })}${field("Fecha de publicación", "fecha", { type: "date" })}${field("Número de edición", "editorial.edicion", { placeholder: "Ej. 02" })}${field("Ámbito", "ambito", { type: "select", options: ["Nacional", "América Latina", "Internacional"] })}${field("Tipo de publicación", "tipo", { type: "select", options: ["Informe", "Análisis", "Nota de coyuntura", "Explicador"] })}${field("Temas", "temas", { array: true, wide: true, placeholder: "Geopolítica, elecciones, América Latina", hint: "Separa los temas con comas. Ayudan a encontrar el informe en la biblioteca." })}${field("Resumen de la edición", "resumen", { type: "textarea", wide: true, rows: 4, hint: "Presenta en 2 o 3 frases qué encontrará el lector." })}${field("Nota de edición (opcional)", "editorial.nota", { wide: true, placeholder: "Ej. Fecha de corte: 15 de noviembre de 2026" })}<label class="studio-field studio-field--wide studio-field--check"><input type="checkbox" data-bind="destacado"${state.report.destacado ? " checked" : ""}> Destacar este informe en el inicio</label>${field("Identificador del enlace", "id", { wide: true, hint: "Se genera a partir del título. Cambiarlo después de publicar modifica el enlace del informe." })}</div></section><aside><div class="editor-tip"><p class="eyebrow">Una edición con criterio</p><h3>Claridad desde el inicio.</h3><ul><li>Usa un título que describa el tema.</li><li>Indica quién escribió y revisó el informe.</li><li>Señala la fecha de corte cuando analices una coyuntura.</li><li>Reserva una página para las fuentes.</li></ul></div><div class="editor-tip"><h3>Tu libro se construye aquí.</h3><p>La portada y las páginas que prepares se convertirán en una edición navegable. Puedes comprobar el resultado con “Vista previa” en cualquier momento.</p></div></aside></div>`;
+    return `<div class="editor-split"><section class="editor-panel-card"><h2>La identidad del informe</h2><p>Estos datos aparecerán junto a la edición en la biblioteca pública.</p><div class="studio-fields">${field("Título del informe", "titulo", { wide: true, placeholder: "¿Qué tema analiza esta edición?", max: 220 })}${field("Subtítulo", "subtitulo", { wide: true, placeholder: "Una línea que amplíe el título", max: 400 })}${field("Autor o equipo responsable", "autor", { placeholder: "Nombre del autor o Equipo CERI" })}${field("Revisado por", "revisadoPor", { placeholder: can("informes.editarTodos") ? "Nombre de quien revisó" : "Lo completa revisión o edición", disabled: !can("informes.editarTodos") })}${field("Fecha de publicación", "fecha", { type: "date" })}${isNote(state.report) ? "" : field("Número de edición", "editorial.edicion", { placeholder: "Ej. 02" })}${field("Ámbito", "ambito", { type: "select", options: ["Nacional", "América Latina", "Internacional"] })}${field("Tipo de publicación", "tipo", { type: "select", options: ["Informe", "Análisis", "Nota de coyuntura", "Explicador"] })}${field("Temas", "temas", { array: true, wide: true, placeholder: "Geopolítica, elecciones, América Latina", hint: "Separa los temas con comas. Ayudan a encontrar el informe en la biblioteca." })}${field("Resumen de la edición", "resumen", { type: "textarea", wide: true, rows: 4, hint: "Presenta en 2 o 3 frases qué encontrará el lector." })}${isNote(state.report) ? "" : field("Nota de edición (opcional)", "editorial.nota", { wide: true, placeholder: "Ej. Fecha de corte: 15 de noviembre de 2026" })}<label class="studio-field studio-field--wide studio-field--check"><input type="checkbox" data-bind="destacado"${state.report.destacado ? " checked" : ""}> Destacar este informe en el inicio</label>${field("Identificador del enlace", "id", { wide: true, hint: "Se genera a partir del título. Cambiarlo después de publicar modifica el enlace del informe." })}</div></section><aside><div class="editor-tip"><p class="eyebrow">Una edición con criterio</p><h3>Claridad desde el inicio.</h3><ul><li>Usa un título que describa el tema.</li><li>Indica quién escribió y revisó el informe.</li><li>Señala la fecha de corte cuando analices una coyuntura.</li><li>Reserva una página para las fuentes.</li></ul></div><div class="editor-tip"><h3>Tu libro se construye aquí.</h3><p>La portada y las páginas que prepares se convertirán en una edición navegable. Puedes comprobar el resultado con “Vista previa” en cualquier momento.</p></div></aside></div>`;
   }
   function renderCover() {
     return `<div class="editor-split"><section class="editor-panel-card"><h2>La primera impresión</h2><p>Elige una portada editorial o conserva un diseño de página completo.</p><div class="studio-fields">${field(
@@ -412,6 +522,41 @@
         ]
       }
     )}<div class="studio-field studio-field--wide">Imagen de portada${imageWell("editorial.paginas.0")}</div>${field("Título en la portada", "editorial.paginas.0.titulo", { wide: true })}${field("Subtítulo en la portada", "editorial.paginas.0.bajada", { type: "textarea", wide: true, rows: 3 })}${field("Descripción de la imagen", "editorial.paginas.0.alt", { type: "textarea", wide: true, rows: 2, hint: "Describe lo que aparece. Permite comprender la imagen a quienes usan un lector de pantalla." })}${field("Crédito o pie de foto (opcional)", "editorial.paginas.0.pie", { wide: true })}</div></section><aside class="cover-preview"><p>Portada de tu edición</p><div id="cover-preview-art"></div><p>Vista previa en tiempo real</p></aside></div>`;
+  }
+  function renderNoteImage() {
+    return `<div class="editor-split"><section class="editor-panel-card"><h2>Imagen principal</h2><p>Opcional. Aparece en la tarjeta y al inicio de la nota.</p><div class="studio-fields"><div class="studio-field studio-field--wide">Imagen${imageWell("", "imagen")}</div>${field("Descripción de la imagen", "imagenAlt", { type: "textarea", wide: true, rows: 2, hint: "Describe lo que aparece para quienes usan lector de pantalla." })}</div></section><aside><div class="editor-tip"><h3>Una imagen con permiso.</h3><p>Usa fotos propias o con licencia, e indica el crédito en la descripción o en el texto.</p></div></aside></div>`;
+  }
+  function listEditor(key, label, fields, empty) {
+    const items = state.report[key] || [];
+    return `<div class="studio-field studio-field--wide"><strong>${E(label)}</strong><div class="block-items">${items
+      .map(
+        (item, i) =>
+          `<div class="block-item"><div class="block-item__head"><strong>${i + 1}</strong><button type="button" class="icon-button" data-note-remove="${key}:${i}" aria-label="Quitar elemento">✕</button></div>${fields
+            .map(([k, l, type]) => field(l, `${key}.${i}.${k}`, { type: type || "text", rows: 3 }))
+            .join("")}</div>`
+      )
+      .join(
+        ""
+      )}</div><button type="button" class="studio-button" data-note-add="${key}">+ ${E(empty)}</button></div>`;
+  }
+  function renderNoteContent() {
+    return `<div class="editor-split"><section class="editor-panel-card"><h2>El análisis</h2><p>Escribe la nota con títulos (##), **negrita**, listas (-) y enlaces [texto](https://…).</p><div class="studio-fields">${field("Hechos verificados", "hechos", { type: "textarea", lines: true, wide: true, rows: 4, hint: "Un hecho por línea. Solo datos comprobables." })}${field("Desarrollo del análisis", "desarrollo", { type: "textarea", wide: true, rows: 16 })}${listEditor(
+      "posturas",
+      "Posturas de los actores",
+      [
+        ["actor", "Actor o sector"],
+        ["postura", "Qué plantea", "textarea"]
+      ],
+      "Añadir postura"
+    )}${field("Escenarios posibles", "escenarios", { type: "textarea", lines: true, wide: true, rows: 4, hint: "Un escenario por línea." })}${listEditor(
+      "fuentes",
+      "Fuentes",
+      [
+        ["nombre", "Fuente"],
+        ["url", "Enlace", "url"]
+      ],
+      "Añadir fuente"
+    )}</div></section><aside><div class="editor-tip"><p class="eyebrow">Criterio CERI</p><h3>Hechos, posturas y fuentes.</h3><ul><li>Separa los hechos de la interpretación.</li><li>Presenta las posturas relevantes.</li><li>Enlaza cada fuente.</li></ul></div></aside></div>`;
   }
   function updateCover() {
     if ($("cover-preview-art")) $("cover-preview-art").innerHTML = CeriEditorial.cover(previewData());
@@ -493,12 +638,28 @@
   function renderReview() {
     const check = publishCheck(),
       p = state.report;
-    return `<div class="review-grid"><section class="editor-panel-card"><p class="eyebrow">Última lectura</p><h2>Una edición lista para compartir.</h2><p>Comprueba el libro completo antes de publicarlo.</p><button type="button" class="studio-button" data-editor-action="preview">Abrir vista previa del libro ↗</button><div class="review-ready"><b>${check.errors.length ? "○" : "✓"}</b><p>${check.errors.length ? `${check.errors.length} ${check.errors.length === 1 ? "detalle pendiente" : "detalles pendientes"} antes de publicar.` : "La edición tiene los datos, la portada y el contenido necesarios para publicarse."}</p></div>${check.errors.length ? `<ul class="review-list">${check.errors.map((issue, i) => `<li><button type="button" data-fix="${i}"><span>→</span>${E(issue.message)}</button></li>`).join("")}</ul>` : ""}${check.warnings.map(w => `<p class="studio-caption">${E(w)}</p>`).join("")}<div class="publish-actions"><button type="button" class="studio-button studio-button--primary" data-editor-action="publish"${check.errors.length ? " disabled" : ""}>${p.estado === "publicado" ? "Actualizar publicación" : "Publicar en la biblioteca"} ↗</button>${p.estado !== "publicado" ? '<button type="button" class="studio-button" data-editor-action="review">Guardar para revisión</button>' : ""}</div><p class="studio-caption" style="margin-top:16px">Al publicar, la edición aparecerá como libro en la biblioteca pública. Guardar un borrador no la hace pública.</p><div id="publish-result"></div></section><aside><div class="cover-preview"><p>Tu próxima edición</p>${CeriEditorial.cover(previewData())}<p>${p.editorial.paginas.length} páginas · Edición ${E(p.editorial.edicion || "por asignar")}</p></div><div class="editor-tip" style="margin-top:20px"><h3>Antes de compartir</h3><ul><li>Comprueba nombres, fechas y fuentes.</li><li>Revisa que las fotos tengan permiso y crédito cuando corresponda.</li><li>Recorre todas las páginas y prueba el modo texto.</li></ul></div></aside></div>`;
+    return `<div class="review-grid"><section class="editor-panel-card"><p class="eyebrow">Última lectura</p><h2>Una edición lista para compartir.</h2><p>Comprueba el libro completo antes de publicarlo.</p><button type="button" class="studio-button" data-editor-action="preview">Abrir vista previa del libro ↗</button><div class="review-ready"><b>${check.errors.length ? "○" : "✓"}</b><p>${check.errors.length ? `${check.errors.length} ${check.errors.length === 1 ? "detalle pendiente" : "detalles pendientes"} antes de publicar.` : "La edición tiene los datos, la portada y el contenido necesarios para publicarse."}</p></div>${check.errors.length ? `<ul class="review-list">${check.errors.map((issue, i) => `<li><button type="button" data-fix="${i}"><span>→</span>${E(issue.message)}</button></li>`).join("")}</ul>` : ""}${check.warnings.map(w => `<p class="studio-caption">${E(w)}</p>`).join("")}${reviewActions(check)}<div id="publish-result"></div></section><aside><div class="cover-preview"><p>${isNote(p) ? "Tu próxima nota" : "Tu próxima edición"}</p>${isNote(p) ? (p.imagen ? `<img class="report-card__image" src="${E(rutaImagen(p.imagen))}" alt="">` : '<span class="report-card__empty">Nota</span>') : CeriEditorial.cover(previewData())}<p>${isNote(p) ? `${minutosLectura(p)} min de lectura` : `${p.editorial.paginas.length} páginas · Edición ${E(p.editorial.edicion || "por asignar")}`}</p></div><div class="editor-tip" style="margin-top:20px"><h3>Antes de compartir</h3><ul><li>Comprueba nombres, fechas y fuentes.</li><li>Revisa que las fotos tengan permiso y crédito cuando corresponda.</li><li>Recorre todas las páginas y prueba el modo texto.</li></ul></div></aside></div>`;
+  }
+  function reviewActions(check) {
+    const p = state.report;
+    const publish = can("informes.publicar");
+    const sign =
+      can("informes.editarTodos") && p.revisadoPor !== state.user.nombre
+        ? `<button type="button" class="studio-button" data-editor-action="sign">Firmar como revisor/a: ${E(state.user.nombre)}</button>`
+        : "";
+    const buttons = publish
+      ? `<button type="button" class="studio-button studio-button--primary" data-editor-action="publish"${check.errors.length ? " disabled" : ""}>${p.estado === "publicado" ? "Actualizar publicación" : "Publicar en la biblioteca"} ↗</button>${p.estado !== "publicado" ? '<button type="button" class="studio-button" data-editor-action="review">Guardar en revisión</button>' : ""}`
+      : `<button type="button" class="studio-button studio-button--primary" data-editor-action="review">${p.estado === "revision" ? "Guardar cambios de la revisión" : "Enviar a revisión"}</button>`;
+    const note = publish
+      ? "Al publicar, aparecerá en la biblioteca pública. Guardar un borrador no la hace pública."
+      : "Tu rol no publica: al enviar a revisión, edición o administración la revisará y publicará.";
+    return `<div class="publish-actions">${buttons}${sign}</div><p class="studio-caption review-note">${note}</p>`;
   }
   function previewData() {
     const pub = M.clone(state.report);
     pub.titulo ||= "Título del informe";
     pub.autor ||= "Equipo autor";
+    if (isNote(pub)) return pub;
     pub.editorial.paginas = pub.editorial.paginas.map((p, i) => ({
       ...p,
       titulo: p.titulo || (i ? `Página ${i + 1}` : pub.titulo)
@@ -506,9 +667,26 @@
     return pub;
   }
   function preview() {
+    previewPublication(previewData());
+  }
+  /* Vista previa de solo lectura: libro para ediciones y artículo para notas. */
+  function previewPublication(pub) {
     const dialog = $("preview-dialog");
     dialog.showModal();
-    CeriEditorial.mount($("admin-preview"), previewData());
+    const host = $("admin-preview");
+    host._reader?.destroy();
+    host._reader = null;
+    if (!isNote(pub) && pub.editorial?.paginas?.length) {
+      host.innerHTML = "";
+      CeriEditorial.mount(host, pub);
+      return;
+    }
+    const lista = arr =>
+      (arr || [])
+        .filter(Boolean)
+        .map(x => `<li>${E(x)}</li>`)
+        .join("");
+    host.innerHTML = `<article class="note-preview"><p class="eyebrow">${E(pub.tipo)} · ${E(pub.ambito)}</p><h1>${E(pub.titulo)}</h1><p class="lead">${E(pub.subtitulo || "")}</p><p class="studio-caption">Por ${E(pub.autor)} · ${formatearFecha(pub.fecha)}</p>${pub.imagen ? `<img src="${E(rutaImagen(pub.imagen))}" alt="${E(pub.imagenAlt || "")}">` : ""}${pub.resumen ? `<h2>Resumen</h2><p>${E(pub.resumen)}</p>` : ""}${lista(pub.hechos) ? `<h2>Hechos verificados</h2><ul>${lista(pub.hechos)}</ul>` : ""}${pub.desarrollo ? `<h2>Análisis</h2>${markdown(pub.desarrollo)}` : ""}${(pub.posturas || []).length ? `<h2>Posturas</h2>${pub.posturas.map(x => `<p><strong>${E(x.actor)}</strong>: ${E(x.postura)}</p>`).join("")}` : ""}${lista(pub.escenarios) ? `<h2>Escenarios</h2><ul>${lista(pub.escenarios)}</ul>` : ""}${(pub.fuentes || []).length ? `<h2>Fuentes</h2><ol>${pub.fuentes.map(f => `<li>${E(f.nombre)}${f.url ? ` · ${E(f.url)}` : ""}</li>`).join("")}</ol>` : ""}</article>`;
   }
   async function save(status = null) {
     if (state.saving) return false;
@@ -516,7 +694,7 @@
     candidate.estado = status || candidate.estado;
     candidate.actualizado = M.today();
     if (!candidate.id) candidate.id = uniqueSlug(candidate.titulo);
-    const sources = candidate.editorial.paginas.flatMap(p =>
+    const sources = (candidate.editorial?.paginas || []).flatMap(p =>
       (p.bloques || []).filter(b => b.tipo === "fuentes").flatMap(b => b.items || [])
     );
     if (sources.length)
@@ -558,11 +736,13 @@
         `Guardado en el servidor · ${new Date().toLocaleTimeString("es-PE", { hour: "2-digit", minute: "2-digit" })}`;
       if (candidate.estado === "publicado" && state.step === 3)
         $("publish-result").innerHTML =
-          `<div class="published-result"><p class="eyebrow">Edición publicada</p><h3>El informe ya está en la biblioteca.</h3><a class="studio-button studio-button--primary" href="${E(publicLink(candidate))}" target="_blank" rel="noopener">Ver en la web ↗</a><button type="button" class="studio-button" data-editor-action="copy-link">Copiar enlace</button></div>`;
+          `<div class="published-result"><p class="eyebrow">Publicado</p><h3>Ya está en la biblioteca pública.</h3><a class="studio-button studio-button--primary" href="${E(publicLink(candidate))}" target="_blank" rel="noopener">Ver en la web ↗</a><button type="button" class="studio-button" data-editor-action="copy-link">Copiar enlace</button></div>`;
       toast(
         candidate.estado === "publicado"
-          ? "Edición publicada. Ya puedes verla en la biblioteca."
-          : "Informe guardado en el servidor."
+          ? "Publicado. Ya puedes verlo en la biblioteca."
+          : candidate.estado === "revision"
+            ? "Guardado en revisión. Edición o administración podrá publicarlo."
+            : "Borrador guardado en el servidor."
       );
       return true;
     } catch (error) {
@@ -600,7 +780,7 @@
         .map(m =>
           picker
             ? `<button type="button" class="media-tile" data-media="${E(m.path)}"><img src="${E(rutaImagen(m.path))}" alt="" loading="lazy"><span>${E(m.name)}</span></button>`
-            : `<a class="media-tile" href="${E(rutaImagen(m.path))}" target="_blank" rel="noopener"><img src="${E(rutaImagen(m.path))}" alt="" loading="lazy"><span>${E(m.name)}</span></a>`
+            : `<div class="media-tile media-tile--info"><a href="${E(rutaImagen(m.path))}" target="_blank" rel="noopener"><img src="${E(rutaImagen(m.path))}" alt="" loading="lazy"></a><span>${E(m.name)}</span><small>${m.enUso?.length ? `En uso: ${E(m.enUso.join(", "))}` : "Sin usar"} · ${Math.max(1, Math.round(m.size / 1024))} KB</small>${m.eliminable && can("medios.eliminar") ? `<button type="button" class="studio-link studio-link--danger" data-delete-media="${E(m.path)}">Eliminar</button>` : ""}</div>`
         )
         .join("");
     $("media-library").innerHTML = state.media.length
@@ -623,7 +803,12 @@
       toast("Puedes seleccionar esta imagen al editar una portada o un bloque de foto.");
       return;
     }
-    const object = deepGet(state.report, state.mediaTarget.route),
+    if (state.mediaTarget.callback) {
+      state.mediaTarget.callback(path);
+      $("media-dialog").close();
+      return;
+    }
+    const object = state.mediaTarget.route ? deepGet(state.report, state.mediaTarget.route) : state.report,
       key = state.mediaTarget.key || "imagen";
     if (object[key] !== path) {
       object[key] = path;
@@ -787,8 +972,12 @@
     if (!input || !state.report) return;
     const path = input.dataset.bind,
       old = deepGet(state.report, path);
-    const value =
-      input.type === "checkbox"
+    const value = input.dataset.lines
+      ? input.value
+          .split("\n")
+          .map(v => v.trim())
+          .filter(Boolean)
+      : input.type === "checkbox"
         ? input.checked
         : input.dataset.array
           ? input.value
@@ -804,18 +993,15 @@
     if (path === "id") state.idCustom = true;
     if (path === "titulo") {
       if (!state.idCustom) state.report.id = uniqueSlug(value);
-      if (!state.report.editorial.paginas[0].titulo || state.report.editorial.paginas[0].titulo === old)
-        state.report.editorial.paginas[0].titulo = value;
+      const cover = state.report.editorial?.paginas?.[0];
+      if (cover && (!cover.titulo || cover.titulo === old)) cover.titulo = value;
       const slugInput = $("editor-panel").querySelector('[data-bind="id"]');
       if (slugInput) slugInput.value = state.report.id;
     }
-    if (
-      path === "subtitulo" &&
-      (!state.report.editorial.paginas[0].bajada || state.report.editorial.paginas[0].bajada === old)
-    )
-      state.report.editorial.paginas[0].bajada = value;
+    const cover = state.report.editorial?.paginas?.[0];
+    if (path === "subtitulo" && cover && (!cover.bajada || cover.bajada === old)) cover.bajada = value;
     changed();
-    if (state.step === 1) {
+    if (state.step === 1 && !isNote(state.report)) {
       clearTimeout(coverTimer);
       coverTimer = setTimeout(updateCover, 180);
     }
@@ -852,7 +1038,70 @@
     }
     const fresh = e.target.closest('[data-action="new"]');
     if (fresh) {
-      await openReport();
+      await openReport(null, false, fresh.dataset.kind || "edicion");
+      return;
+    }
+    const removeReport = e.target.closest("[data-delete-report]");
+    if (removeReport) {
+      const p = state.items.find(x => x.id === removeReport.dataset.deleteReport);
+      if (
+        p &&
+        (await confirmAction(
+          `¿Eliminar «${p.titulo}»?`,
+          "Se quitará del estudio y, si estaba publicado, de la web. Queda una copia en los respaldos que administración puede restaurar.",
+          "Eliminar definitivamente"
+        ))
+      ) {
+        try {
+          const data = await api("publicaciones/eliminar", {
+            method: "POST",
+            body: { id: p.id, revision: state.revision }
+          });
+          state.revision = data.revision;
+          state.items = state.items.filter(x => x.id !== p.id);
+          renderLibrary();
+          toast("Publicación eliminada.");
+        } catch (error) {
+          toast(error.message);
+          if (error.status === 409) await loadLibrary();
+        }
+      }
+      return;
+    }
+    const removeMedia = e.target.closest("[data-delete-media]");
+    if (removeMedia) {
+      if (
+        await confirmAction(
+          "¿Eliminar esta imagen?",
+          "Se borrará del servidor. Solo se pueden eliminar imágenes que no se usan.",
+          "Eliminar imagen"
+        )
+      ) {
+        try {
+          await api("media/eliminar", { method: "POST", body: { path: removeMedia.dataset.deleteMedia } });
+          toast("Imagen eliminada.");
+          await loadMedia();
+        } catch (error) {
+          toast(error.message);
+        }
+      }
+      return;
+    }
+    const noteAdd = e.target.closest("[data-note-add]");
+    if (noteAdd) {
+      const key = noteAdd.dataset.noteAdd;
+      state.report[key] ||= [];
+      state.report[key].push(key === "fuentes" ? { nombre: "", url: "" } : { actor: "", postura: "" });
+      changed();
+      renderEditor();
+      return;
+    }
+    const noteRemove = e.target.closest("[data-note-remove]");
+    if (noteRemove) {
+      const [key, i] = noteRemove.dataset.noteRemove.split(":");
+      state.report[key].splice(Number(i), 1);
+      changed();
+      renderEditor();
       return;
     }
     const edit = e.target.closest("[data-edit]");
@@ -922,7 +1171,9 @@
     }
     const removeImage = e.target.closest("[data-remove-image]");
     if (removeImage) {
-      const object = deepGet(state.report, removeImage.dataset.removeImage);
+      const object = removeImage.dataset.removeImage
+        ? deepGet(state.report, removeImage.dataset.removeImage)
+        : state.report;
       object[removeImage.dataset.imageKey || "imagen"] = "";
       delete object.recorte;
       delete object.original;
@@ -1093,6 +1344,12 @@
       if (a === "preview") preview();
       if (a === "publish") await save("publicado");
       if (a === "review") await save("revision");
+      if (a === "sign") {
+        state.report.revisadoPor = state.user.nombre;
+        changed();
+        renderEditor();
+        toast("Firmado como revisor/a. Guarda para conservar el cambio.");
+      }
       if (a === "copy-link") {
         try {
           await navigator.clipboard.writeText(publicLink(state.report));
@@ -1207,5 +1464,20 @@
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) cacheDraft();
   });
+  window.CeriStudio = {
+    $,
+    E,
+    api,
+    toast,
+    confirmAction,
+    downloadJSON,
+    showView,
+    openMedia,
+    can,
+    state,
+    reload: loadLibrary,
+    openReportById: id => openReport(state.items.find(p => p.id === id)),
+    filterStatus: status => document.querySelector(`[data-status="${status}"]`)?.click()
+  };
   access();
 })();
