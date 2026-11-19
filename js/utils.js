@@ -22,8 +22,10 @@ function hoyISO() {
 
 /* Evita que texto con < > rompa la página o inyecte código */
 function esc(txt) {
-  return String(txt ?? "").replace(/[&<>"']/g, c =>
-    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  return String(txt ?? "").replace(
+    /[&<>"']/g,
+    c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]
+  );
 }
 
 /* Solo permite enlaces http(s), mailto o rutas relativas */
@@ -42,14 +44,23 @@ function rutaImagen(ruta) {
 
 function ordenarPorFecha(lista, desc = true) {
   return [...lista].sort((a, b) =>
-    desc ? String(b.fecha).localeCompare(String(a.fecha)) : String(a.fecha).localeCompare(String(b.fecha)));
+    desc ? String(b.fecha).localeCompare(String(a.fecha)) : String(a.fecha).localeCompare(String(b.fecha))
+  );
 }
 
 /* Minutos de lectura aproximados (200 palabras por minuto) */
 function minutosLectura(p) {
-  const texto = [p.resumen, ...(p.hechos || []), p.desarrollo,
-    ...(p.posturas || []).map(x => x.postura), ...(p.escenarios || []),
-    ...(p.editorial?.paginas || []).flatMap(page => [page.contenido, ...(page.bloques || []).map(b => [b.texto, ...(b.items || []).map(x => x.texto || x.nombre)].join(" "))])].join(" ");
+  const texto = [
+    p.resumen,
+    ...(p.hechos || []),
+    p.desarrollo,
+    ...(p.posturas || []).map(x => x.postura),
+    ...(p.escenarios || []),
+    ...(p.editorial?.paginas || []).flatMap(page => [
+      page.contenido,
+      ...(page.bloques || []).map(b => [b.texto, ...(b.items || []).map(x => x.texto || x.nombre)].join(" "))
+    ])
+  ].join(" ");
   return Math.max(1, Math.round(texto.split(/\s+/).filter(Boolean).length / 200));
 }
 
@@ -60,30 +71,35 @@ function minutosLectura(p) {
    --------------------------------------------------------- */
 function markdown(md) {
   if (!md) return "";
-  const enLinea = t => esc(t)
-    .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
-    .replace(/\*(.+?)\*/g, "<em>$1</em>")
-    .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (m, txt, url) => {
-      const u = urlSegura(url.replace(/&amp;/g, "&"));
-      return u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${txt}</a>` : txt;
-    });
+  const enLinea = t =>
+    esc(t)
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\*(.+?)\*/g, "<em>$1</em>")
+      .replace(/\[([^\]]+)\]\(([^)\s]+)\)/g, (m, txt, url) => {
+        const u = urlSegura(url.replace(/&amp;/g, "&"));
+        return u ? `<a href="${esc(u)}" target="_blank" rel="noopener">${txt}</a>` : txt;
+      });
 
-  return String(md).replace(/\r/g, "").split(/\n{2,}/).map(bloque => {
-    const lineas = bloque.split("\n").filter(l => l.trim());
-    if (!lineas.length) return "";
-    const h = lineas[0].match(/^(#{2,4})\s+(.*)/);
-    if (h && lineas.length === 1) {
-      const n = Math.min(h[1].length + 1, 4); // ## -> h3 (h2 ya se usa en las secciones)
-      return `<h${n}>${enLinea(h[2])}</h${n}>`;
-    }
-    if (lineas.every(l => /^\s*[-*]\s+/.test(l)))
-      return `<ul>${lineas.map(l => `<li>${enLinea(l.replace(/^\s*[-*]\s+/, ""))}</li>`).join("")}</ul>`;
-    if (lineas.every(l => /^\s*\d+\.\s+/.test(l)))
-      return `<ol>${lineas.map(l => `<li>${enLinea(l.replace(/^\s*\d+\.\s+/, ""))}</li>`).join("")}</ol>`;
-    if (lineas.every(l => /^>\s?/.test(l)))
-      return `<blockquote>${enLinea(lineas.map(l => l.replace(/^>\s?/, "")).join(" "))}</blockquote>`;
-    return `<p>${lineas.map(enLinea).join("<br>")}</p>`;
-  }).join("\n");
+  return String(md)
+    .replace(/\r/g, "")
+    .split(/\n{2,}/)
+    .map(bloque => {
+      const lineas = bloque.split("\n").filter(l => l.trim());
+      if (!lineas.length) return "";
+      const h = lineas[0].match(/^(#{2,4})\s+(.*)/);
+      if (h && lineas.length === 1) {
+        const n = Math.min(h[1].length + 1, 4); // ## -> h3 (h2 ya se usa en las secciones)
+        return `<h${n}>${enLinea(h[2])}</h${n}>`;
+      }
+      if (lineas.every(l => /^\s*[-*]\s+/.test(l)))
+        return `<ul>${lineas.map(l => `<li>${enLinea(l.replace(/^\s*[-*]\s+/, ""))}</li>`).join("")}</ul>`;
+      if (lineas.every(l => /^\s*\d+\.\s+/.test(l)))
+        return `<ol>${lineas.map(l => `<li>${enLinea(l.replace(/^\s*\d+\.\s+/, ""))}</li>`).join("")}</ol>`;
+      if (lineas.every(l => /^>\s?/.test(l)))
+        return `<blockquote>${enLinea(lineas.map(l => l.replace(/^>\s?/, "")).join(" "))}</blockquote>`;
+      return `<p>${lineas.map(enLinea).join("<br>")}</p>`;
+    })
+    .join("\n");
 }
 
 /* Botones para compartir una publicación */
@@ -101,13 +117,15 @@ function botonesCompartir(titulo) {
 }
 
 function activarCopiar() {
-  document.querySelectorAll("[data-copiar]").forEach(b => b.addEventListener("click", async () => {
-    try {
-      await navigator.clipboard.writeText(location.href);
-      b.textContent = "¡Enlace copiado!";
-    } catch {
-      b.textContent = "Copia el enlace de la barra";
-    }
-    setTimeout(() => (b.textContent = "Copiar enlace"), 2500);
-  }));
+  document.querySelectorAll("[data-copiar]").forEach(b =>
+    b.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(location.href);
+        b.textContent = "¡Enlace copiado!";
+      } catch {
+        b.textContent = "Copia el enlace de la barra";
+      }
+      setTimeout(() => (b.textContent = "Copiar enlace"), 2500);
+    })
+  );
 }

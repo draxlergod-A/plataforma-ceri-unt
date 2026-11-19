@@ -11,11 +11,13 @@ let _datos = null;
 async function cargarDatos() {
   if (_datos) return _datos;
 
-  const respuestas = await Promise.all(ARCHIVOS.map(async nombre => {
-    const r = await fetch(`contenido/${nombre}.json`, { cache: "no-store" });
-    if (!r.ok) throw new Error(`No se pudo leer contenido/${nombre}.json`);
-    return [nombre, await r.json()];
-  }));
+  const respuestas = await Promise.all(
+    ARCHIVOS.map(async nombre => {
+      const r = await fetch(`contenido/${nombre}.json`, { cache: "no-store" });
+      if (!r.ok) throw new Error(`No se pudo leer contenido/${nombre}.json`);
+      return [nombre, await r.json()];
+    })
+  );
 
   const d = Object.fromEntries(respuestas);
   const lista = obj => (obj && Array.isArray(obj.items) ? obj.items : []);
@@ -41,12 +43,14 @@ function mostrarErrorCarga(err) {
   main.innerHTML = `
     <div class="container"><div class="error-carga">
       <h1>No se pudo cargar el contenido</h1>
-      ${porArchivo
-        ? `<p>Abriste la web con doble clic. Como ahora el contenido está en la carpeta <code>contenido/</code>,
+      ${
+        porArchivo
+          ? `<p>Abriste la web con doble clic. Como ahora el contenido está en la carpeta <code>contenido/</code>,
            la web necesita un servidor local.</p>
            <p><strong>Solución:</strong> en VS Code, clic derecho en <code>index.html</code> →
            <em>Open with Live Server</em>. O en la terminal: <code>npm run sitio</code>.</p>`
-        : `<p>Revisa que los archivos de <code>contenido/</code> existan y no tengan errores.
-           Detalle: ${esc(err.message)}</p>`}
+          : `<p>Revisa que los archivos de <code>contenido/</code> existan y no tengan errores.
+           Detalle: ${esc(err.message)}</p>`
+      }
     </div></div>`;
 }

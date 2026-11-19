@@ -9,5 +9,8 @@
     "dev": "npx --yes concurrently -n sitio,panel -c blue,green \"npm:sitio\" \"npm:cms\"",
     "validar": "node herramientas/validar.js",
     "test:admin": "node --test herramientas/admin.test.js"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3"
   }
 }
