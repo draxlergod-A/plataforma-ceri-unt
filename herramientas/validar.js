@@ -3,7 +3,7 @@
    Uso:  npm run validar
    Usa las mismas reglas que el estudio y el servidor: el modelo de
    publicaciones (admin/model.js) y los esquemas del sitio (admin/colecciones.js).
-   Si existe el almacén privado (.ceri/publicaciones.json), revisa también los borradores.
+   También revisa los borradores del equipo (datos-equipo/publicaciones.json).
    ========================================================= */
 const fs = require("fs");
 const path = require("path");
@@ -88,7 +88,10 @@ if (publico) {
     );
   revisarPublicaciones(items, "Publicación");
 }
-const privado = leer(path.join(DATOS, ".ceri", "publicaciones.json"), ".ceri/publicaciones.json");
+const privado = leer(
+  path.join(DATOS, "datos-equipo", "publicaciones.json"),
+  "datos-equipo/publicaciones.json"
+);
 if (privado)
   revisarPublicaciones(
     (privado.items || []).filter(p => p.estado !== "publicado"),

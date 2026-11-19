@@ -1,0 +1,15 @@
+{
+  "usuarios": [
+    {
+      "id": "b6124d31-5334-445f-800f-32dccc6f489c",
+      "usuario": "admin",
+      "nombre": "Administración CERI",
+      "rol": "admin",
+      "activo": true,
+      "debeCambiar": true,
+      "salt": "818ab3229c206761efc39a52cbe95703e68ff653b67de7ad",
+      "hash": "a627cf63102cbedb5dc0ab26be6bb41daca64793d2d46fbbee81f82273519b9bc1b340668d23f4f9fee04fad0f30bbfe58a5a914fb15718fd91232b8093b5e2d",
+      "creadoEn": "2026-11-19T15:45:15.857Z"
+    }
+  ]
+}

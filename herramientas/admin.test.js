@@ -198,7 +198,7 @@ test("Configuración inicial, sesiones persistentes, borradores privados y confl
     ).status,
     409
   );
-  const guardadas = await fs.readFile(path.join(ctx.root, ".ceri", "usuarios.json"), "utf8");
+  const guardadas = await fs.readFile(path.join(ctx.root, "datos-equipo", "usuarios.json"), "utf8");
   assert.ok(!guardadas.includes(CLAVE_ADMIN), "La contraseña no se guarda en texto plano.");
 
   const inicial = await admin.pedir("publicaciones");
@@ -584,6 +584,8 @@ test("El servidor solo expone archivos públicos y añade cabeceras de seguridad
     "/herramientas/servidor.js",
     "/package.json",
     "/.ceri/usuarios.json",
+    "/datos-equipo/usuarios.json",
+    "/datos-equipo/publicaciones.json",
     "/README.md",
     "/admin/../package.json"
   ])
@@ -616,7 +618,7 @@ test("Con una carpeta de datos aparte, se copia el contenido inicial", async t =
   const copia = JSON.parse(await fs.readFile(path.join(ctx.dataDir, "contenido", "eventos.json"), "utf8"));
   assert.deepEqual(copia, { items: [] });
   const privadas = JSON.parse(
-    await fs.readFile(path.join(ctx.dataDir, ".ceri", "publicaciones.json"), "utf8")
+    await fs.readFile(path.join(ctx.dataDir, "datos-equipo", "publicaciones.json"), "utf8")
   );
   assert.equal(privadas.items[0].id, "borrador");
   assert.equal((await fetch(ctx.base + "/contenido/publicaciones.json").then(r => r.json())).items.length, 0);

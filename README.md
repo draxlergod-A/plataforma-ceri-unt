@@ -38,17 +38,19 @@ Cada persona del equipo entra con **su propio usuario y contraseña**. El rol de
 
 Los permisos están definidos en un solo lugar: `admin/permisos.js`.
 
-### Primera vez
+### Cuentas compartidas con todo el equipo
 
-Abre `/admin/` desde **localhost en la computadora del servidor** y crea la cuenta de administración (usuario, nombre y contraseña de 10 a 128 caracteres). No hay contraseña predeterminada.
+Las cuentas y todas las publicaciones (incluidos los borradores) se guardan en **`datos-equipo/`**, que **sí va a Git**. Así, quien haga `git pull` ve las mismas cuentas, roles y borradores, y entra con su propio usuario. Las contraseñas no se guardan: solo su huella cifrada con scrypt.
 
-Después, en **Cuentas y roles**, invita a cada persona: escribe su nombre, su usuario y su rol. El estudio muestra **una sola vez** una contraseña temporal. Entrégala en persona o por un canal privado. Al entrar, la persona debe crear su propia contraseña.
+1. El repositorio ya trae la cuenta **`admin`**, con una contraseña temporal que el responsable entrega al equipo de forma privada. Al entrar por primera vez, el estudio pide cambiarla.
+2. En **Cuentas y roles**, el admin crea la cuenta de cada persona y le entrega su contraseña temporal.
+3. **Después de crear cuentas, cambiar contraseñas o editar borradores, haz commit y push de `datos-equipo/`** para que el resto lo reciba con `git pull`.
 
-### Si vienes de la versión anterior (contraseña compartida)
+Si dos personas cambian `datos-equipo/` a la vez, Git puede pedir resolver un conflicto. Para evitarlo, haz `git pull` antes de empezar y sube los cambios al terminar.
 
-Al iniciar el servidor, el acceso compartido anterior (`.ceri/admin.json`) se convierte en la cuenta **`admin`**, con la misma contraseña. Entra con el usuario `admin`, crea las cuentas del equipo y, si quieres, desactiva o cambia la cuenta `admin`.
+Lo que **no** va a Git, porque es de cada computadora, está en `.ceri/`: sesiones, mensajes de contacto, respaldos automáticos y el registro de actividad.
 
-Los informes también se reorganizan solos: los borradores pasan al almacén privado `.ceri/publicaciones.json` y `contenido/publicaciones.json` queda solo con lo publicado. **Antes de actualizar**, si tenías borradores que no estaban en Git, descarga un respaldo desde el estudio anterior.
+**Recomendación:** mantén el repositorio **privado**. Aunque las contraseñas están cifradas, los borradores y la lista de cuentas no deberían ser públicos.
 
 ### Olvidé mi contraseña
 
@@ -130,7 +132,8 @@ HTML, CSS y JavaScript sin framework. El servidor no tiene dependencias externas
 | `herramientas/cuentas.js` | Gestión de cuentas desde la terminal |
 | `herramientas/config.js` | Variables de entorno |
 | `assets/img/subidas/` | Imágenes subidas desde el estudio |
-| `.ceri/` | Cuentas, sesiones, borradores, mensajes, respaldos y registro (privado, fuera de Git) |
+| `datos-equipo/` | Cuentas (contraseñas cifradas) y todas las publicaciones con borradores: se comparten por Git |
+| `.ceri/` | Sesiones, mensajes, respaldos y registro de esta computadora (fuera de Git) |
 
 El servidor solo entrega archivos de una lista permitida: el código del servidor, `package.json`, el README y `.ceri/` no son accesibles desde el navegador.
 

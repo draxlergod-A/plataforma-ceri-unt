@@ -52,14 +52,22 @@ const publico = u =>
   };
 
 function crearUsuarios(almacen, { sessionHours = 8 } = {}) {
-  const archivo = almacen.archivoPrivado("usuarios.json", { usuarios: [] });
+  // Las cuentas se comparten con el equipo por Git; las sesiones son de cada computadora.
+  const archivo = almacen.archivoEquipo("usuarios.json", { usuarios: [] });
   const archivoSesiones = almacen.archivoPrivado("sesiones.json", { sesiones: {} });
+  const accesos = almacen.archivoPrivado("accesos.json", {});
   const SESSION_MS = sessionHours * 60 * 60 * 1000;
   let sesiones = null;
   let hashFicticio = null;
 
   /* Convierte el acceso único de la versión anterior (.ceri/admin.json) en la cuenta «admin». */
   async function migrarLegado() {
+    // Versión anterior: cuentas en .ceri/usuarios.json (solo en esta computadora).
+    const local = path.join(almacen.rutas.privado, "usuarios.json");
+    if (!(await almacen.existe(archivo.file)) && (await almacen.existe(local))) {
+      await archivo.escribir(JSON.parse(await fs.readFile(local, "utf8")));
+      await fs.rename(local, local + ".migrado");
+    }
     const legado = path.join(almacen.rutas.privado, "admin.json");
     if (!(await almacen.existe(legado)) || (await almacen.existe(archivo.file))) return null;
     const anterior = JSON.parse(await fs.readFile(legado, "utf8"));
@@ -86,7 +94,8 @@ function crearUsuarios(almacen, { sessionHours = 8 } = {}) {
   }
 
   async function lista() {
-    return (await archivo.leer()).usuarios || [];
+    const vistos = await accesos.leer().catch(() => ({}));
+    return ((await archivo.leer()).usuarios || []).map(u => ({ ...u, ultimoAcceso: vistos[u.id] || "" }));
   }
   async function porId(id) {
     return (await lista()).find(u => u.id === id) || null;
@@ -204,10 +213,10 @@ function crearUsuarios(almacen, { sessionHours = 8 } = {}) {
     return u;
   }
 
+  /* El último acceso se guarda solo en esta computadora para no cambiar el archivo compartido en cada inicio de sesión. */
   async function registrarAcceso(id) {
-    await archivo.actualizar(async contenido => {
-      const u = contenido.usuarios.find(x => x.id === id);
-      if (u) u.ultimoAcceso = new Date().toISOString();
+    await accesos.actualizar(async datos => {
+      datos[id] = new Date().toISOString();
     });
   }
 

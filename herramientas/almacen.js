@@ -21,9 +21,12 @@ async function existe(file) {
 function crearAlmacen({ root, dataDir }) {
   const contenido = path.join(dataDir, "contenido");
   const privado = path.join(dataDir, ".ceri");
+  // Datos del equipo que se comparten por Git: cuentas (sin contraseñas, solo su huella scrypt)
+  // y todas las publicaciones, incluidos los borradores. Nunca se sirven por la web.
+  const equipo = path.join(dataDir, "datos-equipo");
   const respaldos = path.join(privado, "backups");
   const subidas = path.join(dataDir, "assets", "img", "subidas");
-  const publicacionesPrivadas = path.join(privado, "publicaciones.json");
+  const publicacionesPrivadas = path.join(equipo, "publicaciones.json");
   const publicacionesPublicas = path.join(contenido, "publicaciones.json");
   const auditoria = path.join(privado, "auditoria.jsonl");
   let cola = Promise.resolve();
@@ -83,6 +86,7 @@ function crearAlmacen({ root, dataDir }) {
     await fs.mkdir(privado, { recursive: true, mode: 0o700 });
     await fs.mkdir(subidas, { recursive: true });
     await fs.mkdir(contenido, { recursive: true });
+    await fs.mkdir(equipo, { recursive: true });
     if (path.resolve(dataDir) !== path.resolve(root)) {
       for (const nombre of [...COLECCIONES_PUBLICAS, "publicaciones"]) {
         const destino = path.join(contenido, nombre + ".json");
@@ -91,11 +95,26 @@ function crearAlmacen({ root, dataDir }) {
       }
     }
     await enSerie(async () => {
+      // Versión anterior: las publicaciones vivían solo en .ceri/ de cada computadora.
+      const anterior = path.join(privado, "publicaciones.json");
+      if (await existe(anterior)) {
+        const viejas = (await leerJSON(anterior)).datos.items || [];
+        if (!(await existe(publicacionesPrivadas)))
+          await escribirAtomico(publicacionesPrivadas, { items: viejas });
+        else {
+          const actual = await leerJSON(publicacionesPrivadas);
+          const ids = new Set((actual.datos.items || []).map(p => p.id));
+          const nuevas = viejas.filter(p => p && p.id && !ids.has(p.id));
+          if (nuevas.length)
+            await escribirAtomico(publicacionesPrivadas, { items: [...actual.datos.items, ...nuevas] });
+        }
+        await fs.rename(anterior, anterior + ".migrado");
+      }
       const publico = (await existe(publicacionesPublicas))
         ? (await leerJSON(publicacionesPublicas)).datos.items || []
         : [];
       if (!(await existe(publicacionesPrivadas))) {
-        await escribirAtomico(publicacionesPrivadas, { items: publico }, 0o600);
+        await escribirAtomico(publicacionesPrivadas, { items: publico });
       } else {
         // Importa publicaciones que llegaron por Git y aún no están en el almacén privado.
         const privadas = await leerJSON(publicacionesPrivadas);
@@ -103,11 +122,7 @@ function crearAlmacen({ root, dataDir }) {
         const nuevas = publico.filter(p => p && p.id && !ids.has(p.id));
         if (nuevas.length) {
           await respaldar("publicaciones", privadas.raw);
-          await escribirAtomico(
-            publicacionesPrivadas,
-            { items: [...nuevas, ...privadas.datos.items] },
-            0o600
-          );
+          await escribirAtomico(publicacionesPrivadas, { items: [...nuevas, ...privadas.datos.items] });
         }
       }
       const actuales = (await leerJSON(publicacionesPrivadas)).datos.items || [];
@@ -135,7 +150,7 @@ function crearAlmacen({ root, dataDir }) {
         }
         const items = await cambiar(structuredClone(actual.items));
         await respaldar("publicaciones", actual.raw);
-        await escribirAtomico(publicacionesPrivadas, { items }, 0o600);
+        await escribirAtomico(publicacionesPrivadas, { items });
         await exportarPublicas(items);
         return publicaciones.leer();
       });
@@ -252,9 +267,11 @@ function crearAlmacen({ root, dataDir }) {
     }
   };
 
-  /* Archivo JSON privado genérico (usuarios, sesiones, mensajes). */
-  function archivoPrivado(nombre, inicial) {
-    const file = path.join(privado, nombre);
+  /* Archivo JSON genérico. Privado (.ceri/, solo esta computadora) o del equipo (datos-equipo/, va a Git). */
+  const archivoPrivado = (nombre, inicial) => archivoEn(privado, nombre, inicial, 0o600);
+  const archivoEquipo = (nombre, inicial) => archivoEn(equipo, nombre, inicial, undefined);
+  function archivoEn(carpeta, nombre, inicial, modo) {
+    const file = path.join(carpeta, nombre);
     const archivo = {
       file,
       async leer() {
@@ -265,12 +282,12 @@ function crearAlmacen({ root, dataDir }) {
           throw error;
         }
       },
-      escribir: datos => escribirAtomico(file, datos, 0o600),
+      escribir: datos => escribirAtomico(file, datos, modo),
       actualizar: cambiar =>
         enSerie(async () => {
           const datos = await archivo.leer();
           const resultado = await cambiar(datos);
-          await escribirAtomico(file, datos, 0o600);
+          await escribirAtomico(file, datos, modo);
           return resultado;
         })
     };
@@ -278,7 +295,7 @@ function crearAlmacen({ root, dataDir }) {
   }
 
   return {
-    rutas: { contenido, privado, respaldos, subidas, dataDir, root },
+    rutas: { contenido, privado, equipo, respaldos, subidas, dataDir, root },
     iniciar,
     enSerie,
     publicaciones,
@@ -286,6 +303,7 @@ function crearAlmacen({ root, dataDir }) {
     copias,
     registro,
     archivoPrivado,
+    archivoEquipo,
     existe
   };
 }
