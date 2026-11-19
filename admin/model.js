@@ -66,6 +66,13 @@
       }
     };
   }
+  /* Nota o artículo: texto continuo, sin páginas de libro. */
+  function createNote() {
+    const p = createReport();
+    delete p.editorial;
+    return { ...p, formato: "nota", tipo: "Nota de coyuntura", imagenAlt: "" };
+  }
+  const isNote = p => !!p && p.formato === "nota";
   function mediaIn(p) {
     const paths = [];
     if (p.imagen) paths.push(p.imagen);
@@ -121,6 +128,33 @@
       new Date(p.fecha + "T12:00:00Z").toISOString().slice(0, 10) !== p.fecha
     )
       add("Indica una fecha de publicación válida.");
+    for (const f of Array.isArray(p.fuentes) ? p.fuentes : [])
+      if (
+        !f ||
+        typeof f !== "object" ||
+        typeof (f.nombre ?? "") !== "string" ||
+        typeof (f.url ?? "") !== "string"
+      )
+        add("Revisa la lista de fuentes.", 2);
+      else if (f.url && !/^https?:\/\//i.test(f.url))
+        add("Los enlaces de las fuentes deben empezar por https://.", 2);
+    for (const key of ["hechos", "escenarios"])
+      if (Array.isArray(p[key]) && (p[key].length > 100 || p[key].some(x => typeof x !== "string")))
+        add(`Revisa la lista de ${key}.`, 2);
+    if (
+      Array.isArray(p.posturas) &&
+      p.posturas.some(
+        x =>
+          !x ||
+          typeof x !== "object" ||
+          typeof (x.actor ?? "") !== "string" ||
+          typeof (x.postura ?? "") !== "string"
+      )
+    )
+      add("Revisa la lista de posturas.", 2);
+    if (p.formato !== undefined && !["edicion", "nota"].includes(p.formato))
+      add("Selecciona un formato válido.");
+    if (isNote(p)) return validateNote(p, publishing, errors, warnings, add);
     const pages = p.editorial?.paginas;
     if (!Array.isArray(pages) || pages.length < 1 || pages.length > 100) {
       add("La edición necesita entre 1 y 100 páginas.", 2);
@@ -193,5 +227,32 @@
     if (!p.revisadoPor) warnings.push("Aún no has indicado quién revisó el informe.");
     return { errors, warnings };
   }
-  return { clone, slug, today, createBlock, createPage, createReport, mediaIn, validate };
+  function validateNote(p, publishing, errors, warnings, add) {
+    if (p.editorial !== undefined) add("Una nota no lleva páginas de edición.");
+    if (p.imagen && !validImage(p.imagen)) add("Hay una imagen con una ruta o formato no permitido.", 1);
+    if (String(p.desarrollo || "").length > 60000) add("El texto de la nota es demasiado largo.", 2);
+    if (errors.length || !publishing) return { errors, warnings };
+    if (!String(p.autor || "").trim()) add("Indica el autor o equipo responsable.");
+    if (String(p.resumen || "").trim().length < 20) add("Escribe un resumen de al menos 20 caracteres.");
+    if (String(p.desarrollo || "").trim().length < 200)
+      add("Desarrolla el análisis con al menos 200 caracteres.", 2);
+    if (p.imagen && !String(p.imagenAlt || "").trim()) add("Describe la imagen principal.", 1);
+    if (!(p.fuentes || []).some(f => f.nombre && /^https?:\/\//i.test(f.url || "")))
+      add("Incluye al menos una fuente con nombre y enlace.", 2);
+    if (!p.revisadoPor) warnings.push("Aún no has indicado quién revisó la nota.");
+    return { errors, warnings };
+  }
+  return {
+    clone,
+    slug,
+    today,
+    createBlock,
+    createPage,
+    createReport,
+    createNote,
+    isNote,
+    mediaIn,
+    validImage,
+    validate
+  };
 });
